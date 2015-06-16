@@ -1,9 +1,9 @@
 Phase 1 (Die Modelle)
 
 Unsere erste Aufgabe ist es unserem Auto auch eine Form zu geben! Oder dem Cokpit.
-Wir brauchen zumind. eins oder zwei Modelle für das Auto... 
-Die Landschaft und Umgebung.
-Und evtl. auch für den Editor!
+Wir brauchen zumind. eins oder zwei Modelle fÃ¼r das Auto... 
+Die Landschaft und Umgebung. Zumindest die Grundstrukturen, Ort werden eventuel Random vergeben.
+Und evtl. auch fÃ¼r den Editor!
 
 Erster Meilenstein Modelling / Texturing
 
