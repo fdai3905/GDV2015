@@ -1,0 +1,12 @@
+Phase 2 (Die Strecke (n))
+
+Unsere zweite Aufgabe ist es die Landschaft zu gestalten und auch einige Funktionen zu hinterlegen.
+Zum einen sollte die Strecke beschränkt sein, sodass das Auto nicht in die Leere fährt...
+Zum anderen sollte die Strecke mit Objekten wie Bäumen oder Autoreifen gepickt sein... 
+
+Evtl. gibt es auch Objekte die auf das Auto reagieren oder einfach irgendwas agieren... 
+
+Zweiter Meilenstein: Game Gestaltung und Aktion
+Entwicklungsphase 1!
+
+Status: 0%
