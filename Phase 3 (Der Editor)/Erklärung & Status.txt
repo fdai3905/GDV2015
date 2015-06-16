@@ -1,10 +1,10 @@
 Phase 3 (Der Editor)
 
-Unsere dritte Aufgabe ist es zusätzlich zum Spiel auch die typischen Renn-Fähigkeiten aufweisen zu lassen.
-Hier zu soll es einen Auswahl Editor geben, in dem der Anwender das Auto verändern kann.
-Aus einer Palette aus Farben soll er die Gestaltung vornehmen können und evtl. auch die Form des Autos ändern können.
+Unsere dritte Aufgabe ist es zusÃ¤tzlich zum Spiel auch die typischen Renn-FÃ¤higkeiten aufweisen zu lassen.
+Hier zu soll es einen Auswahl Editor geben, in dem der Anwender das Auto verÃ¤ndern kann.
+Aus einer Palette aus Farben soll er die Gestaltung vornehmen kÃ¶nnen und evtl. auch die Form des Autos Ã¤ndern kÃ¶nnen.
 
-Diese Phase wird aber erst in Angriff genommen wenn Phase 1 (Die Strecke) funktioniert!
+Diese Phase wird aber erst in Angriff genommen wenn Phase 2 (Die Strecke) funktioniert!
 
 Dritter Meilenstein: Auto-Editor
 Entwicklungsphase 2!
