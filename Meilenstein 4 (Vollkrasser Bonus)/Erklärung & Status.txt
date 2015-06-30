@@ -1,0 +1,12 @@
+Meilenstein 4 (Vollkrasser Bonus)
+
+Falls wir noch die Zeit für was Schnickes haben...
+
+Das Programm könnte noch über den Zusatz eines Menüs verfügen...
+Hier soll unteranderem zwischen unterschiedlichen Strecken ausgewählt werden können.
+Darüber hinaus soll ein eigener Auto-Editor erstellt werden, mit dem man die Farbe und Form des Wagens variieren kann.
+
+Was auch ein nettes Extra wäre, wäre ein Multiplayer-Modus.
+(Für unsere Zwecke aber nur local!)
+
+Status: 0%

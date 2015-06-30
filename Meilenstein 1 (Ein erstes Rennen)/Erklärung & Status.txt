@@ -1,0 +1,15 @@
+Meilenstein 1 (Die Modelle)
+
+Unsere erste Aufgabe ist es erst einmal unsere Welt zu definieren. Wir brauchen also eine Strecke, einen Wagen und evtl. auch mehrere Gegner.
+
+Gegner fahren nach einem vorgegeben Muster. Sie steuern also nur bestimmte Checkpoints auf der Strecke ab.
+
+Um erfolgreich zu fahren, soll der Spieler ebenfalls bestimmte Checkpoints passieren müssen.
+
+Zusätzlich dazu soll eine erste Kollisionsabfrage gewährleisten, dass man nicht durch Objekte wie Bäume bzw. andere Fahrer fährt.
+
+Im Fall eines Zusammenstoßes soll das getroffene Objekt entweder weggeschleudert werden, umfallen oder wenigstens den Spieler selbst zurückfedern lassen.
+
+Eine wichtige Grundfunktion ist eine Respawn Funktion, die den Fahrer, bei betätigung am letzten Checkpoint respawnen lässt.
+
+Status: 0%

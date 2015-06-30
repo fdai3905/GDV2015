@@ -1,0 +1,17 @@
+Die Doc von three.js
+Unter anderem auch mit Anleitung für erste Grundlagen
+
+http://threejs.org/docs/index.html#Manual/Introduction/Creating_a_scene
+
+
+Ein ähnliches Konzept wie wir es planen...
+evtl. kann man sich hier einige Tipps bzw. auch Lösungsansätze anschauen
+
+http://matthiasschuetz.com/three-basicthirdpersongame/
+
+
+Weitere Vorschläge immer gerne hier eintragen...
+
+
+
+(Dieses Dokument wird in die weiteren Meilensteine mit übernommen) 
