@@ -15,42 +15,40 @@
                     var clock = new THREE.Clock();
                     var collidableMeshList = [];
                     
-			//Creating a new Scene
+			//Neue Szene
                         scene = new THREE.Scene();
-                        //Creating a new Camera
+                        
+                        //Neue Kamera
                         camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 20000);
                         scene.add(camera);
-                        camera.position.set(0,150,400);
+                        camera.position.set(0,200,500);
                         camera.lookAt(scene.position);
                         
-                        //Creating a new Renderer
+                        //Den Renderer einfuehren
                         var renderer = new THREE.WebGLRenderer();
                         renderer.setSize(window.innerWidth, window.innerHeight);
                         document.body.appendChild(renderer.domElement);
                         
                         
-                        // FLOOR
+                                                
+                        // Fußboden
                         var floorMaterial = new THREE.MeshBasicMaterial( {color:0x444444, side:THREE.DoubleSide} );
                         var floorGeometry = new THREE.PlaneGeometry(1000, 1000, 10, 10);
                         var floor = new THREE.Mesh(floorGeometry, floorMaterial);
                         floor.position.y = -0.5;
                         floor.rotation.x = Math.PI / 2;
                         scene.add(floor);
-                        // SKYBOX/FOG
-                        var skyBoxGeometry = new THREE.CubeGeometry( 10000, 10000, 10000 );
-                        var skyBoxMaterial = new THREE.MeshBasicMaterial( { color: 0x9999ff, side: THREE.BackSide } );
-                        var skyBox = new THREE.Mesh( skyBoxGeometry, skyBoxMaterial );
-                        scene.add(skyBox);
                         
-                        //Add a cube
+                        //Neuer Würfel
                         var geometry = new THREE.BoxGeometry(4,4,4);
                         var material = new THREE.MeshBasicMaterial({color:0x00ff00});
                         var cube = new THREE.Mesh(geometry,material);
                         scene.add(cube);
                         
                         camera.position.z = 7;
+                        camera.position.y = 7;
                         
-                        //2Wände
+                        //2 Wände
                         var wallGeometry = new THREE.CubeGeometry( 100, 100, 20, 1, 1, 1 );
                         var wallMaterial = new THREE.MeshBasicMaterial( {color: 0x8888ff} );
                         var wireMaterial = new THREE.MeshBasicMaterial( { color: 0x000000, wireframe:true } );
@@ -73,7 +71,8 @@
                         wall2.rotation.y = 3.14159 / 2;
                         scene.add(wall2);
                         
-                        //Rendering the scene
+                        
+                        //Szene aktuell halten (Updaten)
                         function render()
                         {
                             requestAnimationFrame(render);
@@ -84,9 +83,9 @@
                         
                         function update()
                         {
-                        var delta = clock.getDelta(); // seconds.
-                        var moveDistance = 200 * delta; // 200 pixels per second
-                        var rotateAngle = Math.PI / 2 * delta;   // pi/2 radians (90 degrees) per second
+                        var delta = clock.getDelta();           // Sekunden
+                        var moveDistance = 200 * delta;         // 200 pixels pro Sekunde
+                        var rotateAngle = Math.PI / 2 * delta;  // Pi/2 Grad (90°) pro Sekunde
 
                         if ( keyboard.pressed("A") )
                                 cube.rotation.y += rotateAngle;
