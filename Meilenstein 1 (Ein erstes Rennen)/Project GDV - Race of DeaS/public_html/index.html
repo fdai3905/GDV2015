@@ -17,11 +17,14 @@
                     
 			//Creating a new Scene
                         scene = new THREE.Scene();
+                        
+                        
                         //Creating a new Camera
                         camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 20000);
                         scene.add(camera);
-                        camera.position.set(0,150,400);
+                        camera.position.set(0,400,80);
                         camera.lookAt(scene.position);
+                        
                         
                         //Creating a new Renderer
                         var renderer = new THREE.WebGLRenderer();
@@ -36,16 +39,13 @@
                         floor.position.y = -0.5;
                         floor.rotation.x = Math.PI / 2;
                         scene.add(floor);
-                        // SKYBOX/FOG
-                        var skyBoxGeometry = new THREE.CubeGeometry( 10000, 10000, 10000 );
-                        var skyBoxMaterial = new THREE.MeshBasicMaterial( { color: 0x9999ff, side: THREE.BackSide } );
-                        var skyBox = new THREE.Mesh( skyBoxGeometry, skyBoxMaterial );
-                        scene.add(skyBox);
+                     
                         
                         //Add a cube
-                        var geometry = new THREE.BoxGeometry(4,4,4);
+                        var geometry = new THREE.BoxGeometry(50,50,50);
                         var material = new THREE.MeshBasicMaterial({color:0x00ff00});
                         var cube = new THREE.Mesh(geometry,material);
+                        cube.position.set(0, 25.1, 0);
                         scene.add(cube);
                         
                         camera.position.z = 7;
