@@ -7,8 +7,13 @@
 		</style>
 	</head>
 	<body>
-		<script src="JS/three.min.js"></script>
+            <script src="JS/three.js"></script>
+            <script src="JS/three.min.js"></script>
+            <script src="js/THREEx.KeyboardState.js"></script>
 		<script>
+                    var keyboard = new THREEx.KeyboardState();
+                    var clock = new THREE.Clock();
+                    
 			document.write("Let the Egines be with ya !!! *hicks*");
                         var scene = new THREE.Scene();
                         var camera = new THREE.PerspectiveCamera(75, window.innerWidth, 0.1, 1000);
@@ -18,7 +23,7 @@
                         document.body.appendChild(renderer.domElement);
                         
                         //Add a cube
-                        var geometry = new THREE.BoxGeometry(1,1,1);
+                        var geometry = new THREE.BoxGeometry(4,4,4);
                         var material = new THREE.MeshBasicMaterial({color:0x00ff00});
                         var cube = new THREE.Mesh(geometry,material);
                         scene.add(cube);
@@ -29,13 +34,34 @@
                         function render()
                         {
                             requestAnimationFrame(render);
-                            cube.rotation.x += 0.1;
-                            cube.rotation.y += 0.1;
+                            update();
                             renderer.render(scene, camera);
                         }
                         render();
                         
+                        function update()
+                        {
+                        var delta = clock.getDelta(); // seconds.
+                        var moveDistance = 200 * delta; // 200 pixels per second
+                        var rotateAngle = Math.PI / 2 * delta;   // pi/2 radians (90 degrees) per second
+
+                        if ( keyboard.pressed("A") )
+                                cube.rotation.y += rotateAngle;
+                        if ( keyboard.pressed("D") )
+                                cube.rotation.y -= rotateAngle;
+
+                        if ( keyboard.pressed("left") )
+                                cube.position.x -= moveDistance;
+                        if ( keyboard.pressed("right") )
+                                cube.position.x += moveDistance;
+                        if ( keyboard.pressed("up") )
+                                cube.position.z -= moveDistance;
+                        if ( keyboard.pressed("down") )
+                                cube.position.z += moveDistance;
+                        }
+                        //
 		</script>
+                
                 
 	</body>
 </html>
