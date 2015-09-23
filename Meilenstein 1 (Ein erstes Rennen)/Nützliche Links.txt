@@ -1,17 +1,18 @@
 Die Doc von three.js
-Unter anderem auch mit Anleitung für erste Grundlagen
+Unter anderem auch mit Anleitung fÃ¼r erste Grundlagen
 
 http://threejs.org/docs/index.html#Manual/Introduction/Creating_a_scene
 
 
-Ein ähnliches Konzept wie wir es planen...
-evtl. kann man sich hier einige Tipps bzw. auch Lösungsansätze anschauen
+Ein Ã¤hnliches Konzept wie wir es planen...
+evtl. kann man sich hier einige Tipps bzw. auch LÃ¶sungsansÃ¤tze anschauen
 
 http://matthiasschuetz.com/three-basicthirdpersongame/
 
 
-Weitere Vorschläge immer gerne hier eintragen...
+Weitere VorschlÃ¤ge immer gerne hier eintragen...
 
+Ein 3D-Game "Pong" mit KI-Reaktion
+http://buildnewgames.com/webgl-threejs/
 
-
-(Dieses Dokument wird in die weiteren Meilensteine mit übernommen) 
+(Dieses Dokument wird in die weiteren Meilensteine mit Ã¼bernommen) 
