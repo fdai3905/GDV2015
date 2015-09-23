@@ -1,0 +1,10 @@
+Wir gehen immer von der Ursprungsdatei "index" aus. 
+
+###########################
+
+Dabei ist für JEDEN die Namesgebung *indexName.html* einzuhalten
+
+###########################
+
+Somit kommen wir uns nicht in die Quere und sin am Ende zumindest von der Gleichen Startdatei ausgegangen. 
+Ich hoffe das erleichtert uns später das Zusammenführen des Codes.
