@@ -72,7 +72,7 @@
             //Add a cube
             {
             var geometry = new THREE.BoxGeometry(50,50,50);
-            var material = new THREE.MeshBasicMaterial({color:0x00ff00});
+            var material = new THREE.MeshBasicMaterial({color:0x0000ff});
             cube = new THREE.Mesh(geometry,material);
             cube.position.set(0, 25.1, 0);
             scene.add(cube);
@@ -82,7 +82,7 @@
             //2 Walls
             {
             var wallGeometry = new THREE.CubeGeometry( 100, 100, 20, 1, 1, 1 );
-            var wallMaterial = new THREE.MeshBasicMaterial( {color: 0x8888ff} );
+            var wallMaterial = new THREE.MeshBasicMaterial( {color: 0xff0000} );
             var wireMaterial = new THREE.MeshBasicMaterial( { color: 0x000000, wireframe:true } );
 
             //fist Wall
@@ -113,14 +113,14 @@
             collidableMeshList.push(checkpoint1);
 
             //Creating Checkpoint 1 WireVersion
-            var checkpoint1 = new THREE.Mesh(wallGeometry, wireMaterial);
-            checkpoint1.position.set(300, 50, 50);
-            checkpoint1.rotation.y = 3.14159/2;
-            scene.add(checkpoint1);
+            var checkpointWire = new THREE.Mesh(wallGeometry, wireMaterial);
+            checkpointWire.position.set(300, 50, 50);
+            checkpointWire.rotation.y = 3.14159/2;
+            scene.add(checkpointWire);
 
             //First Target!
             target = checkpoint1;
-            checkpoint1.material.color = 0xffffff;
+            checkpoint1.material.color.setHex(0x00ff00);
             }
         }
 
@@ -221,14 +221,14 @@
                     {
                         case checkpoint1:
                             target = wall1;
-                            wall1.material.color = 0xffffff;
-                            checkpoint1.material.color = 0x8888ff;
+                            wall1.material.color.setHex(0xffffff);
+                            checkpoint1.material.color.setHex(0x8888ff);
                             break;
 
                         case wall1:
                             target = checkpoint1;
-                            wall1.material.color = 0x8888ff;
-                            checkpoint1.material.color = 0xffffff;
+                            wall1.material.color.setHex(0x8888ff);
+                            checkpoint1.material.color.setHex(0xffffff);
                             break;
                     }
                 }
