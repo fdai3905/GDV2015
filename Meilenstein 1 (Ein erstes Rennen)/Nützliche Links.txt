@@ -17,6 +17,6 @@ http://buildnewgames.com/webgl-threejs/
 
 (Dieses Dokument wird in die weiteren Meilensteine mit übernommen) 
 
-Blender-Models nutzen:
 
+Blender-Models nutzen:
 http://www.3d-ring.de/3d/forum.php?post_id=15341
