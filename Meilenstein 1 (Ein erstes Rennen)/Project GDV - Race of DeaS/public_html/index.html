@@ -7,6 +7,7 @@
 		</style>
 	</head>
 	<body>
+            <div id="textarrea"> </div>
             <script src="JS/three.js"></script>
             <script src="JS/three.min.js"></script>
             <script src="js/THREEx.KeyboardState.js"></script>
@@ -50,7 +51,7 @@
                         cube.position.set(0, 25.1, 0);
                         scene.add(cube);
                         
-                        camera.position.z = 7;
+                        //camera.position.z = 7;
 
                         
                         //2 Walls
@@ -58,6 +59,7 @@
                         var wallMaterial = new THREE.MeshBasicMaterial( {color: 0x8888ff} );
                         var wireMaterial = new THREE.MeshBasicMaterial( { color: 0x000000, wireframe:true } );
 
+                        //fist Wall
                         var wall = new THREE.Mesh(wallGeometry, wallMaterial);
                         wall.position.set(100, 50, -100);
                         scene.add(wall);
@@ -66,6 +68,7 @@
                         wall.position.set(100, 50, -100);
                         scene.add(wall);
 
+                        //second Wall
                         var wall2 = new THREE.Mesh(wallGeometry, wallMaterial);
                         wall2.position.set(-150, 50, 0);
                         wall2.rotation.y = 3.14159 / 2;
@@ -88,9 +91,9 @@
                         
                         function update()
                         {
-                        var delta = clock.getDelta();           // Sekunden
-                        var moveDistance = 200 * delta;         // 200 pixels pro Sekunde
-                        var rotateAngle = Math.PI / 2 * delta;  // Pi/2 Grad (90°) pro Sekunde
+                        var second = clock.getDelta();           // Sekunden
+                        var moveDistance = 200 * second;         // 200 pixels pro Sekunde
+                        var rotateAngle = Math.PI / 2 * second;  // Pi/2 Grad (90°) pro Sekunde
 
                         if ( keyboard.pressed("A") )
                                 cube.rotation.y += rotateAngle;
@@ -107,6 +110,33 @@
                                 cube.position.z += moveDistance;
                         }
                         
+                        
+                        function updateCollision()
+                        {
+                            document.getElementById('textarrea').innerHTML += 'Collision';
+                        }
+                        
+                        
+                        //Collision detection via Raytracing
+                        //Looking for all different Vertices 
+                        for(var verti = 0; verti <cube.geometry.vertices.length; verti++)
+                        {
+                            //Get Local Vertex, Get Global Vertex, Get Direction of moving cube
+                            var localvert = cube.geometry.vertices[verti].clone();
+                            var globalvert = localvert.applyMatrix4( cube.matrix);
+                            var directionvec = globalvert.sub(cube.position);
+                            
+                            //Creating a Ray for Raytracing an looking if there is an collision
+                            var ray = new THREE.Raycaster(cube.position.clone(), directionvec.clone().normalize());
+                            var collision = ray.intersectObject(collidableMeshList);
+                            
+                            //What happens if there is an collision
+                            if(collision.length > 0 && collision[0].distance < directionvec.length())
+                            {
+                                //Here there musst happen something
+                                updateCollision();
+                            }
+                        }
 		</script>
                 
                 
