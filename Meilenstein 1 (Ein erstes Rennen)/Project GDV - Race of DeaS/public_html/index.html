@@ -10,10 +10,13 @@
             <script src="JS/three.js"></script>
             <script src="JS/three.min.js"></script>
             <script src="js/THREEx.KeyboardState.js"></script>
+            <div id="message"></div>
+            <div id="ThreeJS" style="z-index: 2;"></div>
 		<script>
                     var keyboard = new THREEx.KeyboardState();
                     var clock = new THREE.Clock();
                     var collidableMeshList = [];
+                    var target;                 //Test Variable for Checkpoints
                     
 			//Creating a new Scene
                         scene = new THREE.Scene();
@@ -76,6 +79,22 @@
                         wall2.rotation.y = 3.14159 / 2;
                         scene.add(wall2);
                         
+                        var checkpoint1 = new THREE.Mesh(wallGeometry, wallMaterial);
+                        checkpoint1.position.set(300, 50, 50);
+                        checkpoint1.rotation.y = 3.14159/2;
+                        scene.add(checkpoint1);
+                        collidableMeshList.push(checkpoint1);
+                        
+                        var checkpoint1 = new THREE.Mesh(wallGeometry, wireMaterial);
+                        checkpoint1.position.set(300, 50, 50);
+                        checkpoint1.rotation.y = 3.14159/2;
+                        scene.add(checkpoint1);
+                        
+                        //First Target!
+                        target = checkpoint1;
+                        checkpoint1.material.color = 0xffffff;
+                        
+                        
                         
                         //Rendering the Scene
                         function render()
@@ -92,6 +111,7 @@
                         var moveDistance = 200 * delta;         // 200 pixels pro Sekunde
                         var rotateAngle = Math.PI / 2 * delta;  // Pi/2 Grad (90°) pro Sekunde
 
+                        //checkpointQuest(target);
                         if ( keyboard.pressed("A") )
                                 cube.rotation.y += rotateAngle;
                         if ( keyboard.pressed("D") )
@@ -107,6 +127,58 @@
                                 cube.position.z += moveDistance;
                         }
                         
+                        //Collision Test
+                    var Player = cube;
+                    for (var vertexIndex = 0; vertexIndex < Player.geometry.vertices.length; vertexIndex++)
+                    {       
+                        var localVertex = Player.geometry.vertices[vertexIndex].clone();
+                        var globalVertex = Player.matrix.multiplyVector3(localVertex);
+                        var directionVector = globalVertex.subSelf( Player.position );
+
+                            var ray = new THREE.Ray( Player.position, directionVector.clone().normalize() );
+                            var collisionResults = ray.intersectObjects( collidableMeshList );
+        
+                        if ( collisionResults.length > 0 && collisionResults[0].distance < directionVector.length() ) 
+                        {
+                             // a collision occurred... do something...
+                            alert("HIT");
+                        }
+                    }
+                    
+                    
+                    //Get Target for Abfrage
+                    function getTarget()
+                    {
+                        return target;
+                    }
+                    
+                    //Prototyp Checkpoint Abfrage
+                    function checkpointQuest(check)
+                    {
+                        if(Player.position = target)
+                        {
+                            target = nextTarget();
+                        }
+                    }
+                    
+                    function nextTarget()
+                    {
+                        switch(getTarget())
+                        {
+                            case checkpoint1:
+                                target = wall1;
+                                wall1.material.color = 0xffffff;
+                                checkpoint1.material.color = 0x8888ff;
+                                break;
+                            
+                            case wall1:
+                                target = checkpoint1;
+                                wall1.material.color = 0x8888ff;
+                                checkpoint1.material.color = 0xffffff;
+                                break;
+                        }
+                    }
+
 		</script>
                 
                 
