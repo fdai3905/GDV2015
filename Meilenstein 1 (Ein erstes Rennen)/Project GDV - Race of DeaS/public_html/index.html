@@ -1,20 +1,25 @@
 <html>
 	<head>
 		<title>Race of DeaS</title>
+                <meta charset="utf-8">
+                <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 		<style>
 			body { margin: 0; }
 			canvas { width: 100%; height: 100% }
 		</style>
 	</head>
 	<body>
-            <div id="textarrea"> </div>
+            <div id="textarrea"> Test</div>
             <script src="JS/three.js"></script>
             <script src="JS/three.min.js"></script>
             <script src="js/THREEx.KeyboardState.js"></script>
+            <script src="JS/OrbitControls.js"></script>
 		<script>
                     var keyboard = new THREEx.KeyboardState();
                     var clock = new THREE.Clock();
                     var collidableMeshList = [];
+                    var arrowList = [];
+                    var directionList = [];
                     
 			//Creating a new Scene
                         scene = new THREE.Scene();
@@ -45,7 +50,6 @@
                         
                         //Add a cube
                         var geometry = new THREE.BoxGeometry(50,50,50);
-
                         var material = new THREE.MeshBasicMaterial({color:0x00ff00});
                         var cube = new THREE.Mesh(geometry,material);
                         cube.position.set(0, 25.1, 0);
@@ -110,7 +114,7 @@
                                 cube.position.z += moveDistance;
                         }
                         
-                        
+                        //Output: Information when there is an Collision
                         function updateCollision()
                         {
                             document.getElementById('textarrea').innerHTML += 'Collision';
@@ -128,7 +132,7 @@
                             
                             //Creating a Ray for Raytracing an looking if there is an collision
                             var ray = new THREE.Raycaster(cube.position.clone(), directionvec.clone().normalize());
-                            var collision = ray.intersectObject(collidableMeshList);
+                            var collision = ray.intersectObjects(collidableMeshList);
                             
                             //What happens if there is an collision
                             if(collision.length > 0 && collision[0].distance < directionvec.length())
