@@ -12,140 +12,162 @@
             <script src="js/THREEx.KeyboardState.js"></script>
             <div id="message"></div>
             <div id="ThreeJS" style="z-index: 2;"></div>
-		<script>
-                    var keyboard = new THREEx.KeyboardState();
-                    var clock = new THREE.Clock();
-                    var collidableMeshList = [];
-                    var target;                 //Test Variable for Checkpoints
+		<script>            
+            var keyboard = new THREEx.KeyboardState();
+            var clock = new THREE.Clock();
+            var collidableMeshList = [];
+            var arrowList = [];
+            var directionList = [];
+            var scene, camera, renderer, cube;
+            var target;                 //Test Variable for Checkpoints
+
+            function init()
+            {
+                //Creating a new Scene
+                scene = new THREE.Scene();
+
+                //Creating a new Camera
+                {
+                camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 20000);
+                scene.add(camera);
+                camera.position.set(0,400,80);
+                camera.lookAt(scene.position);
+                }
+
+                //Creating a new Renderer
+                {
+                renderer = new THREE.WebGLRenderer();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                document.body.appendChild(renderer.domElement);
+                }
+
+                //FLOOR
+                {
+                var floorMaterial = new THREE.MeshBasicMaterial( {color:0x444444, side:THREE.DoubleSide} );
+                var floorGeometry = new THREE.PlaneGeometry(1000, 1000, 10, 10);
+                var floor = new THREE.Mesh(floorGeometry, floorMaterial);
+                floor.position.y = -0.5;
+                floor.rotation.x = Math.PI / 2;
+                scene.add(floor);
+                }
+
+
+                //Add a cube
+                {
+                var geometry = new THREE.BoxGeometry(50,50,50);
+                var material = new THREE.MeshBasicMaterial({color:0x00ff00});
+                cube = new THREE.Mesh(geometry,material);
+                cube.position.set(0, 25.1, 0);
+                scene.add(cube);
+                }
+
+                //camera.position.z = 7;
+
+
+                //2 Walls
+                {
+                var wallGeometry = new THREE.CubeGeometry( 100, 100, 20, 1, 1, 1 );
+                var wallMaterial = new THREE.MeshBasicMaterial( {color: 0x8888ff} );
+                var wireMaterial = new THREE.MeshBasicMaterial( { color: 0x000000, wireframe:true } );
+
+                //fist Wall
+                var wall = new THREE.Mesh(wallGeometry, wallMaterial);
+                wall.position.set(100, 50, -100);
+                scene.add(wall);
+                collidableMeshList.push(wall);
+                var wall = new THREE.Mesh(wallGeometry, wireMaterial);
+                wall.position.set(100, 50, -100);
+                scene.add(wall);
+
+                //second Wall
+                var wall2 = new THREE.Mesh(wallGeometry, wallMaterial);
+                wall2.position.set(-150, 50, 0);
+                wall2.rotation.y = 3.14159 / 2;
+                scene.add(wall2);
+                collidableMeshList.push(wall2);
+                var wall2 = new THREE.Mesh(wallGeometry, wireMaterial);
+                wall2.position.set(-150, 50, 0);
+                wall2.rotation.y = 3.14159 / 2;
+                scene.add(wall2);
+                
+                var checkpoint1 = new THREE.Mesh(wallGeometry, wallMaterial);
+                checkpoint1.position.set(300, 50, 50);
+                checkpoint1.rotation.y = 3.14159/2;
+                scene.add(checkpoint1);
+                collidableMeshList.push(checkpoint1);
+
+                var checkpoint1 = new THREE.Mesh(wallGeometry, wireMaterial);
+                checkpoint1.position.set(300, 50, 50);
+                checkpoint1.rotation.y = 3.14159/2;
+                scene.add(checkpoint1);
+                        
+                //First Target!
+                target = checkpoint1;
+                checkpoint1.material.color = 0xffffff;
+                }
+            }
+
+            init();
+            
+                //Rendering the Scene
+                function render()
+                {
+                    requestAnimationFrame(render);
+                    update();
+                    renderer.render(scene, camera);
+                }
+                render();
+
+                function update()
+                {
+                var second = clock.getDelta();           // Sekunden
+                var moveDistance = 200 * second;         // 200 pixels pro Sekunde
+                var rotateAngle = Math.PI / 2 * second;  // Pi/2 Grad (90°) pro Sekunde
+
+                //checkpointQuest(target);
+                if ( keyboard.pressed("A") )
+                        cube.rotation.y += rotateAngle;
+                if ( keyboard.pressed("D") )
+                        cube.rotation.y -= rotateAngle;
+
+                if ( keyboard.pressed("left") )
+                        cube.position.x -= moveDistance;
+                if ( keyboard.pressed("right") )
+                        cube.position.x += moveDistance;
+                if ( keyboard.pressed("up") )
+                        cube.position.z -= moveDistance;
+                if ( keyboard.pressed("down") )
+                        cube.position.z += moveDistance;
+                }
                     
-			//Creating a new Scene
-                        scene = new THREE.Scene();
-                        
-                        
-                        //Creating a new Camera
-                        camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 20000);
-                        scene.add(camera);
-                        camera.position.set(0,400,80);
-                        camera.lookAt(scene.position);
-                        
-                        
-                        //Creating a new Renderer
-                        var renderer = new THREE.WebGLRenderer();
-                        renderer.setSize(window.innerWidth, window.innerHeight);
-                        document.body.appendChild(renderer.domElement);
-                        
-                        
-                        //FLOOR
-                        var floorMaterial = new THREE.MeshBasicMaterial( {color:0x444444, side:THREE.DoubleSide} );
-                        var floorGeometry = new THREE.PlaneGeometry(1000, 1000, 10, 10);
-                        var floor = new THREE.Mesh(floorGeometry, floorMaterial);
-                        floor.position.y = -0.5;
-                        floor.rotation.x = Math.PI / 2;
-                        scene.add(floor);
+                    //Output: Information when there is an Collision
+                function updateCollision()
+                {
+                    document.getElementById('textarrea').innerHTML += 'Collision';
+                }
 
-                     
-                        
-                        //Add a cube
-                        var geometry = new THREE.BoxGeometry(50,50,50);
 
-                        var material = new THREE.MeshBasicMaterial({color:0x00ff00});
-                        var cube = new THREE.Mesh(geometry,material);
-                        cube.position.set(0, 25.1, 0);
-                        scene.add(cube);
-                        
-                        camera.position.z = 7;
+                //Collision detection via Raytracing
+                //Looking for all different Vertices 
+                for(var verti = 0; verti <cube.geometry.vertices.length; verti++)
+                {
+                    //Get Local Vertex, Get Global Vertex, Get Direction of moving cube
+                    var localvert = cube.geometry.vertices[verti].clone();
+                    var globalvert = localvert.applyMatrix4( cube.matrix);
+                    var directionvec = globalvert.sub(cube.position);
 
-                        
-                        //2 Walls
-                        var wallGeometry = new THREE.CubeGeometry( 100, 100, 20, 1, 1, 1 );
-                        var wallMaterial = new THREE.MeshBasicMaterial( {color: 0x8888ff} );
-                        var wireMaterial = new THREE.MeshBasicMaterial( { color: 0x000000, wireframe:true } );
+                    //Creating a Ray for Raytracing an looking if there is an collision
+                    var ray = new THREE.Raycaster(cube.position.clone(), directionvec.clone().normalize());
+                    var collision = ray.intersectObjects(collidableMeshList);
 
-                        var wall = new THREE.Mesh(wallGeometry, wallMaterial);
-                        wall.position.set(100, 50, -100);
-                        scene.add(wall);
-                        collidableMeshList.push(wall);
-                        var wall = new THREE.Mesh(wallGeometry, wireMaterial);
-                        wall.position.set(100, 50, -100);
-                        scene.add(wall);
-
-                        var wall2 = new THREE.Mesh(wallGeometry, wallMaterial);
-                        wall2.position.set(-150, 50, 0);
-                        wall2.rotation.y = 3.14159 / 2;
-                        scene.add(wall2);
-                        collidableMeshList.push(wall2);
-                        var wall2 = new THREE.Mesh(wallGeometry, wireMaterial);
-                        wall2.position.set(-150, 50, 0);
-                        wall2.rotation.y = 3.14159 / 2;
-                        scene.add(wall2);
-                        
-                        var checkpoint1 = new THREE.Mesh(wallGeometry, wallMaterial);
-                        checkpoint1.position.set(300, 50, 50);
-                        checkpoint1.rotation.y = 3.14159/2;
-                        scene.add(checkpoint1);
-                        collidableMeshList.push(checkpoint1);
-                        
-                        var checkpoint1 = new THREE.Mesh(wallGeometry, wireMaterial);
-                        checkpoint1.position.set(300, 50, 50);
-                        checkpoint1.rotation.y = 3.14159/2;
-                        scene.add(checkpoint1);
-                        
-                        //First Target!
-                        target = checkpoint1;
-                        checkpoint1.material.color = 0xffffff;
-                        
-                        
-                        
-                        //Rendering the Scene
-                        function render()
-                        {
-                            requestAnimationFrame(render);
-                            update();
-                            renderer.render(scene, camera);
-                        }
-                        render();
-                        
-                        function update()
-                        {
-                        var delta = clock.getDelta();           // Sekunden
-                        var moveDistance = 200 * delta;         // 200 pixels pro Sekunde
-                        var rotateAngle = Math.PI / 2 * delta;  // Pi/2 Grad (90°) pro Sekunde
-
-                        //checkpointQuest(target);
-                        if ( keyboard.pressed("A") )
-                                cube.rotation.y += rotateAngle;
-                        if ( keyboard.pressed("D") )
-                                cube.rotation.y -= rotateAngle;
-
-                        if ( keyboard.pressed("left") )
-                                cube.position.x -= moveDistance;
-                        if ( keyboard.pressed("right") )
-                                cube.position.x += moveDistance;
-                        if ( keyboard.pressed("up") )
-                                cube.position.z -= moveDistance;
-                        if ( keyboard.pressed("down") )
-                                cube.position.z += moveDistance;
-                        }
-                        
-                        //Collision Test
-                    var Player = cube;
-                    for (var vertexIndex = 0; vertexIndex < Player.geometry.vertices.length; vertexIndex++)
-                    {       
-                        var localVertex = Player.geometry.vertices[vertexIndex].clone();
-                        var globalVertex = Player.matrix.multiplyVector3(localVertex);
-                        var directionVector = globalVertex.subSelf( Player.position );
-
-                            var ray = new THREE.Ray( Player.position, directionVector.clone().normalize() );
-                            var collisionResults = ray.intersectObjects( collidableMeshList );
-        
-                        if ( collisionResults.length > 0 && collisionResults[0].distance < directionVector.length() ) 
-                        {
-                             // a collision occurred... do something...
-                            alert("HIT");
-                        }
+                    //What happens if there is an collision
+                    if(collision.length > 0 && collision[0].distance < directionvec.length())
+                    {
+                        //Here there musst happen something
+                        updateCollision();
                     }
-                    
-                    
+                }
+                
                     //Get Target for Abfrage
                     function getTarget()
                     {
@@ -178,9 +200,9 @@
                                 break;
                         }
                     }
+                    
+                    
 
 		</script>
-                
-                
 	</body>
 </html>
