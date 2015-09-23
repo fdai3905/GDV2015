@@ -2,7 +2,7 @@
     <head>
             <title>Race of DeaS</title>
             <meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+            <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
             <style>
                     body { margin: 0; }
                     canvas { width: 100%; height: 100% }
@@ -14,7 +14,7 @@
         <script src="JS/three.min.js"></script>
         <script src="js/THREEx.KeyboardState.js"></script>
         <!--   Creating div, for different informations-->
-        <div id="message"></div>
+        <div id="textarea"></div>
         <div id="ThreeJS" style="z-index: 2;"></div>
         
         <!-- Script for the Game  -->
@@ -31,6 +31,8 @@
         var keyboard = new THREEx.KeyboardState();
         var clock = new THREE.Clock();
         var collidableMeshList = [];
+        var arrowList = [];
+        var directionList = [];
         var scene, camera, renderer, cube;
         var target;                 
 
@@ -74,6 +76,7 @@
             cube = new THREE.Mesh(geometry,material);
             cube.position.set(0, 25.1, 0);
             scene.add(cube);
+            //camera.position.z = 7;
             }
 
             //2 Walls
@@ -109,7 +112,7 @@
             scene.add(checkpoint1);
             collidableMeshList.push(checkpoint1);
 
-            //Creating Checkpoint 2
+            //Creating Checkpoint 1 WireVersion
             var checkpoint1 = new THREE.Mesh(wallGeometry, wireMaterial);
             checkpoint1.position.set(300, 50, 50);
             checkpoint1.rotation.y = 3.14159/2;
@@ -126,15 +129,18 @@
         //Rendering the Scene
         function render()
         {
+            requestAnimationFrame(render);
+            update();
             renderer.render(scene, camera);
         }
+        render();
 
         //Function animate for running the game. Lokking that the scene is 
         //rendered and that the movement happens
         function animate()
         {
-            render();
-            update();
+            //render();
+            //update();
         }
 
         //Function update for the movement and the collisiondetection
@@ -158,7 +164,7 @@
                     cube.position.z -= moveDistance;
             if ( keyboard.pressed("down") )
                     cube.position.z += moveDistance;
-                
+              
             //Collision detection via Raytracing
             //Looking for all different Vertices 
             for(var verti = 0; verti <cube.geometry.vertices.length; verti++)
@@ -175,7 +181,7 @@
                 //What happens if there is an collision
                 if(collision.length > 0 && collision[0].distance < directionvec.length())
                 {
-                    //Here there musst happen something
+                    clearText();  
                     updateCollision();
                 }
             }
@@ -185,14 +191,14 @@
         //and in HTML
         function updateCollision()
         {
-            document.getElementById('textarrea').innerHTML += 'Collision';
+            document.getElementById('textarea').innerHTML = '...Collision';
             console.log("Collision");
         }
 
-
-
-
-
+        function clearText()
+        {
+            document.getElementById('textarea').innerHTML = '...';
+        }
 
                 //Get Target for Abfrage
                 function getTarget()
