@@ -27,14 +27,19 @@
         // camera -- The Name says itself, the camera
         // renderer -- For rendering the complete Scene
         // cube -- Now a cube, but later the car
+        // wall1 / wall2 -- The two test-walls for collisiondetection
         // target -- Test Variable for Checkpoints
+        // checkpoint1 -- First try for a checkpoint
         var keyboard = new THREEx.KeyboardState();
         var clock = new THREE.Clock();
         var collidableMeshList = [];
+        var checkpointMeshList = [];
         var arrowList = [];
         var directionList = [];
         var scene, camera, renderer, cube;
-        var target;                 
+        var wall, wall2;
+        var target;  
+        var checkpoint;
 
         //Function for Creating the World, getting a scene, a camera, the
         //test-walls, the floor and our test-cube.
@@ -72,7 +77,7 @@
             //Add a cube
             {
             var geometry = new THREE.BoxGeometry(50,50,50);
-            var material = new THREE.MeshBasicMaterial({color:0x00ff00});
+            var material = new THREE.MeshBasicMaterial({color:0x0000ff});
             cube = new THREE.Mesh(geometry,material);
             cube.position.set(0, 25.1, 0);
             scene.add(cube);
@@ -82,45 +87,46 @@
             //2 Walls
             {
             var wallGeometry = new THREE.CubeGeometry( 100, 100, 20, 1, 1, 1 );
-            var wallMaterial = new THREE.MeshBasicMaterial( {color: 0x8888ff} );
+            var wallMaterial = new THREE.MeshBasicMaterial( {color: 0xff0000} );
             var wireMaterial = new THREE.MeshBasicMaterial( { color: 0x000000, wireframe:true } );
+            var wallMaterial2 = new THREE.MeshBasicMaterial( { color: 0x00ff00});
 
             //fist Wall
-            var wall = new THREE.Mesh(wallGeometry, wallMaterial);
+            wall = new THREE.Mesh(wallGeometry, wallMaterial);
             wall.position.set(100, 50, -100);
             scene.add(wall);
             collidableMeshList.push(wall);
-            var wall = new THREE.Mesh(wallGeometry, wireMaterial);
+            wall = new THREE.Mesh(wallGeometry, wireMaterial);
             wall.position.set(100, 50, -100);
             scene.add(wall);
 
             //second Wall
-            var wall2 = new THREE.Mesh(wallGeometry, wallMaterial);
+            wall2 = new THREE.Mesh(wallGeometry, wallMaterial);
             wall2.position.set(-150, 50, 0);
             wall2.rotation.y = 3.14159 / 2;
             scene.add(wall2);
             collidableMeshList.push(wall2);
-            var wall2 = new THREE.Mesh(wallGeometry, wireMaterial);
+            wall2 = new THREE.Mesh(wallGeometry, wireMaterial);
             wall2.position.set(-150, 50, 0);
             wall2.rotation.y = 3.14159 / 2;
             scene.add(wall2);
 
             //Creating Checkpoint 1
-            var checkpoint1 = new THREE.Mesh(wallGeometry, wallMaterial);
+            checkpoint1 = new THREE.Mesh(wallGeometry, wallMaterial);
             checkpoint1.position.set(300, 50, 50);
             checkpoint1.rotation.y = 3.14159/2;
             scene.add(checkpoint1);
-            collidableMeshList.push(checkpoint1);
+            checkpointMeshList.push(checkpoint1);
 
             //Creating Checkpoint 1 WireVersion
-            var checkpoint1 = new THREE.Mesh(wallGeometry, wireMaterial);
-            checkpoint1.position.set(300, 50, 50);
-            checkpoint1.rotation.y = 3.14159/2;
-            scene.add(checkpoint1);
+            checkpointWire = new THREE.Mesh(wallGeometry, wireMaterial);
+            checkpointWire.position.set(300, 50, 50);
+            checkpointWire.rotation.y = 3.14159/2;
+            scene.add(checkpointWire);
 
             //First Target!
             target = checkpoint1;
-            checkpoint1.material.color = 0xffffff;
+            checkpoint1.material = wallMaterial2;
             }
         }
 
@@ -134,13 +140,42 @@
             renderer.render(scene, camera);
         }
         render();
-
-        //Function animate for running the game. Lokking that the scene is 
-        //rendered and that the movement happens
-        function animate()
+            
+        // Information when there is an Collision getting out on console
+        //and in HTML
+        function updateCollision()
         {
-            //render();
-            //update();
+            document.getElementById('textarea').innerHTML = '...Collision';
+            console.log("Collision");
+        }
+
+        function clearText()
+        {
+            document.getElementById('textarea').innerHTML = '...';
+        }
+
+
+        function nextTarget()
+        {
+            
+            switch(target)
+            {
+                case checkpoint1:
+                    console.log("checkpoint");
+                    checkpointMeshList[0] = wall;
+                    target = wall;
+                    wall.material = new THREE.MeshBasicMaterial( { color: 0x00ff00});
+                    checkpoint1.material = new THREE.MeshBasicMaterial( { color: 0xff0000});
+                    break;
+
+                case wall:
+                    console.log("checkpoint wall");
+                    checkpointMeshList[0] = checkpoint1;
+                    target = checkpoint1;
+                    wall.material = new THREE.MeshBasicMaterial( { color: 0xff0000});
+                    checkpoint1.material = new THREE.MeshBasicMaterial( { color: 0x00ff00});
+                    break;
+            }
         }
 
         //Function update for the movement and the collisiondetection
@@ -150,7 +185,6 @@
             var moveDistance = 200 * second;         // 200 pixels pro Sekunde
             var rotateAngle = Math.PI / 2 * second;  // Pi/2 Grad (90°) pro Sekunde
 
-            //checkpointQuest(target);
             if ( keyboard.pressed("A") )
                     cube.rotation.y += rotateAngle;
             if ( keyboard.pressed("D") )
@@ -169,6 +203,7 @@
             //Looking for all different Vertices 
             for(var verti = 0; verti <cube.geometry.vertices.length; verti++)
             {
+                
                 //Get Local Vertex, Get Global Vertex, Get Direction of moving cube
                 var localvert = cube.geometry.vertices[verti].clone();
                 var globalvert = localvert.applyMatrix4( cube.matrix);
@@ -177,6 +212,7 @@
                 //Creating a Ray for Raytracing an looking if there is an collision
                 var ray = new THREE.Raycaster(cube.position.clone(), directionvec.clone().normalize());
                 var collision = ray.intersectObjects(collidableMeshList);
+                var checkcollision = ray.intersectObjects(checkpointMeshList);
 
                 //What happens if there is an collision
                 if(collision.length > 0 && collision[0].distance < directionvec.length())
@@ -184,56 +220,13 @@
                     clearText();  
                     updateCollision();
                 }
+                if(checkcollision.length > 0 && checkcollision[0].distance < directionvec.length())
+                {
+                    console.log(checkcollision);
+                    nextTarget();
+                }
             }
         }
-            
-        // Information when there is an Collision getting out on console
-        //and in HTML
-        function updateCollision()
-        {
-            document.getElementById('textarea').innerHTML = '...Collision';
-            console.log("Collision");
-        }
-
-        function clearText()
-        {
-            document.getElementById('textarea').innerHTML = '...';
-        }
-
-                //Get Target for Abfrage
-                function getTarget()
-                {
-                    return target;
-                }
-
-                //Prototyp Checkpoint Abfrage
-                function checkpointQuest(check)
-                {
-                    if(Player.position = target)
-                    {
-                        target = nextTarget();
-                    }
-                }
-
-                function nextTarget()
-                {
-                    switch(getTarget())
-                    {
-                        case checkpoint1:
-                            target = wall1;
-                            wall1.material.color = 0xffffff;
-                            checkpoint1.material.color = 0x8888ff;
-                            break;
-
-                        case wall1:
-                            target = checkpoint1;
-                            wall1.material.color = 0x8888ff;
-                            checkpoint1.material.color = 0xffffff;
-                            break;
-                    }
-                }
-
-
 
             </script>
     </body>
