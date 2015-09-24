@@ -53,9 +53,8 @@
             //Creating a new Camera
             {
                 camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 20000);
-                scene.add(camera);
-                camera.position.set(0,400,80);
-                camera.lookAt(scene.position);
+                camera.position.z = 125;
+                camera.position.y = 50;
             }
 
             //Creating a new Renderer
@@ -84,6 +83,7 @@
                 cube = new THREE.Mesh(geometry,material);
                 cube.position.set(spawnX, 25.1, spawnZ);
                 scene.add(cube);
+                cube.add(camera);
             }
 
             //2 Walls
