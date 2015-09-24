@@ -1,2 +1,10 @@
 30.06.2015
 - First Version of "Hello World" Three.js
+
+23.09.2015
+- Collisions detection full functional
+
+24.09.2015
+- Checkpoint detection full functional
+- Respawn added
+- 3rd Person Follower Camera added
