@@ -42,6 +42,7 @@
         var checkpoint;
         var spawnX, spawnZ;
         var distance;
+        var controls; 
 
         //Function for Creating the World, getting a scene, a camera, the
         //test-walls, the floor and our test-cube.
@@ -59,6 +60,12 @@
                 camera.lookAt(scene.position);
             }
 
+            //Creating Controls
+            {
+                controls = new THREE.FirstPersonControls(cube);
+                controls.movementSpeed = 10000;
+                controls.activeLook = false;
+            }
             //Creating a new Renderer
             {
                 renderer = new THREE.WebGLRenderer();
@@ -139,6 +146,7 @@
         function render()
         {
             requestAnimationFrame(render);
+            controls.update(clock.getDelta());
             update();
             renderer.render(scene, camera);
         }
@@ -188,75 +196,83 @@
         //Function update for the movement and the collisiondetection
         function update()
         {
+            detectCollision(); 
+        }
+        
+        //Function for Collision detection!...
+        function detectCollision()
+        {
             var second = clock.getDelta();           // Sekunden
             var moveDistance = 200 * second;         // 200 pixels pro Sekunde
             var rotateAngle = Math.PI / 2 * second;  // Pi/2 Grad (90°) pro Sekunde
 
-                if ( keyboard.pressed("A") )
-                {
-                    cube.rotation.y += rotateAngle;
-                }
-                if ( keyboard.pressed("D") )
-                {
-                    cube.rotation.y -= rotateAngle;
-                }
-
-                if ( keyboard.pressed("left") )
-                {
-                    cube.position.x -= moveDistance;
-                }
-                if ( keyboard.pressed("right") )
-                {
-                    cube.position.x += moveDistance;
-                }
-                if ( keyboard.pressed("up") )
-                {
-                    cube.position.z -= moveDistance;
-                }
-                if ( keyboard.pressed("down") )
-                {
-                    cube.position.z += moveDistance;
-                }
+            var x,z;
+            //Controlls
+            /*if ( keyboard.pressed("A") )
+            {
+                cube.rotation.y += rotateAngle;
+            }
+            if ( keyboard.pressed("D") )
+            {
+                cube.rotation.y -= rotateAngle;
+            }*/
+            if ( controls.moveLeft )
+            {
+                //cube.position.x -= moveDistance;
+                z = 1;
+            }
+            if ( controls.moveRight )
+            {
+                //cube.position.x += moveDistance;
+                z = -1;
+            }
+            if ( controls.moveBackward )
+            {
+                //cube.position.z -= moveDistance;
+                x = 1;
+            }
+            if ( controls.moveForward )
+            {
+                //cube.position.z += moveDistance;
+                x = -1;
+            }
                 
                 if ( keyboard.pressed("R") )
                 {
                     cube.position.x = spawnX;
                     cube.position.z = spawnZ;
                 }
-           
-            //Collision detection via Raytracing
-            //Looking for all different Vertices 
-            for(var verti = 0; verti <cube.geometry.vertices.length; verti++)
-            {
                 
-                //Get Local Vertex, Get Global Vertex, Get Direction of moving cube
-                var localvert = cube.geometry.vertices[verti].clone();
-                var globalvert = localvert.applyMatrix4( cube.matrix);
-                var directionvec = globalvert.sub(cube.position);
-
-                //Creating a Ray for Raytracing an looking if there is an collision
-                var ray = new THREE.Raycaster(cube.position.clone(), directionvec.clone().normalize());
-                var collision = ray.intersectObjects(collidableMeshList);
-                var checkcollision = ray.intersectObjects(checkpointMeshList);
-                var distance = 32;
-                //What happens if there is an collision
-                if(collision.length > 0 && collision[0].distance < directionvec.length())
+                
+            var vector = new THREE.Vector3()
+                    //cube.position.clone().sub(cube.position).normalize();
+            var ray = new THREE.Ray(cube.position, vector);
+            
+            /*
+            var localvert = cube.geometry.vertices[verti].clone();
+            var globalvert = localvert.applyMatrix4( cube.matrix);
+            var directionvec = globalvert.sub(cube.position);    
+        */
+            var intersects = ray.intersectObjects(collidableMeshList);
+            if(intersects.length > 0)
+            {
+                if(intersects[0].distance < 50)
                 {
-                    clearText();  
-                    updateCollision();
-                    ray.set(cube.position.clone(), directionvec.clone().normalize());
-                    if ((verti === 0 || verti === 1 || verti === 7) && cube.direction.z === 1) { cube.direction.setZ(0); } else if ((verti === 3 || verti === 4 || verti === 5) && cube.direction.z === -1) { cube.direction.setZ(0); }
-                    if ((verti === 1 || verti === 2 || verti === 3) && cube.direction.x === 1) { cube.direction.setX(0); } else if ((verti === 5 || verti === 6 || verti === 7) && cube.direction.x === -1) { cube.direction.setX(0); }
-                    
-                    
-                }
-                if(checkcollision.length > 0 && checkcollision[0].distance < directionvec.length())
-                {
-                    console.log(checkcollision);
-                    nextTarget();
+                    console.log(intersects);
+                    if (z == 1) controls.moveLeft = false;
+                    if (z == -1) controls.moveRight = false;
+                    if (x == 1) controls.moveBackward = false;
+                    if (x == -1) controls.moveForward = false;
                 }
             }
-        }
+
+            var checkcollision = ray.intersectObjects(checkpointMeshList);
+            if(checkcollision.length > 0 && checkcollision[0].distance < directionvec.length())
+            {
+                console.log(checkcollision);
+                nextTarget();
+            }
+         }
 
             </script>
     </body>

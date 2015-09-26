@@ -12,4 +12,4 @@ Im Fall eines Zusammenstoﬂes soll das getroffene Objekt entweder weggeschleudert
 
 Eine wichtige Grundfunktion ist eine Respawn Funktion, die den Fahrer, bei bet‰tigung am letzten Checkpoint respawnen l‰sst.
 
-Status: 0%
+Status: 50%

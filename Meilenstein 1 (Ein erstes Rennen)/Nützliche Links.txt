@@ -1,22 +1,32 @@
-ï»¿Die Doc von three.js
-Unter anderem auch mit Anleitung fÃ¼r erste Grundlagen
+Die Doc von three.js
+Unter anderem auch mit Anleitung für erste Grundlagen
 
 http://threejs.org/docs/index.html#Manual/Introduction/Creating_a_scene
 
 
-Ein Ã¤hnliches Konzept wie wir es planen...
-evtl. kann man sich hier einige Tipps bzw. auch LÃ¶sungsansÃ¤tze anschauen
+Ein ähnliches Konzept wie wir es planen...
+evtl. kann man sich hier einige Tipps bzw. auch Lösungsansätze anschauen
 
 http://matthiasschuetz.com/three-basicthirdpersongame/
 
 
-Weitere VorschlÃ¤ge immer gerne hier eintragen...
+Weitere Vorschläge immer gerne hier eintragen...
 
 Ein 3D-Game "Pong" mit KI-Reaktion
 http://buildnewgames.com/webgl-threejs/
 
-(Dieses Dokument wird in die weiteren Meilensteine mit Ã¼bernommen) 
+(Dieses Dokument wird in die weiteren Meilensteine mit übernommen) 
 
 
 Blender-Models nutzen:
 http://www.3d-ring.de/3d/forum.php?post_id=15341
+
+
+Code Beispiele Stück für Stück...
+für Fahrzeugsteuerung bzw. Solide Wände, an die NICHT durch gerauscht wird.
+
+Steuerung
+http://japhr.blogspot.de/2012/07/threejs-first-person-controls.html
+
+Collisions Blockade
+http://japhr.blogspot.de/2012/07/fencing-my-threejs-avatar-in-with.html
