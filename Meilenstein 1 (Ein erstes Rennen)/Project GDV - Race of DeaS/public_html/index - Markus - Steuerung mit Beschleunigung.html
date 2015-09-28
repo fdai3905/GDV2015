@@ -22,14 +22,10 @@
         // Global Variables
         // keyboard -- For getting the pressed Keys from Keyboard
         // clock    -- For getting the Time, for calculating speed per second
-        // collidableMeshList -- All Meshes, that could be hit by the "car"
         // scene -- The complete Scene in where the game happens
         // camera -- The Name says itself, the camera
         // renderer -- For rendering the complete Scene
         // cube -- Now a cube, but later the car
-        // wall1 / wall2 -- The two test-walls for collisiondetection
-        // target -- Test Variable for Checkpoints
-        // checkpoint1 -- First try for a checkpoint
         var keyboard = new THREEx.KeyboardState();
         var clock = new THREE.Clock();
         var arrowList = [];
@@ -37,7 +33,7 @@
         var spawnX, spawnZ;
 
         //Function for Creating the World, getting a scene, a camera, the
-        //test-walls, the floor and our test-cube.
+        //the floor and our test-cube.
         //Also Creating a Renderer with WebGL
         function init()
         {
@@ -82,12 +78,11 @@
         }
 
         init();
-
         //Function update for the movement
         function update()
         {
             var second = clock.getDelta();           // Sekunden
-            var moveDistance = 750 * second;         // 200 pixels pro Sekunde
+            var moveDistance = 100 * (clock.getElapsedTime() / 50);         // 200 pixels pro Sekunde
             var rotateAngle = Math.PI / 2 * second;  // Pi/2 Grad (90°) pro Sekunde
 
                 if ( keyboard.pressed("left") || keyboard.pressed("a"))
@@ -100,20 +95,26 @@
                 }
                 if ( keyboard.pressed("up") || keyboard.pressed("w"))
                 {
+					clock.start();
 					cube.translateZ (-moveDistance);
                 }
-                if ( keyboard.pressed("down") || keyboard.pressed("s"))
+				else if ( keyboard.pressed("down") || keyboard.pressed("s"))
                 {
+					clock.start();
                     cube.translateZ (+moveDistance);
-                }
-                
+                }    
+				else {
+					clock.stop ();
+					clock.elapsedTime= 0;
+				}
                 if ( keyboard.pressed("R") )
                 {
                     cube.position.x = spawnX;
                     cube.position.z = spawnZ;
                 }
-				
 		}
+		
+		
 		
 		//Rendering the Scene
         function render()
