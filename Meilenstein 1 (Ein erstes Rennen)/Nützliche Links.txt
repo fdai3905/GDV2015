@@ -20,3 +20,7 @@ http://buildnewgames.com/webgl-threejs/
 
 Blender-Models nutzen:
 http://www.3d-ring.de/3d/forum.php?post_id=15341
+
+
+Viele Beispiele für alles mögliche:
+http://stemkoski.github.io/Three.js/#keyboard-events
