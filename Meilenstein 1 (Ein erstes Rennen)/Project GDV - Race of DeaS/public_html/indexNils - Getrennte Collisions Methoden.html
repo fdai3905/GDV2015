@@ -334,24 +334,10 @@ function nextTarget()
 						
 					document.addEventListener ("keyup", keyUpw, false);
 					function keyUpw (w) {
-						if (w.keyCode == "87") {
+						if (w.keyCode === "87") {
 							acc_clock.elapsedTime = 0;
 						}
 					}
-						
-						/*	document.addEventListener ("keyup", keyUp, false);
-						function keyUp (w) {
-							if (w.keyCode == "87") {
-								acc_clock.stop ();
-								br_clock.start ();
-								while (acc_clock.elapsedTime >= br_clock.getElapsedTime ()) {
-									cube.translateZ (- (100 * ((acc_clock.elapsedTime - br_clock.getElapsedTime ()) / 10)));
-								}
-								br_clock.stop ();
-								br_clock.elapsedTime = 0;
-								
-							}
-						} 	*/
 				}
 				
 			else if (keyboard.pressed ("s"))
@@ -375,7 +361,7 @@ function nextTarget()
 					
 				document.addEventListener ("keyup", keyUps, false);
 				function keyUps (s) {
-					if (s.keyCode == "83") {
+					if (s.keyCode === "83") {
 						acc_clock.elapsedTime = 0;
 					}
 				}
@@ -398,15 +384,21 @@ function nextTarget()
             }
               
             //Round Counter
-            if(round == 4)
+            if(round === 4)
             {
                 console.log("Race Won!");
                 document.getElementById('textarea').innerHTML = 'You Won!';
             }
-
-            for(var verti = 0; verti <cube.geometry.vertices.length; verti++)
+            
+            detectCollisionWall();
+            detectCollisionCheckPoint();
+ 
+        }
+        
+        function detectCollisionWall()
+        {
+            for(var verti = 0; verti < cube.geometry.vertices.length; verti++)
             {
-                //Get Local Vertex, Get Global Vertex, Get Direction of moving cube
                 var localvert = cube.geometry.vertices[verti].clone();
                 var globalvert = localvert.applyMatrix4( cube.matrix);
                 var directionvec = globalvert.sub(cube.position);
@@ -414,53 +406,31 @@ function nextTarget()
                 //Creating a Ray for Raytracing an looking if there is an collision
                 var ray = new THREE.Raycaster(cube.position.clone(), directionvec.clone().normalize());
                 var collision = ray.intersectObjects(collidableMeshList);
-                
-                //What happens if there is an collision
+
                 if(collision.length > 0 && collision[0].distance < directionvec.length())
                 {
                     clearText();  
                     updateCollision();
                 }
             }
-            detectCollision();
         }
         
-        function detectCollision()
+        function detectCollisionCheckPoint()
         {
-            //Collision detection via Raytracing
-            //Looking for all different Vertices 
-            for(var verti = 0; verti <checkpoint8.geometry.vertices.length; verti++)
+            for(var verti = 0; verti <cube.geometry.vertices.length; verti++)
             {
-                //Get Local Vertex, Get Global Vertex, Get Direction of moving cube
-                var localvert = checkpoint8.geometry.vertices[verti].clone();
-                var globalvert = localvert.applyMatrix4( checkpoint8.matrix);
-                var directionvec = globalvert.sub(checkpoint8.position);
+                var localvert = cube.geometry.vertices[verti].clone();
+                var globalvert = localvert.applyMatrix4( cube.matrix);
+                var directionvec = globalvert.sub(cube.position);
 
                 //Creating a Ray for Raytracing an looking if there is an collision
-                var ray = new THREE.Raycaster(checkpoint8.position.clone(), directionvec.clone().normalize());
-                var checkcollision = ray.intersectObjects(cube);
-                
-                if(checkcollision.length > 0 && checkcollision[0].distance < directionvec.length())
-                {
-                    console.log("checkcollision Point 8");
-                    nextTarget();
-                }
-            }
-            
-            for(var verti = 0; verti <checkpointc.geometry.vertices.length; verti++)
-            {
-                //Get Local Vertex, Get Global Vertex, Get Direction of moving cube
-                var localvert = checkpointc.geometry.vertices[verti].clone();
-                var globalvert = localvert.applyMatrix4( checkpointc.matrix);
-                var directionvec = globalvert.sub(checkpointc.position);
+                var ray = new THREE.Raycaster(cube.position.clone(), directionvec.clone().normalize());
+                var checkcollision = ray.intersectObjects(checkpointMeshList);
 
-                //Creating a Ray for Raytracing an looking if there is an collision
-                var ray = new THREE.Raycaster(checkpointc.position.clone(), directionvec.clone().normalize());
-                var checkcollision = ray.intersectObjects(cube);
-                
+                //What happens if there is an collision
                 if(checkcollision.length > 0 && checkcollision[0].distance < directionvec.length())
                 {
-                    console.log("checkcollision Point C");
+                    console.log(checkcollision);
                     nextTarget();
                 }
             }
