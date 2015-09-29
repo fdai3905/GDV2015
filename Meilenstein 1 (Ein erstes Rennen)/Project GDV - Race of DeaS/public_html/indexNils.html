@@ -41,6 +41,7 @@
         var target;  
         var checkpoint;
         var spawnX, spawnZ;
+        var round;
 
         //Function for Creating the World, getting a scene, a camera, the
         //test-walls, the floor and our test-cube.
@@ -77,8 +78,8 @@
 
             //Add a cube
             {
-                spawnX = -300;
-                spawnZ = 0;
+                spawnX = -500;
+                spawnZ = 500;
                 var geometry = new THREE.BoxGeometry(50,50,50);
                 var material = new THREE.MeshBasicMaterial({color:0x0000ff});
                 cube = new THREE.Mesh(geometry,material);
@@ -88,8 +89,8 @@
 
             //The Walls...
             {
-            var wallGeometry = new THREE.CubeGeometry( 500, 500, 50, 1, 1, 1 );
-            var außenwand = new THREE.CubeGeometry( 1000, 1000, 50, 1, 1, 1 );
+            var wallGeometry = new THREE.CubeGeometry( 482, 482, 50, 1, 1, 1 );
+            var außenwand = new THREE.CubeGeometry( 999, 999, 50, 1, 1, 1 );
             var wallMaterial = new THREE.MeshBasicMaterial( {color: 0xff0000} );
             var wireMaterial = new THREE.MeshBasicMaterial( { color: 0x000000, wireframe:true } );
             var wallMaterial2 = new THREE.MeshBasicMaterial( { color: 0x00ff00});
@@ -207,7 +208,7 @@
             collidableMeshList.push(innWall4);
 
 
-            //Creating Checkpoint 1
+            //Creating Checkpoints
             checkpoint1 = new THREE.Mesh(wallGeometry, wallMaterial);
             checkpoint1.position.set(1000, 100, 500);
             checkpoint1.rotation.y = 3.14159/2;
@@ -229,10 +230,108 @@
             checkpointWire2.position.set(1000, 50, 1500);
             checkpointWire2.rotation.y = 3.14159/2;
             scene.add(checkpointWire2);
+            
+            checkpoint3 = new THREE.Mesh(wallGeometry, wallMaterial);
+            checkpoint3.position.set(0, 100, 1500);
+            checkpoint3.rotation.y = 3.14159/2;
+            scene.add(checkpoint3);
+            checkpointMeshList.push(checkpoint3);
+            
+            checkpointWire3 = new THREE.Mesh(außenwand, wireMaterial);
+            checkpointWire3.position.set(0, 50, 1500);
+            checkpointWire3.rotation.y = 3.14159/2;
+            scene.add(checkpointWire3);
+            
+            checkpoint4 = new THREE.Mesh(wallGeometry, wallMaterial);
+            checkpoint4.position.set(-1000, 100, 1500);
+            checkpoint4.rotation.y = 3.14159/2;
+            scene.add(checkpoint4);
+            checkpointMeshList.push(checkpoint4);
+            
+            checkpointWire4 = new THREE.Mesh(außenwand, wireMaterial);
+            checkpointWire4.position.set(-1000, 50, 1500);
+            checkpointWire4.rotation.y = 3.14159/2;
+            scene.add(checkpointWire4);
+            
+            checkpoint5 = new THREE.Mesh(wallGeometry, wallMaterial);
+            checkpoint5.position.set(-1500, 100, 1000);
+            scene.add(checkpoint5);
+            checkpointMeshList.push(checkpoint5);
+            
+            checkpointWire5 = new THREE.Mesh(außenwand, wireMaterial);
+            checkpointWire5.position.set(-1500, 50, 1000);
+            scene.add(checkpointWire5);
+            
+            checkpoint6 = new THREE.Mesh(wallGeometry, wallMaterial);
+            checkpoint6.position.set(-1500, 100, 0);
+            scene.add(checkpoint6);
+            checkpointMeshList.push(checkpoint6);
+            
+            checkpointWire6 = new THREE.Mesh(außenwand, wireMaterial);
+            checkpointWire6.position.set(-1500, 50, 0);
+            scene.add(checkpointWire6);
+            
+            checkpoint7 = new THREE.Mesh(wallGeometry, wallMaterial);
+            checkpoint7.position.set(-1500, 100, -1000);
+            scene.add(checkpoint7);
+            checkpointMeshList.push(checkpoint7);
+            
+            checkpointWire7 = new THREE.Mesh(außenwand, wireMaterial);
+            checkpointWire7.position.set(-1500, 50, -1000);
+            scene.add(checkpointWire7);
+            
+            checkpoint8 = new THREE.Mesh(wallGeometry, wallMaterial);
+            checkpoint8.position.set(-1000, 100, -1500);
+            checkpoint8.rotation.y = 3.14159/2;
+            scene.add(checkpoint8);
+            checkpointMeshList.push(checkpoint8);
+            
+            checkpointWire8 = new THREE.Mesh(außenwand, wireMaterial);
+            checkpointWire8.position.set(-1000, 50, -1500);
+            checkpointWire8.rotation.y = 3.14159/2;
+            scene.add(checkpointWire8);
+            
+            checkpoint9 = new THREE.Mesh(wallGeometry, wallMaterial);
+            checkpoint9.position.set(-500, 100, -1000);
+            scene.add(checkpoint9);
+            checkpointMeshList.push(checkpoint9);
+            
+            checkpointWire9 = new THREE.Mesh(außenwand, wireMaterial);
+            checkpointWire9.position.set(-500, 50, -1000);
+            scene.add(checkpointWire9);
+            
+            checkpointa = new THREE.Mesh(wallGeometry, wallMaterial);
+            checkpointa.position.set(-500, 100, 0);
+            scene.add(checkpointa);
+            checkpointMeshList.push(checkpointa);
+            
+            checkpointWirea = new THREE.Mesh(außenwand, wireMaterial);
+            checkpointWirea.position.set(-500, 50, 0);
+            scene.add(checkpointWirea);
+            
+            checkpointb = new THREE.Mesh(wallGeometry, wallMaterial);
+            checkpointb.position.set(0, 100, 500);
+            checkpointb.rotation.y = 3.14159/2;
+            scene.add(checkpointb);
+            checkpointMeshList.push(checkpointb);
+            
+            checkpointWireb = new THREE.Mesh(außenwand, wireMaterial);
+            checkpointWireb.position.set(0, 50, 500);
+            checkpointWireb.rotation.y = 3.14159/2;
+            scene.add(checkpointWireb);
+            
+            checkpointc = new THREE.Mesh(wallGeometry, wallMaterial);
+            checkpointc.position.set(1500, 100, 1000);
+            scene.add(checkpointc);
+            checkpointMeshList.push(checkpointc);
+            
+            checkpointWirec = new THREE.Mesh(außenwand, wireMaterial);
+            checkpointWirec.position.set(1500, 50, 1000);
+            scene.add(checkpointWirec);
 
             //First Target!
-            target = checkpointWire1;
-            checkpoint1.material = wallMaterial2;
+            target = checkpointWirea;
+            checkpointa.material = wallMaterial2;
             }
         }
 
@@ -241,6 +340,7 @@
         //Rendering the Scene
         function render()
         {
+            round = 1;
             requestAnimationFrame(render);
             update();
             renderer.render(scene, camera);
@@ -266,14 +366,125 @@
             
             switch(target)
             {
-                case checkpointWire1:
+                case checkpointWirea:
+                    console.log("checkpoint");
+                    checkpointMeshList[0] = checkpointWire9;
+                    target = checkpointWire9;
+                    checkpoint9.material = new THREE.MeshBasicMaterial( { color: 0x00ff00});
+                    checkpointa.material = new THREE.MeshBasicMaterial( { color: 0xff0000});
+                    spawnX = checkpointWirea.position.x;
+                    spawnZ = checkpointWirea.position.z;
+                    break;
+                    
+                case checkpointWire9:
+                    console.log("checkpoint");
+                    checkpointMeshList[0] = checkpointWire8;
+                    target = checkpointWire8;
+                    checkpoint8.material = new THREE.MeshBasicMaterial( { color: 0x00ff00});
+                    checkpoint9.material = new THREE.MeshBasicMaterial( { color: 0xff0000});
+                    spawnX = checkpointWire9.position.x;
+                    spawnZ = checkpointWire9.position.z;
+                    break;
+                    
+                case checkpointWire8:
+                    console.log("checkpoint");
+                    checkpointMeshList[0] = checkpointWire7;
+                    target = checkpointWire7;
+                    checkpoint7.material = new THREE.MeshBasicMaterial( { color: 0x00ff00});
+                    checkpoint8.material = new THREE.MeshBasicMaterial( { color: 0xff0000});
+                    spawnX = checkpointWire8.position.x;
+                    spawnZ = checkpointWire8.position.z;
+                    break;
+                    
+                case checkpointWire7:
+                    console.log("checkpoint");
+                    checkpointMeshList[0] = checkpointWire6;
+                    target = checkpointWire6;
+                    checkpoint6.material = new THREE.MeshBasicMaterial( { color: 0x00ff00});
+                    checkpoint7.material = new THREE.MeshBasicMaterial( { color: 0xff0000});
+                    spawnX = checkpointWire7.position.x;
+                    spawnZ = checkpointWire7.position.z;
+                    break;
+                    
+                case checkpointWire6:
+                    console.log("checkpoint");
+                    checkpointMeshList[0] = checkpointWire5;
+                    target = checkpointWire5;
+                    checkpoint5.material = new THREE.MeshBasicMaterial( { color: 0x00ff00});
+                    checkpoint6.material = new THREE.MeshBasicMaterial( { color: 0xff0000});
+                    spawnX = checkpointWire6.position.x;
+                    spawnZ = checkpointWire6.position.z;
+                    break;
+                    
+                case checkpointWire5:
+                    console.log("checkpoint");
+                    checkpointMeshList[0] = checkpointWire4;
+                    target = checkpointWire4;
+                    checkpoint4.material = new THREE.MeshBasicMaterial( { color: 0x00ff00});
+                    checkpoint5.material = new THREE.MeshBasicMaterial( { color: 0xff0000});
+                    spawnX = checkpointWire5.position.x;
+                    spawnZ = checkpointWire5.position.z;
+                    break;
+                    
+                case checkpointWire4:
+                    console.log("checkpoint");
+                    checkpointMeshList[0] = checkpointWire3;
+                    target = checkpointWire3;
+                    checkpoint3.material = new THREE.MeshBasicMaterial( { color: 0x00ff00});
+                    checkpoint4.material = new THREE.MeshBasicMaterial( { color: 0xff0000});
+                    spawnX = checkpointWire4.position.x;
+                    spawnZ = checkpointWire4.position.z;
+                    break;
+                    
+                case checkpointWire3:
                     console.log("checkpoint");
                     checkpointMeshList[0] = checkpointWire2;
                     target = checkpointWire2;
-                    null.material = new THREE.MeshBasicMaterial( { color: 0x00ff00});
+                    checkpoint2.material = new THREE.MeshBasicMaterial( { color: 0x00ff00});
+                    checkpoint3.material = new THREE.MeshBasicMaterial( { color: 0xff0000});
+                    spawnX = checkpointWire3.position.x;
+                    spawnZ = checkpointWire3.position.z;
+                    break;
+                    
+                case checkpointWire2:
+                    console.log("checkpoint");
+                    checkpointMeshList[0] = checkpointWirec;
+                    target = checkpointWirec;
+                    checkpointc.material = new THREE.MeshBasicMaterial( { color: 0x00ff00});
+                    checkpoint2.material = new THREE.MeshBasicMaterial( { color: 0xff0000});
+                    spawnX = checkpointWire2.position.x;
+                    spawnZ = checkpointWire2.position.z;
+                    break;
+                    
+                case checkpointWirec:
+                    console.log("checkpoint");
+                    checkpointMeshList[0] = checkpointWire1;
+                    target = checkpointWire1;
+                    checkpoint1.material = new THREE.MeshBasicMaterial( { color: 0x00ff00});
+                    checkpointc.material = new THREE.MeshBasicMaterial( { color: 0xff0000});
+                    spawnX = checkpointWirec.position.x;
+                    spawnZ = checkpointWirec.position.z;
+                    break;
+                    
+                case checkpointWire1:
+                    console.log("checkpoint");
+                    checkpointMeshList[0] = checkpointWireb;
+                    target = checkpointWireb;
+                    checkpointb.material = new THREE.MeshBasicMaterial( { color: 0x00ff00});
                     checkpoint1.material = new THREE.MeshBasicMaterial( { color: 0xff0000});
                     spawnX = checkpointWire1.position.x;
                     spawnZ = checkpointWire1.position.z;
+                    break;
+                    
+                case checkpointWireb:
+                    console.log("checkpoint");
+                    checkpointMeshList[0] = checkpointWirea;
+                    target = checkpointWirea;
+                    checkpointa.material = new THREE.MeshBasicMaterial( { color: 0x00ff00});
+                    checkpointb.material = new THREE.MeshBasicMaterial( { color: 0xff0000});
+                    spawnX = checkpointWireb.position.x;
+                    spawnZ = checkpointWireb.position.z;
+                    round++;
                     break;
 
             }
@@ -318,6 +529,12 @@
                     cube.position.z = spawnZ;
                 }
               
+            //Round Counter
+            if(round == 4)
+            {
+                console.log("Race Won!");
+                document.getElementById('textarea').innerHTML = '...Collision';
+            }
             //Collision detection via Raytracing
             //Looking for all different Vertices 
             for(var verti = 0; verti <cube.geometry.vertices.length; verti++)
