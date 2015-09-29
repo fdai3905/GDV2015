@@ -81,8 +81,8 @@
 
             //Add a cube
             {
-                spawnX = -300;
-                spawnZ = 0;
+                spawnX = -500;
+                spawnZ = 500;
                 var geometry = new THREE.BoxGeometry(50,50,50);
                 var material = new THREE.MeshBasicMaterial({color:0x0000ff});
                 cube = new THREE.Mesh(geometry,material);
@@ -97,7 +97,6 @@
             var außenwand = new THREE.CubeGeometry( 1000, 1000, 50, 1, 1, 1 );
             var wallMaterial = new THREE.MeshBasicMaterial( {color: 0xff0000} );
             var wireMaterial = new THREE.MeshBasicMaterial( { color: 0x000000, wireframe:true } );
-            var wallMaterial2 = new THREE.MeshBasicMaterial( { color: 0x00ff00});
             
             //Außenwände
             outWall = new THREE.Mesh(außenwand, wallMaterial);
@@ -344,6 +343,55 @@
 
         init();
 
+function nextTarget()
+        {
+            switch(target)
+            {
+                case checkpointa:
+                    console.log("checkpoint");
+                    checkpointMeshList[0] = checkpoint9 ;
+                    target = checkpoint9;
+                    checkpoint9.material = new THREE.MeshBasicMaterial( { color: 0x00ff00});
+                    checkpointa.material = new THREE.MeshBasicMaterial( { color: 0xff0000});
+                    spawnX = checkpointa.position.x;
+                    spawnZ = checkpointa.position.z;
+                    break;
+
+                case checkpoint9:
+                    console.log("checkpoint 2");
+                    checkpointMeshList[0] = checkpoint5;
+                    target = checkpoint5;
+                    checkpoint5.material = new THREE.MeshBasicMaterial( { color: 0xff0000});
+                    checkpoint9.material = new THREE.MeshBasicMaterial( { color: 0x00ff00});
+                    spawnX = checkpoint9.position.x;
+                    spawnZ = checkpoint9.position.z;
+                    break;
+                    
+                case checkpoint5:
+                    console.log("checkpoint 3");
+                    checkpointMeshList[0] = checkpointa;
+                    target = checkpointa;
+                    checkpointa.material = new THREE.MeshBasicMaterial( { color: 0xff0000});
+                    checkpoint5.material = new THREE.MeshBasicMaterial( { color: 0x00ff00});
+                    spawnX = checkpoint5.position.x;
+                    spawnZ = checkpoint5.position.z;
+                    break;
+            }
+            
+           /* for(var i=0; i< checkpointMeshList.length;i++)
+            {
+                if(checkpointMeshList[i]===target)
+                {
+                    target = checkpointMeshList[i+1];
+                    checkpointMeshList[i].material = new THREE.MeshBasicMaterial({color:0xff0000});
+                    checkpointMeshList[i+1].material = new THREE.MeshBasicMaterial({color:0x00ff00});
+                    spawnX = checkpointMeshList[i].position.x;
+                    spawnZ = checkpointMeshList[i].position.z;
+                    break;
+                }
+            }*/
+        }
+        
         //Rendering the Scene
         function render()
         {
@@ -359,24 +407,6 @@
         function clearText()
         {
             document.getElementById('textarea').innerHTML = '...';
-        }
-
-
-        function nextTarget()
-        {
-            
-            for(var i=0; i< checkpointMeshList.length;i++)
-            {
-                if(checkpointMeshList[i]===target)
-                {
-                    target = checkpointMeshList[i+1];
-                    checkpointMeshList[i].material = new THREE.MeshBasicMaterial({color:0xff0000});
-                    checkpointMeshList[i+1].material = new THREE.MeshBasicMaterial({color:0x00ff00});
-                    spawnX = checkpointMeshList[i].position.x;
-                    spawnZ = checkpointMeshList[i].position.z;
-                    break;
-                }
-            }
         }
 
         //Function update for the movement and the collisiondetection
