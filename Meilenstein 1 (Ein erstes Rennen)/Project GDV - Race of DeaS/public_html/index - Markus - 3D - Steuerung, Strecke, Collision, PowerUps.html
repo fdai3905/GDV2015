@@ -43,6 +43,7 @@
         var target;  
         var checkpoint;
         var spawnX, spawnZ;
+        var round;
 
         //Function for Creating the World, getting a scene, a camera, the
         //test-walls, the floor and our test-cube.
@@ -57,7 +58,7 @@
 				camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 20000);
 				camera.position.z = 200;
 				camera.position.y = 75;
-			}
+            }
 
             //Creating a new Renderer
             {
@@ -85,7 +86,7 @@
                 cube = new THREE.Mesh(geometry,material);
                 cube.position.set(spawnX, 25.1, spawnZ);
                 scene.add(cube);
-				cube.add(camera);
+                cube.add(camera);
             }
 
             //The Walls...
@@ -209,14 +210,13 @@
 				collidableMeshList.push(innWall4);
 
 
-				//Creating Checkpoint 1
+				//Creating Checkpoints
 				checkpoint1 = new THREE.Mesh(wallGeometry, wallMaterial);
 				checkpoint1.position.set(1000, 100, 500);
 				checkpoint1.rotation.y = 3.14159/2;
 				scene.add(checkpoint1);
-				checkpointMeshList.push(checkpoint1);
 				
-				checkpointWire1 = new THREE.Mesh(außenwand, wireMaterial);
+				checkpointWire1 = new THREE.Mesh(wallGeometry, wireMaterial);
 				checkpointWire1.position.set(1000, 50, 500);
 				checkpointWire1.rotation.y = 3.14159/2;
 				scene.add(checkpointWire1);
@@ -225,16 +225,118 @@
 				checkpoint2.position.set(1000, 100, 1500);
 				checkpoint2.rotation.y = 3.14159/2;
 				scene.add(checkpoint2);
-				checkpointMeshList.push(checkpoint2);
 				
-				checkpointWire2 = new THREE.Mesh(außenwand, wireMaterial);
+				checkpointWire2 = new THREE.Mesh(wallGeometry, wireMaterial);
 				checkpointWire2.position.set(1000, 50, 1500);
 				checkpointWire2.rotation.y = 3.14159/2;
 				scene.add(checkpointWire2);
+				
+				checkpoint3 = new THREE.Mesh(wallGeometry, wallMaterial);
+				checkpoint3.position.set(0, 100, 1500);
+				checkpoint3.rotation.y = 3.14159/2;
+				scene.add(checkpoint3);
+				
+				checkpointWire3 = new THREE.Mesh(wallGeometry, wireMaterial);
+				checkpointWire3.position.set(0, 50, 1500);
+				checkpointWire3.rotation.y = 3.14159/2;
+				scene.add(checkpointWire3);
+				
+				checkpoint4 = new THREE.Mesh(wallGeometry, wallMaterial);
+				checkpoint4.position.set(-1000, 100, 1500);
+				checkpoint4.rotation.y = 3.14159/2;
+				scene.add(checkpoint4);
+				
+				checkpointWire4 = new THREE.Mesh(wallGeometry, wireMaterial);
+				checkpointWire4.position.set(-1000, 50, 1500);
+				checkpointWire4.rotation.y = 3.14159/2;
+				scene.add(checkpointWire4);
+				
+				checkpoint5 = new THREE.Mesh(wallGeometry, wallMaterial);
+				checkpoint5.position.set(-1500, 100, 1000);
+				scene.add(checkpoint5);
+				
+				checkpointWire5 = new THREE.Mesh(wallGeometry, wireMaterial);
+				checkpointWire5.position.set(-1500, 50, 1000);
+				scene.add(checkpointWire5);
+				
+				checkpoint6 = new THREE.Mesh(wallGeometry, wallMaterial);
+				checkpoint6.position.set(-1500, 100, 0);
+				scene.add(checkpoint6);
+				
+				checkpointWire6 = new THREE.Mesh(wallGeometry, wireMaterial);
+				checkpointWire6.position.set(-1500, 50, 0);
+				scene.add(checkpointWire6);
+				
+				checkpoint7 = new THREE.Mesh(wallGeometry, wallMaterial);
+				checkpoint7.position.set(-1500, 100, -1000);
+				scene.add(checkpoint7);
+				
+				checkpointWire7 = new THREE.Mesh(wallGeometry, wireMaterial);
+				checkpointWire7.position.set(-1500, 50, -1000);
+				scene.add(checkpointWire7);
+				
+				checkpoint8 = new THREE.Mesh(wallGeometry, wallMaterial);
+				checkpoint8.position.set(-1000, 100, -1500);
+				checkpoint8.rotation.y = 3.14159/2;
+				scene.add(checkpoint8);
+				
+				checkpointWire8 = new THREE.Mesh(wallGeometry, wireMaterial);
+				checkpointWire8.position.set(-1000, 50, -1500);
+				checkpointWire8.rotation.y = 3.14159/2;
+				scene.add(checkpointWire8);
+				
+				checkpoint9 = new THREE.Mesh(wallGeometry, wallMaterial);
+				checkpoint9.position.set(-500, 100, -1000);
+				scene.add(checkpoint9);
+				
+				checkpointWire9 = new THREE.Mesh(wallGeometry, wireMaterial);
+				checkpointWire9.position.set(-500, 50, -1000);
+				scene.add(checkpointWire9);
+				
+				checkpointa = new THREE.Mesh(wallGeometry, wallMaterial);
+				checkpointa.position.set(-500, 100, 0);
+				scene.add(checkpointa);
+				
+				checkpointWirea = new THREE.Mesh(wallGeometry, wireMaterial);
+				checkpointWirea.position.set(-500, 50, 0);
+				scene.add(checkpointWirea);
+				
+				checkpointb = new THREE.Mesh(wallGeometry, wallMaterial);
+				checkpointb.position.set(0, 100, 500);
+				checkpointb.rotation.y = 3.14159/2;
+				scene.add(checkpointb);
+				
+				checkpointWireb = new THREE.Mesh(wallGeometry, wireMaterial);
+				checkpointWireb.position.set(0, 50, 500);
+				checkpointWireb.rotation.y = 3.14159/2;
+				scene.add(checkpointWireb);
+				
+				checkpointc = new THREE.Mesh(wallGeometry, wallMaterial);
+				checkpointc.position.set(1500, 100, 1000);
+				scene.add(checkpointc);
+			   
+				checkpointWirec = new THREE.Mesh(wallGeometry, wireMaterial);
+				checkpointWirec.position.set(1500, 50, 1000);
+				scene.add(checkpointWirec);
+				
+				//Aktivation in right Order!
+				checkpointMeshList.push(checkpointa);
+				checkpointMeshList.push(checkpoint9);
+				checkpointMeshList.push(checkpoint8);
+				checkpointMeshList.push(checkpoint7);
+				checkpointMeshList.push(checkpoint6);
+				checkpointMeshList.push(checkpoint5);
+				checkpointMeshList.push(checkpoint4);
+				checkpointMeshList.push(checkpoint3);
+				checkpointMeshList.push(checkpoint2);
+				checkpointMeshList.push(checkpointc);
+				checkpointMeshList.push(checkpoint1);
+				checkpointMeshList.push(checkpointb);
+				
 
 				//First Target!
-				target = checkpointWire1;
-				checkpoint1.material = wallMaterial2;
+				target = checkpointa;
+				checkpointa.material = new THREE.MeshBasicMaterial({color:0xff0000});
             }
         }
 
@@ -257,10 +359,9 @@
             document.getElementById('textarea').innerHTML = '...';
         }
 
-
         function nextTarget()
         {
-			for(var i=0; i< checkpointMeshList.length;i++)
+            for(var i=0; i< checkpointMeshList.length;i++)
             {
                 if(checkpointMeshList[i]===target)
                 {
@@ -268,7 +369,8 @@
                     checkpointMeshList[i].material = new THREE.MeshBasicMaterial({color:0xff0000});
                     checkpointMeshList[i+1].material = new THREE.MeshBasicMaterial({color:0x00ff00});
                     spawnX = checkpointMeshList[i].position.x;
-                    spawnY = checkpointMeshList[i].position.y;
+                    spawnZ = checkpointMeshList[i].position.z;
+                    break;
                 }
             }
         }
@@ -300,31 +402,45 @@
 				cube.rotation.y -= rotateAngle;
 			}
 			if (keyboard.pressed ("w"))
-			{
-				acc_clock.start ();
-					
-				function updateCollision()
 				{
-					if (acc_clock.elapsedTime > 3) {acc_clock.elapsedTime = -2;}
-					if (acc_clock.elapsedTime > 2) {acc_clock.elapsedTime = -1.5;}
-					if (acc_clock.elapsedTime > 1) {acc_clock.elapsedTime = -1;}
-					if (acc_clock.elapsedTime > 0) {acc_clock.elapsedTime = -0.5;}
-				}
-						
-				if (acc_clock.getElapsedTime () >= 4) {
-							
-					acc_clock.elapsedTime = 4;
-				}
-						
-				cube.translateZ (- acceleration);
-						
-				document.addEventListener ("keyup", keyUpw, false);
-				function keyUpw (w) {
-					if (w.keyCode == "87") {
-						acc_clock.elapsedTime = 0;
+					acc_clock.start ();
+					
+					function updateCollision()
+					{
+						if (acc_clock.elapsedTime > 3) {acc_clock.elapsedTime = -2;}
+						if (acc_clock.elapsedTime > 2) {acc_clock.elapsedTime = -1.5;}
+						if (acc_clock.elapsedTime > 1) {acc_clock.elapsedTime = -1;}
+						if (acc_clock.elapsedTime > 0) {acc_clock.elapsedTime = -0.5;}
 					}
+						
+					if (acc_clock.getElapsedTime () >= 4) {
+							
+						acc_clock.elapsedTime = 4;
+					}
+						
+					cube.translateZ (- acceleration);
+						
+					document.addEventListener ("keyup", keyUpw, false);
+					function keyUpw (w) {
+						if (w.keyCode == "87") {
+							acc_clock.elapsedTime = 0;
+						}
+					}
+						
+						/*	document.addEventListener ("keyup", keyUp, false);
+						function keyUp (w) {
+							if (w.keyCode == "87") {
+								acc_clock.stop ();
+								br_clock.start ();
+								while (acc_clock.elapsedTime >= br_clock.getElapsedTime ()) {
+									cube.translateZ (- (100 * ((acc_clock.elapsedTime - br_clock.getElapsedTime ()) / 10)));
+								}
+								br_clock.stop ();
+								br_clock.elapsedTime = 0;
+								
+							}
+						} 	*/
 				}
-			}
 				
 			else if (keyboard.pressed ("s"))
 			{
@@ -369,6 +485,12 @@
                 cube.position.z = spawnZ;
             }
               
+            //Round Counter
+            if(round == 4)
+            {
+                console.log("Race Won!");
+                document.getElementById('textarea').innerHTML = 'You Won!';
+            }
             //Collision detection via Raytracing
             //Looking for all different Vertices 
             for(var verti = 0; verti <cube.geometry.vertices.length; verti++)
