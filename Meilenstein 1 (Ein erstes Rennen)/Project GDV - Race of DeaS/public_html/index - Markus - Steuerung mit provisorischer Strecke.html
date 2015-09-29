@@ -262,16 +262,16 @@
         {
             
             for(var i=0; i< checkpointMeshList.length;i++)
-        {
-            if(checkpointMeshList[i]===target)
             {
-                target = checkpointMeshList[i+1];
-                checkpointMeshList[i].material = new THREE.MeshBasicMaterial({color:0xff0000});
-                checkpointMeshList[i+1].material = new THREE.MeshBasicMaterial({color:0x00ff00});
-                spawnX = checkpointMeshList[i].position.x;
-                spywnY = checkpointMeshList[i].position.y;
+                if(checkpointMeshList[i]===target)
+                {
+                    target = checkpointMeshList[i+1];
+                    checkpointMeshList[i].material = new THREE.MeshBasicMaterial({color:0xff0000});
+                    checkpointMeshList[i+1].material = new THREE.MeshBasicMaterial({color:0x00ff00});
+                    spawnX = checkpointMeshList[i].position.x;
+                    spawnY = checkpointMeshList[i].position.y;
+                }
             }
-        }
         }
 
         //Function update for the movement and the collisiondetection
