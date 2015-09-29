@@ -84,8 +84,8 @@
 			function update()
 			{
 				var second = acc_clock.getDelta ();           						// Sekunden
-				var acceleration = 100 * (acc_clock.getElapsedTime () / 10);         // 200 pixels pro Sekunde
-				var rotateAngle = Math.PI / 2 * second;  							// Pi/2 Grad (90°) pro Sekunde
+				var acceleration = 100 * (acc_clock.getElapsedTime () / 10);        // 200 pixels pro Sekunde
+				var rotateAngle = Math.PI * 1.5 * second;  							// Pi Grad (225°) pro Sekunde
 
 				if (keyboard.pressed ("a"))
 				{
@@ -99,6 +99,12 @@
 				if (keyboard.pressed ("w"))
 				{
 					acc_clock.start ();
+					
+					if (acc_clock.getElapsedTime () >= 4) {
+						
+						acc_clock.elapsedTime = 4;
+					}
+					
 					cube.translateZ (- acceleration);
 					
 					document.addEventListener ("keyup", keyUpw, false);
@@ -126,6 +132,12 @@
 				else if (keyboard.pressed ("s"))
 				{
 					acc_clock.start ();
+					
+					if (acc_clock.getElapsedTime () >= 5) {
+						
+						acc_clock.elapsedTime = 5;
+					}
+					
 					cube.translateZ (+ acceleration / 5);
 					
 					document.addEventListener ("keyup", keyUps, false);
@@ -150,12 +162,12 @@
 					acc_clock.elapsedTime = 0;
 					acc_clock.stop ();
 				}
-				
-				if (keyboard.pressed ("R") )
-				{
-					cube.position.x = spawnX;
-					cube.position.z = spawnZ;
-				}
+                
+                if ( keyboard.pressed("R") )
+                {
+                    cube.position.x = spawnX;
+                    cube.position.z = spawnZ;
+                }
 			}
 
 			//Rendering the Scene
