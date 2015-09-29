@@ -32,6 +32,7 @@
         // checkpoint1 -- First try for a checkpoint
         var keyboard = new THREEx.KeyboardState();
         var acc_clock = new THREE.Clock();
+		var br_clock = new THREE.Clock();
 		var rota_clock = new THREE.Clock();
         var collidableMeshList = [];
         var checkpointMeshList = [];
@@ -250,11 +251,6 @@
             
         // Information when there is an Collision getting out on console
         //and in HTML
-        function updateCollision()
-        {
-            document.getElementById('textarea').innerHTML = '...Collision';
-            console.log("Collision");
-        }
 
         function clearText()
         {
@@ -282,86 +278,113 @@
 
         //Function update for the movement and the collisiondetection
         function update()
-			{
-				var acceleration = 100 * (acc_clock.getElapsedTime () / 10);        // 200 pixels pro Sekunde
-				var rotateAngle = Math.PI * (acc_clock.getElapsedTime () / 150);  	// Pi Grad (225°) pro Sekunde
-
-				if (keyboard.pressed ("a"))
-				{
-					cube.rotation.y += rotateAngle;
+		{
+			var acceleration = 100 * (acc_clock.getElapsedTime () / 10);        // 200 pixels pro Sekunde
+			var rotateAngle = Math.PI * (acc_clock.getElapsedTime () / 150);  	// Pi Grad (225°) pro Sekunde
+				
+			if (keyboard.pressed ("a"))
+			{	
+				
+				if (acc_clock.getElapsedTime () >= 4) {
+						
+					acc_clock.elapsedTime = 4;
 				}
 				
-				if (keyboard.pressed ("d"))
-				{
-					cube.rotation.y -= rotateAngle;
+				cube.rotation.y += rotateAngle;
+			}
+				
+			if (keyboard.pressed ("d"))
+			{
+				if (acc_clock.getElapsedTime () >= 4) {
+						
+					acc_clock.elapsedTime = 4;
 				}
-				if (keyboard.pressed ("w"))
+			
+				cube.rotation.y -= rotateAngle;
+			}
+			if (keyboard.pressed ("w"))
 				{
 					acc_clock.start ();
 					
-					if (acc_clock.getElapsedTime () >= 4) {
+					function updateCollision()
+					{
+						if (acc_clock.elapsedTime > 3) {acc_clock.elapsedTime = -2;}
+						if (acc_clock.elapsedTime > 2) {acc_clock.elapsedTime = -1.5;}
+						if (acc_clock.elapsedTime > 1) {acc_clock.elapsedTime = -1;}
+						if (acc_clock.elapsedTime > 0) {acc_clock.elapsedTime = -0.5;}
+					}
 						
+					if (acc_clock.getElapsedTime () >= 4) {
+							
 						acc_clock.elapsedTime = 4;
 					}
-					
+						
 					cube.translateZ (- acceleration);
-					
+						
 					document.addEventListener ("keyup", keyUpw, false);
 					function keyUpw (w) {
 						if (w.keyCode == "87") {
 							acc_clock.elapsedTime = 0;
 						}
 					}
-					
-					/*	document.addEventListener ("keyup", keyUp, false);
-					function keyUp (w) {
-						if (w.keyCode == "87") {
-							acc_clock.stop ();
-							br_clock.start ();
-							while (acc_clock.elapsedTime >= br_clock.getElapsedTime ()) {
-								cube.translateZ (- (100 * ((acc_clock.elapsedTime - br_clock.getElapsedTime ()) / 10)));
+						
+						/*	document.addEventListener ("keyup", keyUp, false);
+						function keyUp (w) {
+							if (w.keyCode == "87") {
+								acc_clock.stop ();
+								br_clock.start ();
+								while (acc_clock.elapsedTime >= br_clock.getElapsedTime ()) {
+									cube.translateZ (- (100 * ((acc_clock.elapsedTime - br_clock.getElapsedTime ()) / 10)));
+								}
+								br_clock.stop ();
+								br_clock.elapsedTime = 0;
+								
 							}
-							br_clock.stop ();
-							br_clock.elapsedTime = 0;
-							
-						}
-					} 	*/
+						} 	*/
 				}
 				
-				else if (keyboard.pressed ("s"))
+			else if (keyboard.pressed ("s"))
+			{
+				acc_clock.start ();
+				
+				function updateCollision()
 				{
-					acc_clock.start ();
+					if (acc_clock.elapsedTime > 3) {acc_clock.elapsedTime = -2;}
+					if (acc_clock.elapsedTime > 2) {acc_clock.elapsedTime = -1.5;}
+					if (acc_clock.elapsedTime > 1) {acc_clock.elapsedTime = -1;}
+					if (acc_clock.elapsedTime > 0) {acc_clock.elapsedTime = -0.5;}
+				}
 					
-					if (acc_clock.getElapsedTime () >= 5) {
+				if (acc_clock.getElapsedTime () >= 5) {
 						
-						acc_clock.elapsedTime = 5;
-					}
+					acc_clock.elapsedTime = 5;
+				}
 					
-					cube.translateZ (+ acceleration / 5);
+				cube.translateZ (+ acceleration / 5);
 					
-					document.addEventListener ("keyup", keyUps, false);
-					function keyUps (s) {
-						if (s.keyCode == "83") {
-							acc_clock.elapsedTime = 0;
-						}
+				document.addEventListener ("keyup", keyUps, false);
+				function keyUps (s) {
+					if (s.keyCode == "83") {
+						acc_clock.elapsedTime = 0;
 					}
+				}
 					
-					if (keyboard.pressed ("d"))
-					{
-						cube.rotation.y += (rotateAngle * 1.25);
-					}
+				if (keyboard.pressed ("d"))
+				{
+					cube.rotation.y += (rotateAngle * 1.25);
+				}
 					
-					if (keyboard.pressed ("a"))
-					{
-						cube.rotation.y -= (rotateAngle * 1.25);
-					}
-				}  
+				if (keyboard.pressed ("a"))
+				{
+					cube.rotation.y -= (rotateAngle * 1.25);
+				}
+			}  
                 
-                if ( keyboard.pressed("R") )
-                {
-                    cube.position.x = spawnX;
-                    cube.position.z = spawnZ;
-                }
+            if ( keyboard.pressed("R") )
+            {
+                cube.position.x = spawnX;
+                cube.position.z = spawnZ;
+            }
               
             //Collision detection via Raytracing
             //Looking for all different Vertices 
