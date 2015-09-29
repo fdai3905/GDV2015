@@ -1,6 +1,6 @@
 <html>
     <head>
-            <title>Race of DeaS</title>
+            <title>jkjgf</title>
             <meta charset="utf-8">
             <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
             <style>
@@ -9,232 +9,118 @@
             </style>
     </head>
     <body>
-        <!--Including libaries-->
+
         <script src="JS/three.js"></script>
         <script src="JS/three.min.js"></script>
-        <script src="js/THREEx.KeyboardState.js"></script>
-        <!--   Creating div, for different informations-->
-        <div id="textarea"></div>
-        <div id="ThreeJS" style="z-index: 2;"></div>
-        
-        <!-- Script for the Game  -->
-        <script>    
-        // Global Variables
-        // keyboard -- For getting the pressed Keys from Keyboard
-        // clock    -- For getting the Time, for calculating speed per second
-        // collidableMeshList -- All Meshes, that could be hit by the "car"
-        // scene -- The complete Scene in where the game happens
-        // camera -- The Name says itself, the camera
-        // renderer -- For rendering the complete Scene
-        // cube -- Now a cube, but later the car
-        // target -- Test Variable for Checkpoints
-        var keyboard = new THREEx.KeyboardState();
-        var clock = new THREE.Clock();
-        var collidableMeshList = [];
-        var arrowList = [];
-        var directionList = [];
-        var scene, camera, renderer, cube;
-        var target;                 
+        <script src="JS/THREEx.KeyboardState.js"></script>
+        <script src="JS/JSONLoader.js"></script>
+        <script>
+            var camera, scene, renderer, loaderTrack, loaderCar1, loaderCar2;
+            var track, car1, car2;
 
-        //Function for Creating the World, getting a scene, a camera, the
-        //test-walls, the floor and our test-cube.
-        //Also Creating a Renderer with WebGL
-        function init()
-        {
-            //Creating a new Scene
-            scene = new THREE.Scene();
+            init();
+            animate();
 
-            //Creating a new Camera
-            {
-            camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 20000);
-            scene.add(camera);
-            camera.position.set(0,400,80);
-            camera.lookAt(scene.position);
-            }
+            function init() {
 
-            //Creating a new Renderer
-            {
-            renderer = new THREE.WebGLRenderer();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            document.body.appendChild(renderer.domElement);
-            }
 
-            //FLOOR
-            {
-            var floorMaterial = new THREE.MeshBasicMaterial( {color:0x444444, side:THREE.DoubleSide} );
-            var floorGeometry = new THREE.PlaneGeometry(1000, 1000, 10, 10);
-            var floor = new THREE.Mesh(floorGeometry, floorMaterial);
-            floor.position.y = -0.5;
-            floor.rotation.x = Math.PI / 2;
-            scene.add(floor);
-            }
+                camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 20000);
+				camera.position.z = 400;
+				camera.position.y = 75;
 
-            //Add a cube
-            {
-            var geometry = new THREE.BoxGeometry(50,50,50);
-            var material = new THREE.MeshBasicMaterial({color:0x00ff00});
-            cube = new THREE.Mesh(geometry,material);
-            cube.position.set(0, 25.1, 0);
-            scene.add(cube);
-            //camera.position.z = 7;
-            }
+                scene = new THREE.Scene();
 
-            //2 Walls
-            {
-            var wallGeometry = new THREE.CubeGeometry( 100, 100, 20, 1, 1, 1 );
-            var wallMaterial = new THREE.MeshBasicMaterial( {color: 0x8888ff} );
-            var wireMaterial = new THREE.MeshBasicMaterial( { color: 0x000000, wireframe:true } );
+                loaderTrack = new THREE.JSONLoader();
+                loaderCar1 = new THREE.JSONLoader();
+                loaderCar2 = new THREE.JSONLoader();
+                loaderCar3 = new THREE.JSONLoader();
+                loaderCar4 = new THREE.JSONLoader();
+                
 
-            //fist Wall
-            var wall = new THREE.Mesh(wallGeometry, wallMaterial);
-            wall.position.set(100, 50, -100);
-            scene.add(wall);
-            collidableMeshList.push(wall);
-            var wall = new THREE.Mesh(wallGeometry, wireMaterial);
-            wall.position.set(100, 50, -100);
-            scene.add(wall);
-
-            //second Wall
-            var wall2 = new THREE.Mesh(wallGeometry, wallMaterial);
-            wall2.position.set(-150, 50, 0);
-            wall2.rotation.y = 3.14159 / 2;
-            scene.add(wall2);
-            collidableMeshList.push(wall2);
-            var wall2 = new THREE.Mesh(wallGeometry, wireMaterial);
-            wall2.position.set(-150, 50, 0);
-            wall2.rotation.y = 3.14159 / 2;
-            scene.add(wall2);
-
-            //Creating Checkpoint 1
-            var checkpoint1 = new THREE.Mesh(wallGeometry, wallMaterial);
-            checkpoint1.position.set(300, 50, 50);
-            checkpoint1.rotation.y = 3.14159/2;
-            scene.add(checkpoint1);
-            collidableMeshList.push(checkpoint1);
-
-            //Creating Checkpoint 1 WireVersion
-            var checkpoint1 = new THREE.Mesh(wallGeometry, wireMaterial);
-            checkpoint1.position.set(300, 50, 50);
-            checkpoint1.rotation.y = 3.14159/2;
-            scene.add(checkpoint1);
-
-            //First Target!
-            target = checkpoint1;
-            checkpoint1.material.color = 0xffffff;
-            }
-        }
-
-        init();
-
-        //Rendering the Scene
-        function render()
-        {
-            requestAnimationFrame(render);
-            update();
-            renderer.render(scene, camera);
-        }
-        render();
-
-        //Function animate for running the game. Lokking that the scene is 
-        //rendered and that the movement happens
-        function animate()
-        {
-            //render();
-            //update();
-        }
-
-        //Function update for the movement and the collisiondetection
-        function update()
-        {
-            var second = clock.getDelta();           // Sekunden
-            var moveDistance = 200 * second;         // 200 pixels pro Sekunde
-            var rotateAngle = Math.PI / 2 * second;  // Pi/2 Grad (90°) pro Sekunde
-
-            //checkpointQuest(target);
-            if ( keyboard.pressed("A") )
-                    cube.rotation.y += rotateAngle;
-            if ( keyboard.pressed("D") )
-                    cube.rotation.y -= rotateAngle;
-
-            if ( keyboard.pressed("left") )
-                    cube.position.x -= moveDistance;
-            if ( keyboard.pressed("right") )
-                    cube.position.x += moveDistance;
-            if ( keyboard.pressed("up") )
-                    cube.position.z -= moveDistance;
-            if ( keyboard.pressed("down") )
-                    cube.position.z += moveDistance;
-              
-            //Collision detection via Raytracing
-            //Looking for all different Vertices 
-            for(var verti = 0; verti <cube.geometry.vertices.length; verti++)
-            {
-                //Get Local Vertex, Get Global Vertex, Get Direction of moving cube
-                var localvert = cube.geometry.vertices[verti].clone();
-                var globalvert = localvert.applyMatrix4( cube.matrix);
-                var directionvec = globalvert.sub(cube.position);
-
-                //Creating a Ray for Raytracing an looking if there is an collision
-                var ray = new THREE.Raycaster(cube.position.clone(), directionvec.clone().normalize());
-                var collision = ray.intersectObjects(collidableMeshList);
-
-                //What happens if there is an collision
-                if(collision.length > 0 && collision[0].distance < directionvec.length())
-                {
-                    clearText();  
-                    updateCollision();
-                }
-            }
-        }
+                loaderTrack.load("ModelsJson/FullTrack.json", function( geometry, mat ) {
+                
+                var materials = new THREE.MeshFaceMaterial(mat);
+                track = new THREE.Mesh( geometry, materials );
+                track.scale.set( 150, 150, 150 );
+                track.position.y = 0;
+                track.position.x = 0;
+                track.position.z = 0;
+                scene.add( track);
+                
+             
+            } );
             
-        // Information when there is an Collision getting out on console
-        //and in HTML
-        function updateCollision()
-        {
-            document.getElementById('textarea').innerHTML = '...Collision';
-            console.log("Collision");
-        }
+            loaderCar1.load("ModelsJson/car.json", function( geometry, materials) {
 
-        function clearText()
-        {
-            document.getElementById('textarea').innerHTML = '...';
-        }
+                car1 = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial({color:0x0000ff}) );
+                car1.scale.set( 2, 2, 2 );
+                car1.position.y = 0;
+                car1.position.x = 0;
+                car1.position.z = 0;
+                scene.add( car1 );
+                car1.add(camera);
+            } );
+            
+            loaderCar2.load("ModelsJson/car3.json", function( geometry, mat ) {
+                
+                var materials = new THREE.MeshBasicMaterial({color:0x0000ff});
+                car2 = new THREE.Mesh( geometry, materials );
+                car2.scale.set( 5, 5, 5);
+                car2.position.y = 0;
+                car2.position.x = 12;
+                car2.position.z = 0;
+                scene.add( car2 );
+               
+            } );
+            
+            loaderCar3.load("ModelsJson/car3.json", function( geometry, mat ) {
+                
+                var materials = new THREE.MeshBasicMaterial({color:0x0000ff});
+                car2 = new THREE.Mesh( geometry, materials );
+                car2.scale.set( 5, 5, 5);
+                car2.position.y = 0;
+                car2.position.x = 30;
+                car2.position.z = 0;
+                scene.add( car2 );
+               
+            } );
+            
+            loaderCar4.load("ModelsJson/car3.json", function( geometry, mat ) {
+                
+                var materials = new THREE.MeshBasicMaterial({color:0x0000ff});
+                car2 = new THREE.Mesh( geometry, materials );
+                car2.scale.set( 5, 5, 5);
+                car2.position.y = 0;
+                car2.position.x = 50;
+                car2.position.z = 0;
+                scene.add( car2 );
+               
+            } );
 
-                //Get Target for Abfrage
-                function getTarget()
-                {
-                    return target;
-                }
 
-                //Prototyp Checkpoint Abfrage
-                function checkpointQuest(check)
-                {
-                    if(Player.position = target)
-                    {
-                        target = nextTarget();
-                    }
-                }
+                var ambientLight = new THREE.AmbientLight(0x555555);
+                scene.add(ambientLight);
 
-                function nextTarget()
-                {
-                    switch(getTarget())
-                    {
-                        case checkpoint1:
-                            target = wall1;
-                            wall1.material.color = 0xffffff;
-                            checkpoint1.material.color = 0x8888ff;
-                            break;
+                var directionalLight = new THREE.DirectionalLight(0xffffff);
+                directionalLight.position.set(1, 1, 1).normalize();
+                scene.add(directionalLight);
 
-                        case wall1:
-                            target = checkpoint1;
-                            wall1.material.color = 0x8888ff;
-                            checkpoint1.material.color = 0xffffff;
-                            break;
-                    }
-                }
+                renderer = new THREE.WebGLRenderer();
+                renderer.setSize( window.innerWidth, window.innerHeight );
 
+                document.body.appendChild( renderer.domElement );
 
+            }
 
-            </script>
+            function animate() {
+
+                requestAnimationFrame( animate );
+
+                //mesh.rotation.x += 0.05;
+                   // mesh.rotation.y += 0.05;
+                 
+                renderer.render( scene, camera );
+            }
+        </script>
     </body>
 </html>
