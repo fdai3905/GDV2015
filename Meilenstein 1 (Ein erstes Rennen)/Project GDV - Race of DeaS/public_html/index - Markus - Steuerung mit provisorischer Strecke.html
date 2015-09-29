@@ -32,7 +32,7 @@
         // checkpoint1 -- First try for a checkpoint
         var keyboard = new THREEx.KeyboardState();
         var acc_clock = new THREE.Clock();
-		var br_clock = new THREE.Clock();
+		var rota_clock = new THREE.Clock();
         var collidableMeshList = [];
         var checkpointMeshList = [];
         var arrowList = [];
@@ -283,9 +283,8 @@
         //Function update for the movement and the collisiondetection
         function update()
 			{
-				var second = acc_clock.getDelta ();           						// Sekunden
 				var acceleration = 100 * (acc_clock.getElapsedTime () / 10);        // 200 pixels pro Sekunde
-				var rotateAngle = Math.PI * 1.5 * second;  							// Pi Grad (225°) pro Sekunde
+				var rotateAngle = Math.PI * (acc_clock.getElapsedTime () / 150);  	// Pi Grad (225°) pro Sekunde
 
 				if (keyboard.pressed ("a"))
 				{
@@ -349,19 +348,14 @@
 					
 					if (keyboard.pressed ("d"))
 					{
-						cube.rotation.y += (rotateAngle * 2);
+						cube.rotation.y += (rotateAngle * 1.25);
 					}
 					
 					if (keyboard.pressed ("a"))
 					{
-						cube.rotation.y -= (rotateAngle * 2);
+						cube.rotation.y -= (rotateAngle * 1.25);
 					}
 				}  
-				
-				else {
-					acc_clock.elapsedTime = 0;
-					acc_clock.stop ();
-				}
                 
                 if ( keyboard.pressed("R") )
                 {
