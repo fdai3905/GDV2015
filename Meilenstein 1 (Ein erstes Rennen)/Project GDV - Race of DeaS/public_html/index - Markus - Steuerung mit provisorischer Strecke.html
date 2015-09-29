@@ -261,19 +261,17 @@
         function nextTarget()
         {
             
-            switch(target)
+            for(var i=0; i< checkpointMeshList.length;i++)
+        {
+            if(checkpointMeshList[i]===target)
             {
-                case checkpointWire1:
-                    console.log("checkpoint");
-                    checkpointMeshList[0] = checkpointWire2;
-                    target = checkpointWire2;
-                    null.material = new THREE.MeshBasicMaterial( { color: 0x00ff00});
-                    checkpoint1.material = new THREE.MeshBasicMaterial( { color: 0xff0000});
-                    spawnX = checkpointWire1.position.x;
-                    spawnZ = checkpointWire1.position.z;
-                    break;
-
+                target = checkpointMeshList[i+1];
+                checkpointMeshList[i].material = new THREE.MeshBasicMaterial({color:0xff0000});
+                checkpointMeshList[i+1].material = new THREE.MeshBasicMaterial({color:0x00ff00});
+                spawnX = checkpointMeshList[i].position.x;
+                spywnY = checkpointMeshList[i].position.y;
             }
+        }
         }
 
         //Function update for the movement and the collisiondetection
