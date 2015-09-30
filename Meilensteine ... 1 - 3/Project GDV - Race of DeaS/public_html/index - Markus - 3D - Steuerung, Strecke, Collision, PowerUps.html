@@ -1,0 +1,377 @@
+<html>
+    <head>
+            <title>Race of DeaS</title>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+            <style>
+                    body { margin: 0; }
+                    canvas { width: 100%; height: 100% }
+            </style>
+    </head>
+    <body>
+        <!--Including libaries-->
+        <script src="JS/three.js"></script>
+        <script src="JS/three.min.js"></script>
+        <script src="JS/THREEx.KeyboardState.js"></script>
+        <!--   Creating div, for different informations-->
+        <div id="textarea"></div>
+        <div id="ThreeJS" style="z-index: 2;"></div>
+        
+        <!-- Script for the Game  -->
+        <script>    
+        // Global Variables
+        // keyboard -- For getting the pressed Keys from Keyboard
+        // clock    -- For getting the Time, for calculating speed per second
+        // collidableMeshList -- All Meshes, that could be hit by the "car"
+        // scene -- The complete Scene in where the game happens
+        // camera -- The Name says itself, the camera
+        // renderer -- For rendering the complete Scene
+        // cube -- Now a cube, but later the car
+        // wall1 / wall2 -- The two test-walls for collisiondetection
+        // target -- Test Variable for Checkpoints
+        // checkpoint1 -- First try for a checkpoint
+        var keyboard = new THREEx.KeyboardState();
+        var collidableMeshList = [];
+		var collidablePowerUpList = [];
+		var acc_clock = new THREE.Clock();
+		var br_clock = new THREE.Clock();
+		var pU_clock = new THREE.Clock();
+        var scene, camera, renderer, cube;
+        var spawnX, spawnZ;
+		var dmgCalc;
+
+        //Function for Creating the World, getting a scene, a camera, the
+        //test-walls, the floor and our test-cube.
+        //Also Creating a Renderer with WebGL
+        function init()
+        {
+            //Creating a new Scene
+			{
+				scene = new THREE.Scene();
+			}
+			
+            //Creating a new Camera
+            {
+				camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 20000);
+				camera.position.z = 200;
+				camera.position.y = 75;
+            }
+
+            //Creating a new Renderer
+            {
+                renderer = new THREE.WebGLRenderer();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                document.body.appendChild(renderer.domElement);
+            }
+
+            //FLOOR
+            {
+                var floorMaterial = new THREE.MeshBasicMaterial( {color:0x444444, side:THREE.DoubleSide} );
+                var floorGeometry = new THREE.PlaneGeometry(5000, 5000, 10, 10);
+                var floor = new THREE.Mesh(floorGeometry, floorMaterial);
+                floor.position.y = -0.5;
+                floor.rotation.x = Math.PI / 2;
+                scene.add(floor);
+            }
+
+            //Add a cube
+            {
+                spawnX = -300;
+                spawnZ = 0;
+                var geometry = new THREE.BoxGeometry(50,50,50);
+                var material = new THREE.MeshBasicMaterial({color:0x0000ff});
+                cube = new THREE.Mesh(geometry,material);
+                cube.position.set(spawnX, 25.1, spawnZ);
+                scene.add(cube);
+                cube.add(camera);
+            }
+			
+            //The Walls...
+            {
+				var wallGeometry = new THREE.CubeGeometry (500, 500, 50, 1, 1, 1);
+				var außenwand = new THREE.CubeGeometry (1000, 1000, 50, 1, 1, 1);
+				var wallMaterial = new THREE.MeshBasicMaterial ({color: 0xff0000});
+				var powerUpMaterial = new THREE.MeshBasicMaterial ({color: 0xffffff});
+				
+				//Außenwände
+				outWall = new THREE.Mesh(außenwand, wallMaterial);
+				outWall.position.set(-2000, 50, 500);
+				outWall.rotation.y = 3.14159 / 2;
+				scene.add(outWall);
+				collidableMeshList.push(outWall);
+				
+				outWall1 = new THREE.Mesh(außenwand, wallMaterial);
+				outWall1.position.set(-2000, 50, 1500);
+				outWall1.rotation.y = 3.14159 / 2;
+				scene.add(outWall1);
+				collidableMeshList.push(outWall1);
+				
+				outWall2 = new THREE.Mesh(außenwand, wallMaterial);
+				outWall2.position.set(-2000, 50, -500);
+				outWall2.rotation.y = 3.14159 / 2;
+				scene.add(outWall2);
+				collidableMeshList.push(outWall2);
+				
+				outWall3 = new THREE.Mesh(außenwand, wallMaterial);
+				outWall3.position.set(-2000, 50, -1500);
+				outWall3.rotation.y = 3.14159 / 2;
+				scene.add(outWall3);
+				collidableMeshList.push(outWall3);
+				
+				outWall4 = new THREE.Mesh(außenwand, wallMaterial);
+				outWall4.position.set(-1500, 50, -2000);
+				scene.add(outWall4);
+				collidableMeshList.push(outWall4);
+				
+				outWall5 = new THREE.Mesh(außenwand, wallMaterial);
+				outWall5.position.set(-500, 50, -2000);
+				scene.add(outWall5);
+				collidableMeshList.push(outWall5);
+				
+				outWall6 = new THREE.Mesh(außenwand, wallMaterial);
+				outWall6.position.set(0, 50, -1500);
+				outWall6.rotation.y = 3.14159 / 2;
+				scene.add(outWall6);
+				collidableMeshList.push(outWall6);
+				
+				outWall7 = new THREE.Mesh(außenwand, wallMaterial);
+				outWall7.position.set(0, 50, -500);
+				outWall7.rotation.y = 3.14159 / 2;
+				scene.add(outWall7);
+				collidableMeshList.push(outWall7);
+				
+				outWall8 = new THREE.Mesh(außenwand, wallMaterial);
+				outWall8.position.set(500, 50, 0);
+				scene.add(outWall8);
+				collidableMeshList.push(outWall8);
+				
+				outWall9 = new THREE.Mesh(außenwand, wallMaterial);
+				outWall9.position.set(1500, 50, 0);
+				scene.add(outWall9);
+				collidableMeshList.push(outWall9);
+				
+				outWallA = new THREE.Mesh(außenwand, wallMaterial);
+				outWallA.position.set(2000, 50, 500);
+				outWallA.rotation.y = 3.14159 / 2;
+				scene.add(outWallA);
+				collidableMeshList.push(outWallA);
+				
+				outWalla = new THREE.Mesh(außenwand, wallMaterial);
+				outWalla.position.set(2000, 50, 1500);
+				outWalla.rotation.y = 3.14159 / 2;
+				scene.add(outWalla);
+				collidableMeshList.push(outWalla);
+				
+				outWallb = new THREE.Mesh(außenwand, wallMaterial);
+				outWallb.position.set(1500, 50, 2000);
+				scene.add(outWallb);
+				collidableMeshList.push(outWallb);
+				
+				outWallc = new THREE.Mesh(außenwand, wallMaterial);
+				outWallc.position.set(500, 50, 2000);
+				scene.add(outWallc);
+				collidableMeshList.push(outWallc);
+				
+				outWalld = new THREE.Mesh(außenwand, wallMaterial);
+				outWalld.position.set(-500, 50, 2000);
+				scene.add(outWalld);
+				collidableMeshList.push(outWalld);
+				
+				outWalle = new THREE.Mesh(außenwand, wallMaterial);
+				outWalle.position.set(-1500, 50, 2000);
+				scene.add(outWalle);
+				collidableMeshList.push(outWalle);
+				
+				//Innenwände
+				innWall1 = new THREE.Mesh(außenwand, wallMaterial);
+				innWall1.position.set(-500, 50, 1000);
+				scene.add(innWall1);
+				collidableMeshList.push(innWall1);
+				
+				innWall2 = new THREE.Mesh(außenwand, wallMaterial);
+				innWall2.position.set(500, 50, 1000);
+				scene.add(innWall2);
+				collidableMeshList.push(innWall2);
+				
+				innWall3 = new THREE.Mesh(außenwand, wallMaterial);
+				innWall3.position.set(-1000, 50, 500);
+				innWall3.rotation.y = 3.14159 / 2;
+				scene.add(innWall3);
+				collidableMeshList.push(innWall3);
+				
+				innWall4 = new THREE.Mesh(außenwand, wallMaterial);
+				innWall4.position.set(-1000, 50, -500);
+				innWall4.rotation.y = 3.14159 / 2;
+				scene.add(innWall4);
+				collidableMeshList.push(innWall4);
+
+
+				//Creating PowerUps
+				powerUpSpeed = new THREE.Mesh(wallGeometry, powerUpMaterial);
+				powerUpSpeed.position.set(-1000, 100, -1500);
+				powerUpSpeed.rotation.y = 3.14159/2;
+				scene.add(powerUpSpeed);
+				collidablePowerUpList.push(powerUpSpeed);
+            }
+        }
+
+        init();
+
+        //Rendering the Scene
+        function render()
+        {
+            requestAnimationFrame(render);
+            update();
+            renderer.render(scene, camera);
+        }
+        render();      
+		
+        //Function update for the movement and the collisiondetection
+        function update()
+		{
+			var acceleration = 100 * (acc_clock.getElapsedTime () / 10);
+			var rotateAngle = Math.PI * 2 * (acc_clock.getElapsedTime ()  / 150);
+				
+			if (keyboard.pressed ("a"))
+			{	
+				
+				if (acc_clock.getElapsedTime () >= 4) {
+						
+					acc_clock.elapsedTime = 4;
+				}
+				
+				cube.rotation.y += rotateAngle;
+			}
+				
+			if (keyboard.pressed ("d"))
+			{
+				if (acc_clock.getElapsedTime () >= 4) {
+						
+					acc_clock.elapsedTime = 4;
+				}
+			
+				cube.rotation.y -= rotateAngle;
+			}
+			if (keyboard.pressed ("w")) 
+			{
+			
+				function updateCollision()
+				{
+					if (acc_clock.elapsedTime > 3) {acc_clock.elapsedTime = -2; }
+					if (acc_clock.elapsedTime > 2) {acc_clock.elapsedTime = -1.5; }
+					if (acc_clock.elapsedTime > 1) {acc_clock.elapsedTime = -1; }
+					if (acc_clock.elapsedTime > 0) {acc_clock.elapsedTime = -0.5; }
+
+				}
+				
+				function updateCollisionPowerUps() 
+				{
+					pU_clock.elapsedTime = 0;
+				}
+						
+				if (acc_clock.getElapsedTime () >= 2) 
+				{	
+					acc_clock.elapsedTime = 2;
+				}
+				
+				if (pU_clock.getElapsedTime () <= 3) {cube.translateZ (- acceleration * 2);}
+				else if (pU_clock.getElapsedTime () > 3) {cube.translateZ (- acceleration)};
+				
+				document.addEventListener ("keyup", keyUpw, false);
+				function keyUpw (w) {
+					if (w.keyCode == "87") {
+						acc_clock.elapsedTime = 0;
+					}
+				}
+			}
+				
+			else if (keyboard.pressed ("s"))
+			{
+				
+				function updateCollision() 
+				{
+					if (acc_clock.elapsedTime > 3) {acc_clock.elapsedTime = -2;}
+					if (acc_clock.elapsedTime > 2) {acc_clock.elapsedTime = -1.5;}
+					if (acc_clock.elapsedTime > 1) {acc_clock.elapsedTime = -1;}
+					if (acc_clock.elapsedTime > 0) {acc_clock.elapsedTime = -0.5;}
+				}
+			
+				if (acc_clock.getElapsedTime () >= 2) {
+						
+					acc_clock.elapsedTime = 2;
+				}
+					
+				cube.translateZ (+ acceleration);
+					
+				document.addEventListener ("keyup", keyUps, false);
+				function keyUps (s) {
+					if (s.keyCode == "83") {
+						acc_clock.elapsedTime = 0;
+					}
+				}
+					
+				if (keyboard.pressed ("d"))
+				{
+					cube.rotation.y += (rotateAngle * 1.5);
+				}
+					
+				if (keyboard.pressed ("a"))
+				{
+					cube.rotation.y -= (rotateAngle * 1.5);
+				}
+			}  
+			
+			else
+			{
+				acc_clock.elapsedTime = 0;
+				pU_clock.elapsedTime = 5;
+			}
+                
+            if ( keyboard.pressed("R") )
+            {
+                cube.position.x = spawnX;
+                cube.position.z = spawnZ;
+            }
+
+			for (var verti = 0; verti < cube.geometry.vertices.length; verti++) 
+			{
+			                
+				//Get Local Vertex, Get Global Vertex, Get Direction of moving cube
+				var localvert = cube.geometry.vertices [verti].clone();
+				var globalvert = localvert.applyMatrix4 (cube.matrix);
+				var directionvec = globalvert.sub (cube.position);
+
+				//Creating a Ray for Raytracing an looking if there is an collision
+				var ray = new THREE.Raycaster (cube.position.clone (), directionvec.clone ().normalize ());
+				var collision = ray.intersectObjects (collidableMeshList);
+
+                //What happens if there is an collision
+				if (collision.length > 0 && collision [0].distance < directionvec.length ()) 
+				{
+					updateCollision ();
+				}
+			}
+			
+			for (var verti = 0; verti < cube.geometry.vertices.length; verti++) 
+			{
+				
+				//Get Local Vertex, Get Global Vertex, Get Direction of moving cube
+				var localvert = cube.geometry.vertices [verti].clone ();
+				var globalvert = localvert.applyMatrix4 (cube.matrix);
+				var directionvec = globalvert.sub (cube.position);
+
+				//Creating a Ray for Raytracing an looking if there is an collision
+				var ray = new THREE.Raycaster (cube.position.clone (), directionvec.clone ().normalize ());
+				var collision = ray.intersectObjects (collidablePowerUpList);
+                
+				//What happens if there is an collision
+				if (collision.length > 0 && collision [0].distance < directionvec.length ()) 
+				{
+					updateCollisionPowerUps ();
+				}
+			}
+		}
+
+        </script>
+    </body>
+</html>
