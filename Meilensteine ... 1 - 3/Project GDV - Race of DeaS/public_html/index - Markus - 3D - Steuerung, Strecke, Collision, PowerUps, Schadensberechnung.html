@@ -38,6 +38,7 @@
 		var pU_clock = new THREE.Clock();
         var scene, camera, renderer, cube;
         var spawnX, spawnZ;		
+		var dmgCalc = 0;
 
         //Function for Creating the World, getting a scene, a camera, the
         //test-walls, the floor and our test-cube.
@@ -348,6 +349,9 @@
                 //What happens if there is an collision
 				if (collision.length > 0 && collision [0].distance < directionvec.length ()) 
 				{
+					dmgCalc += 3;
+					document.getElementById('textarea').innerHTML = dmgCalc;
+					if (dmgCalc >= 100) {cube.position.x = spawnX; cube.position.z = spawnZ; dmgCalc = 0;}
 					updateCollision ();
 				}
 			}
