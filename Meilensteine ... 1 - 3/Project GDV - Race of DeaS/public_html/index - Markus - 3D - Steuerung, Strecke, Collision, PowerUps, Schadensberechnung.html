@@ -32,13 +32,14 @@
         // checkpoint1 -- First try for a checkpoint
         var keyboard = new THREEx.KeyboardState();
         var collidableMeshList = [];
-		var collidablePowerUpList = [];
+		var collidablePowerUpList1 = [];
+		var collidablePowerUpList2 = [];
 		var acc_clock = new THREE.Clock();
 		var br_clock = new THREE.Clock();
 		var pU_clock = new THREE.Clock();
         var scene, camera, renderer, cube;
         var spawnX, spawnZ;		
-		var dmgCalc = 0;
+		var dmgCalc = -3;
 
         //Function for Creating the World, getting a scene, a camera, the
         //test-walls, the floor and our test-cube.
@@ -212,7 +213,12 @@
 				powerUpSpeed.position.set(-1000, 100, -1500);
 				powerUpSpeed.rotation.y = 3.14159/2;
 				scene.add(powerUpSpeed);
-				collidablePowerUpList.push(powerUpSpeed);
+				collidablePowerUpList1.push(powerUpSpeed);
+				
+				powerUpDmg = new THREE.Mesh(wallGeometry, powerUpMaterial);
+				powerUpDmg.position.set(1500, 100, 1000);
+				scene.add(powerUpDmg);
+				collidablePowerUpList2.push(powerUpDmg);
             }
         }
 
@@ -264,10 +270,8 @@
 					if (acc_clock.elapsedTime > 0) {acc_clock.elapsedTime = -0.5;}
 				}
 				
-				function updateCollisionPowerUps() 
+				function updateCollisionPowerUpSpeed() 
 				{
-					cube.spawnX;
-					cube.spawnZ;
 					pU_clock.elapsedTime = 0;
 				}
 						
@@ -350,9 +354,9 @@
                 //What happens if there is an collision
 				if (collision.length > 0 && collision [0].distance < directionvec.length ()) 
 				{
-					dmgCalc += 1;
 					document.getElementById('textarea').innerHTML = dmgCalc;
-					if (dmgCalc >= 100) {cube.position.x = (spawnX-50); cube.position.z = (spawnZ-50); dmgCalc = 0;}
+					dmgCalc += 1;
+					if (dmgCalc >= 100) {cube.position.x; cube.position.z; dmgCalc = -3;}
 					updateCollision ();
 				}
 			}
@@ -367,12 +371,32 @@
 
 				//Creating a Ray for Raytracing an looking if there is an collision
 				var ray = new THREE.Raycaster (cube.position.clone (), directionvec.clone ().normalize ());
-				var collision = ray.intersectObjects (collidablePowerUpList);
+				var collision = ray.intersectObjects (collidablePowerUpList1);
                 
 				//What happens if there is an collision
 				if (collision.length > 0 && collision [0].distance < directionvec.length ()) 
 				{
-					updateCollisionPowerUps ();
+					updateCollisionPowerUpSpeed ();
+				}
+			}
+			
+			for (var verti = 0; verti < cube.geometry.vertices.length; verti++) 
+			{
+
+				//Get Local Vertex, Get Global Vertex, Get Direction of moving cube
+				var localvert = cube.geometry.vertices [verti].clone ();
+				var globalvert = localvert.applyMatrix4 (cube.matrix);
+				var directionvec = globalvert.sub (cube.position);
+
+				//Creating a Ray for Raytracing an looking if there is an collision
+				var ray = new THREE.Raycaster (cube.position.clone (), directionvec.clone ().normalize ());
+				var collision = ray.intersectObjects (collidablePowerUpList2);
+                
+				//What happens if there is an collision
+				if (collision.length > 0 && collision [0].distance < directionvec.length ()) 
+				{
+					dmgCalc = 0;
+					document.getElementById('textarea').innerHTML = dmgCalc;
 				}
 			}
 		}
