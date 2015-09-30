@@ -31,11 +31,11 @@
         // target -- Test Variable for Checkpoints
         // checkpoint1 -- First try for a checkpoint
         var keyboard = new THREEx.KeyboardState();
-        var acc_clock = new THREE.Clock();
-		var br_clock = new THREE.Clock();
-		var pU_clock = new THREE.Clock();
         var collidableMeshList = [];
 		var collidablePowerUpList = [];
+		var acc_clock = new THREE.Clock();
+		var br_clock = new THREE.Clock();
+		var pU_clock = new THREE.Clock();
         var scene, camera, renderer, cube;
         var spawnX, spawnZ;
 
@@ -224,12 +224,12 @@
             renderer.render(scene, camera);
         }
         render();      
-
+		
         //Function update for the movement and the collisiondetection
         function update()
 		{
-			var acceleration = 100 * (acc_clock.getElapsedTime () / 10);        // 200 pixels pro Sekunde
-			var rotateAngle = Math.PI * (acc_clock.getElapsedTime ()  / 150);  	// Pi Grad (225°) pro Sekunde
+			var acceleration = 100 * (acc_clock.getElapsedTime () / 10);
+			var rotateAngle = Math.PI * 2 * (acc_clock.getElapsedTime ()  / 150);
 				
 			if (keyboard.pressed ("a"))
 			{	
@@ -265,16 +265,17 @@
 				
 				function updateCollisionPowerUps() 
 				{
-					
+					pU_clock.elapsedTime = 0;
 				}
 						
-				if (acc_clock.getElapsedTime () >= 4) 
+				if (acc_clock.getElapsedTime () >= 2) 
 				{	
-					acc_clock.elapsedTime = 4;
+					acc_clock.elapsedTime = 2;
 				}
-						
-				cube.translateZ (- acceleration);
-						
+				
+				if (pU_clock.getElapsedTime () <= 3) {cube.translateZ (- acceleration * 2);}
+				else if (pU_clock.getElapsedTime () > 3) {cube.translateZ (- acceleration)};
+				
 				document.addEventListener ("keyup", keyUpw, false);
 				function keyUpw (w) {
 					if (w.keyCode == "87") {
@@ -295,12 +296,12 @@
 					if (acc_clock.elapsedTime > 0) {acc_clock.elapsedTime = -0.5;}
 				}
 			
-				if (acc_clock.getElapsedTime () >= 5) {
+				if (acc_clock.getElapsedTime () >= 2) {
 						
-					acc_clock.elapsedTime = 5;
+					acc_clock.elapsedTime = 2;
 				}
 					
-				cube.translateZ (+ acceleration / 5);
+				cube.translateZ (+ acceleration);
 					
 				document.addEventListener ("keyup", keyUps, false);
 				function keyUps (s) {
@@ -311,14 +312,20 @@
 					
 				if (keyboard.pressed ("d"))
 				{
-					cube.rotation.y += (rotateAngle * 1.25);
+					cube.rotation.y += (rotateAngle * 1.5);
 				}
 					
 				if (keyboard.pressed ("a"))
 				{
-					cube.rotation.y -= (rotateAngle * 1.25);
+					cube.rotation.y -= (rotateAngle * 1.5);
 				}
 			}  
+			
+			else
+			{
+				acc_clock.elapsedTime = 0;
+				pU_clock.elapsedTime = 5;
+			}
                 
             if ( keyboard.pressed("R") )
             {
@@ -339,7 +346,7 @@
 				var collision = ray.intersectObjects (collidableMeshList);
 
                 //What happens if there is an collision
-				if (collision.length > 0 && collision [0].distance <= directionvec.length ()) 
+				if (collision.length > 0 && collision [0].distance < directionvec.length ()) 
 				{
 					updateCollision ();
 				}
@@ -358,7 +365,7 @@
 				var collision = ray.intersectObjects (collidablePowerUpList);
                 
 				//What happens if there is an collision
-				if (collision.length > 0 && collision [0].distance <= directionvec.length ()) 
+				if (collision.length > 0 && collision [0].distance < directionvec.length ()) 
 				{
 					updateCollisionPowerUps ();
 				}
