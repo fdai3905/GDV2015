@@ -8,3 +8,12 @@
 - Checkpoint detection full functional
 - Respawn added
 - 3rd Person Follower Camera added
+
+29.09.2015
+- Collision Reaction on Walls
+- PowerUp Konzept
+
+30.09.2015
+- new "final" Track
+- Cube is now Car
+- ...

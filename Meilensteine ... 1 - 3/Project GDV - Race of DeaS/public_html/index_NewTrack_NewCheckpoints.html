@@ -1,0 +1,555 @@
+<html>
+    <head>
+            <title>track</title>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+            <style>
+                    body { margin: 0; }
+                    canvas { width: 100%; height: 100% }
+            </style>
+    </head>
+    <body>
+        <!--Including libaries-->
+        <script src="JS/three.js"></script>
+        <script src="JS/three.min.js"></script>
+        <script src="JS/THREEx.KeyboardState.js"></script>
+       
+        <!--   Creating div, for different informations-->
+        <div id="textarea"></div>
+        <div id="ThreeJS" style="z-index: 2;"></div>
+        
+        <!-- Script for the Game  -->
+        <script>    
+        // Global Variables
+        // keyboard -- For getting the pressed Keys from Keyboard
+        // clock    -- For getting the Time, for calculating speed per second
+        // collidableMeshList -- All Meshes, that could be hit by the "car"
+        // scene -- The complete Scene in where the game happens
+        // camera -- The Name says itself, the camera
+        // renderer -- For rendering the complete Scene
+        // cube -- Now a cube, but later the car
+        // wall1 / wall2 -- The two test-walls for collisiondetection
+        // target -- Test Variable for Checkpoints
+        // checkpoint1 -- First try for a checkpoint
+        var keyboard = new THREEx.KeyboardState();
+        var acc_clock = new THREE.Clock();
+		var br_clock = new THREE.Clock();
+		var rota_clock = new THREE.Clock();
+        var collidableMeshList = [];
+        var checkpointMeshList = [];
+        var arrowList = [];
+        var directionList = [];
+        var scene, camera, renderer, cube;
+        var wall, wall2;
+        var target;  
+        var checkpoint;
+        var spawnX, spawnZ;
+
+        //Function for Creating the World, getting a scene, a camera, the
+        //test-walls, the floor and our test-cube.
+        //Also Creating a Renderer with WebGL
+        function init()
+        {
+            //Creating a new Scene
+            scene = new THREE.Scene();
+
+            //Creating a new Camera
+            {
+		camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 20000);
+                //camera.position.set(0,7000,80);
+                camera.lookAt(scene.position);
+                //camera.position.z = 200;
+		//camera.position.y = 75;
+            }
+
+            //Creating a new Renderer
+            {
+                renderer = new THREE.WebGLRenderer();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                document.body.appendChild(renderer.domElement);
+            }
+
+            //FLOOR
+            {
+                var floorMaterial = new THREE.MeshBasicMaterial( {color:0x444444, side:THREE.DoubleSide} );
+                var floorGeometry = new THREE.PlaneGeometry(5000, 5000, 10, 10);
+                var floor = new THREE.Mesh(floorGeometry, floorMaterial);
+                floor.position.y = -0.5;
+                floor.rotation.x = Math.PI / 2;
+                scene.add(floor);
+            }
+
+            //Add a cube
+            {
+                spawnX = -2000;
+                spawnZ = 2000;
+                var geometry = new THREE.BoxGeometry(50,50,50);
+                var material = new THREE.MeshBasicMaterial({color:0x0000ff});
+                cube = new THREE.Mesh(geometry,material);
+               
+                cube.position.set(spawnX, 25.1, spawnZ);
+                scene.add(cube);
+		cube.add(camera);
+            }
+
+            //The Walls...
+            {
+				var wallGeometry = new THREE.CubeGeometry( 500, 500, 50, 1, 1, 1 );
+				var außenwand = new THREE.CubeGeometry( 1000, 100, 50, 1, 1, 1 );
+				var wallMaterial = new THREE.MeshNormalMaterial();
+				var wireMaterial = new THREE.MeshBasicMaterial( { color: 0x000000, wireframe:true } );
+				var wallMaterial2 = new THREE.MeshBasicMaterial( { color: 0x00ff00});
+				
+				//Außenwände
+				outWall = new THREE.Mesh(außenwand, wallMaterial);
+				outWall.position.set(-2400, 50, 1900);
+				outWall.rotation.y = 3.14159 / 2;
+				scene.add(outWall);
+				collidableMeshList.push(outWall);
+				
+				outWall2 = new THREE.Mesh(außenwand, wallMaterial);
+				outWall2.position.set(-2400, 50, 900);
+				outWall2.rotation.y = 3.14159 / 2;
+				scene.add(outWall2);
+				collidableMeshList.push(outWall2);
+                                
+                                // kurven   
+                                /*var start = new THREE.Vector3(-1450, 0,-550);
+                                var middle = new THREE.Vector3(0, 0,0);
+                                var end = new THREE.Vector3(-800, 0, 500);
+
+                                var curveQuad = new THREE.QuadraticBezierCurve3(start, middle, end);
+
+                                var tube = new THREE.TubeGeometry(curveQuad, 150, 50, 6, false);
+                                var kurve = new THREE.Mesh(tube, new THREE.MeshNormalMaterial());
+                                kurve.name = 'tube';
+
+                                scene.add(kurve);*/
+				
+				outWall3 = new THREE.Mesh(außenwand, wallMaterial);
+				outWall3.position.set(-1900, 50, 400);
+				scene.add(outWall3);
+				collidableMeshList.push(outWall3);
+				
+				outWall4 = new THREE.Mesh(außenwand, wallMaterial);
+				outWall4.position.set(-1000, 50, 1100);
+				scene.add(outWall4);
+				collidableMeshList.push(outWall4);
+				
+				outWall5 = new THREE.Mesh(außenwand, wallMaterial);
+				outWall5.position.set(-1500, 50, 1600);
+                                outWall5.rotation.y = 3.14159 / 2;
+				scene.add(outWall5);
+				collidableMeshList.push(outWall5);
+				
+				outWall6 = new THREE.Mesh(außenwand, wallMaterial);
+				outWall6.position.set(-1420, 50, -80);
+				outWall6.rotation.y = 3.14159 / 2;
+				scene.add(outWall6);
+				collidableMeshList.push(outWall6);
+				
+				outWall7 = new THREE.Mesh(außenwand, wallMaterial);
+				outWall7.position.set(-900, 50, -80);
+				outWall7.rotation.y = 3.14159 / 2;
+				scene.add(outWall7);
+				collidableMeshList.push(outWall7);
+				
+				outWall8 = new THREE.Mesh(außenwand, wallMaterial);
+				outWall8.position.set(-670, 50, 800);
+                                outWall8.rotation.y = 3.14159 / 1.5;
+				scene.add(outWall8);
+				collidableMeshList.push(outWall8);
+				
+				outWall9 = new THREE.Mesh(außenwand, wallMaterial);
+				outWall9.position.set(-1830, 50,-800);
+                                outWall9.rotation.y = 3.14159 / 1.2;
+				scene.add(outWall9);
+				collidableMeshList.push(outWall9);
+				
+				outWall10 = new THREE.Mesh(außenwand, wallMaterial);
+				outWall10.position.set(-2000, 50, -1440);
+				outWall10.rotation.y = 3.14159 / 3.2;
+				scene.add(outWall10);
+				collidableMeshList.push(outWall10);
+                                
+                                outWall11 = new THREE.Mesh(außenwand, wallMaterial);
+				outWall11.position.set(-1630, 50, -2000);
+				outWall11.rotation.y = 3.14159 / 3.2;
+				scene.add(outWall11);
+				collidableMeshList.push(outWall11);
+                                
+                                outWall12 = new THREE.Mesh(außenwand, wallMaterial);
+				outWall12.position.set(-900, 50, -2400);		
+				scene.add(outWall12);
+				collidableMeshList.push(outWall12);
+                                
+                                outWall13 = new THREE.Mesh(außenwand, wallMaterial);
+				outWall13.position.set(100, 50, -2400);				
+				scene.add(outWall13);
+				collidableMeshList.push(outWall13);
+                                
+                                outWall14 = new THREE.Mesh(außenwand, wallMaterial);
+				outWall14.position.set(1100, 50, -2400);				
+				scene.add(outWall14);
+				collidableMeshList.push(outWall14);
+                                
+                                outWall15 = new THREE.Mesh(außenwand, wallMaterial);
+				outWall15.position.set(1450, 50, -1920);
+				outWall15.rotation.y = 3.14159 / 2.5;
+				scene.add(outWall15);
+				collidableMeshList.push(outWall15);
+                                
+                                outWall16 = new THREE.Mesh(außenwand, wallMaterial);
+				outWall16.position.set(1300, 50, -1020);
+				outWall16.rotation.y = 3.14159 / 2;
+				scene.add(outWall16);
+				collidableMeshList.push(outWall16);
+                                
+                                outWall17 = new THREE.Mesh(außenwand, wallMaterial);
+				outWall17.position.set(600, 50, -500);
+				outWall17.rotation.y = 3.14159 / 2;
+				scene.add(outWall17);
+				collidableMeshList.push(outWall17);
+                                
+                                outWall18 = new THREE.Mesh(außenwand, wallMaterial);
+				outWall18.position.set(1780, 50, -520);				
+				scene.add(outWall18);
+				collidableMeshList.push(outWall18);
+                                
+                                outWall18 = new THREE.Mesh(außenwand, wallMaterial);
+				outWall18.position.set(1780, 50, -20);				
+				scene.add(outWall18);
+				collidableMeshList.push(outWall18);
+                                
+                                outWall19 = new THREE.Mesh(außenwand, wallMaterial);
+				outWall19.position.set(2300, 50, -400);
+				outWall19.rotation.y = 3.14159 / 2;
+				scene.add(outWall19);
+				collidableMeshList.push(outWall19);
+				
+                                outWall20 = new THREE.Mesh(außenwand, wallMaterial);
+				outWall20.position.set(600, 50, 500);
+				outWall20.rotation.y = 3.14159 / 2;
+				scene.add(outWall20);
+				collidableMeshList.push(outWall20);
+                                
+                                outWall21 = new THREE.Mesh(außenwand, wallMaterial);
+				outWall21.position.set(1300, 50, 500);
+				outWall21.rotation.y = 3.14159 / 2;
+				scene.add(outWall21);
+				collidableMeshList.push(outWall21);
+                                
+                                outWall22 = new THREE.Mesh(außenwand, wallMaterial);
+				outWall22.position.set(1300, 50, 1500);
+				outWall22.rotation.y = 3.14159 / 2;
+				scene.add(outWall22);
+				collidableMeshList.push(outWall22);
+                                
+                                outWall23 = new THREE.Mesh(außenwand, wallMaterial);
+				outWall23.position.set(850, 50, 2000);
+				scene.add(outWall23);
+				collidableMeshList.push(outWall23);
+                                
+                                outWall24 = new THREE.Mesh(außenwand, wallMaterial);
+				outWall24.position.set(-50, 50, 2000);
+				scene.add(outWall24);
+				collidableMeshList.push(outWall24);
+                                
+                                outWall25 = new THREE.Mesh(außenwand, wallMaterial);
+				outWall25.position.set(-950, 50, 2200);
+                                outWall25.rotation.y = 3.14159 / 7;
+				scene.add(outWall25);
+				collidableMeshList.push(outWall25);
+                                
+                                outWall26 = new THREE.Mesh(außenwand, wallMaterial);
+				outWall26.position.set(-1900, 50, 2400);             
+				scene.add(outWall26);
+				collidableMeshList.push(outWall26);
+                                
+                                outWall27 = new THREE.Mesh(außenwand, wallMaterial);
+				outWall27.position.set(-1050, 50, 1850);  
+                                outWall27.rotation.y = 3.14159 / 7;
+				scene.add(outWall27);
+				collidableMeshList.push(outWall27);
+                                
+                                outWall28 = new THREE.Mesh(außenwand, wallMaterial);
+				outWall28.position.set(-200, 50, 1450);  
+                                outWall28.rotation.y = 3.14159 / 7;
+				scene.add(outWall28);
+				collidableMeshList.push(outWall28);
+                                
+                                outWall29 = new THREE.Mesh(außenwand, wallMaterial);
+				outWall29.position.set(350, 50, 850);  
+                                outWall29.rotation.y = 3.14159 / 3;
+				scene.add(outWall29);
+				collidableMeshList.push(outWall29);
+                                
+                                outWall30 = new THREE.Mesh(außenwand, wallMaterial);
+				outWall30.position.set(100, 50, -1500);  
+                                //outWall30.rotation.y = 3.14159 /2;
+				scene.add(outWall30);
+				collidableMeshList.push(outWall30);
+                                
+                                outWall31 = new THREE.Mesh(außenwand, wallMaterial);
+				outWall31.position.set(-400, 50, -1500);  
+                                //outWall31.rotation.y = 3.14159 /2;
+				scene.add(outWall31);
+				collidableMeshList.push(outWall31);
+                                
+                                outWall32 = new THREE.Mesh(außenwand, wallMaterial);
+				outWall32.position.set(-900, 50, -1020);  
+                                outWall32.rotation.y = 3.14159 /2;
+				scene.add(outWall32);
+				collidableMeshList.push(outWall32);
+                                
+                                outWall33 = new THREE.Mesh(außenwand, wallMaterial);
+				outWall33.position.set(600, 50, -1020);  
+                                outWall33.rotation.y = 3.14159 /2;
+				scene.add(outWall33);
+				collidableMeshList.push(outWall33);
+                                
+				/*outWalla = new THREE.Mesh(außenwand, wallMaterial);
+				outWalla.position.set(2000, 50, 1500);
+				outWalla.rotation.y = 3.14159 / 2;
+				scene.add(outWalla);
+				collidableMeshList.push(outWalla);
+				
+				outWallb = new THREE.Mesh(außenwand, wallMaterial);
+				outWallb.position.set(1500, 50, 2000);
+				scene.add(outWallb);
+				collidableMeshList.push(outWallb);
+				
+				outWallc = new THREE.Mesh(außenwand, wallMaterial);
+				outWallc.position.set(500, 50, 2000);
+				scene.add(outWallc);
+				collidableMeshList.push(outWallc);
+				
+				outWalld = new THREE.Mesh(außenwand, wallMaterial);
+				outWalld.position.set(-500, 50, 2000);
+				scene.add(outWalld);
+				collidableMeshList.push(outWalld);
+				
+				outWalle = new THREE.Mesh(außenwand, wallMaterial);
+				outWalle.position.set(-1500, 50, 2000);
+				scene.add(outWalle);
+				collidableMeshList.push(outWalle);
+                                */
+				
+				//Innenwände
+				/*innWall1 = new THREE.Mesh(außenwand, wallMaterial);
+				innWall1.position.set(-500, 50, 1000);
+				scene.add(innWall1);
+				collidableMeshList.push(innWall1);
+				
+				innWall2 = new THREE.Mesh(außenwand, wallMaterial);
+				innWall2.position.set(500, 50, 1000);
+				scene.add(innWall2);
+				collidableMeshList.push(innWall2);
+				
+				innWall3 = new THREE.Mesh(außenwand, wallMaterial);
+				innWall3.position.set(-1000, 50, 500);
+				innWall3.rotation.y = 3.14159 / 2;
+				scene.add(innWall3);
+				collidableMeshList.push(innWall3);
+				
+				innWall4 = new THREE.Mesh(außenwand, wallMaterial);
+				innWall4.position.set(-1000, 50, -500);
+				innWall4.rotation.y = 3.14159 / 2;
+				scene.add(innWall4);
+				collidableMeshList.push(innWall4);
+*/
+
+				//Creating Checkpoint 1
+                                /*
+				checkpoint1 = new THREE.Mesh(wallGeometry, wallMaterial);
+				checkpoint1.position.set(1000, 100, 500);
+				checkpoint1.rotation.y = 3.14159/2;
+				scene.add(checkpoint1);
+				checkpointMeshList.push(checkpoint1);
+				
+				checkpointWire1 = new THREE.Mesh(außenwand, wireMaterial);
+				checkpointWire1.position.set(1000, 50, 500);
+				checkpointWire1.rotation.y = 3.14159/2;
+				scene.add(checkpointWire1);
+				
+				checkpoint2 = new THREE.Mesh(wallGeometry, wallMaterial);
+				checkpoint2.position.set(1000, 100, 1500);
+				checkpoint2.rotation.y = 3.14159/2;
+				scene.add(checkpoint2);
+				checkpointMeshList.push(checkpoint2);
+				
+				checkpointWire2 = new THREE.Mesh(außenwand, wireMaterial);
+				checkpointWire2.position.set(1000, 50, 1500);
+				checkpointWire2.rotation.y = 3.14159/2;
+				scene.add(checkpointWire2);
+
+				//First Target!
+				target = checkpointWire1;
+				checkpoint1.material = wallMaterial2;
+                                */
+            }
+        }
+
+        init();
+
+        //Rendering the Scene
+        function render()
+        {
+            requestAnimationFrame(render);
+            update();
+            renderer.render(scene, camera);
+        }
+        render();
+            
+        // Information when there is an Collision getting out on console
+        //and in HTML
+
+        function clearText()
+        {
+            document.getElementById('textarea').innerHTML = '...';
+        }
+
+
+        function nextTarget()
+        {
+			for(var i=0; i< checkpointMeshList.length;i++)
+            {
+                if(checkpointMeshList[i]===target)
+                {
+                    target = checkpointMeshList[i+1];
+                    checkpointMeshList[i].material = new THREE.MeshBasicMaterial({color:0xff0000});
+                    checkpointMeshList[i+1].material = new THREE.MeshBasicMaterial({color:0x00ff00});
+                    spawnX = checkpointMeshList[i].position.x;
+                    spawnY = checkpointMeshList[i].position.y;
+                }
+            }
+        }
+
+        //Function update for the movement and the collisiondetection
+        function update()
+		{
+			var acceleration = 100 * (acc_clock.getElapsedTime () / 10);        // 200 pixels pro Sekunde
+			var rotateAngle = Math.PI * (acc_clock.getElapsedTime () / 150);  	// Pi Grad (225°) pro Sekunde
+				
+			if (keyboard.pressed ("a"))
+			{	
+				
+				if (acc_clock.getElapsedTime () >= 4) {
+						
+					acc_clock.elapsedTime = 4;
+				}
+				
+				cube.rotation.y += rotateAngle;
+			}
+				
+			if (keyboard.pressed ("d"))
+			{
+				if (acc_clock.getElapsedTime () >= 4) {
+						
+					acc_clock.elapsedTime = 4;
+				}
+			
+				cube.rotation.y -= rotateAngle;
+			}
+			if (keyboard.pressed ("w"))
+			{
+				acc_clock.start ();
+					
+				function updateCollision()
+				{
+					if (acc_clock.elapsedTime > 3) {acc_clock.elapsedTime = -2;}
+					if (acc_clock.elapsedTime > 2) {acc_clock.elapsedTime = -1.5;}
+					if (acc_clock.elapsedTime > 1) {acc_clock.elapsedTime = -1;}
+					if (acc_clock.elapsedTime > 0) {acc_clock.elapsedTime = -0.5;}
+				}
+						
+				if (acc_clock.getElapsedTime () >= 4) {
+							
+					acc_clock.elapsedTime = 4;
+				}
+						
+				cube.translateZ (- acceleration);
+						
+				document.addEventListener ("keyup", keyUpw, false);
+				function keyUpw (w) {
+					if (w.keyCode == "87") {
+						acc_clock.elapsedTime = 0;
+					}
+				}
+			}
+				
+			else if (keyboard.pressed ("s"))
+			{
+				acc_clock.start ();
+				
+				function updateCollision()
+				{
+					if (acc_clock.elapsedTime > 3) {acc_clock.elapsedTime = -2;}
+					if (acc_clock.elapsedTime > 2) {acc_clock.elapsedTime = -1.5;}
+					if (acc_clock.elapsedTime > 1) {acc_clock.elapsedTime = -1;}
+					if (acc_clock.elapsedTime > 0) {acc_clock.elapsedTime = -0.5;}
+				}
+					
+				if (acc_clock.getElapsedTime () >= 5) {
+						
+					acc_clock.elapsedTime = 5;
+				}
+					
+				cube.translateZ (+ acceleration / 5);
+					
+				document.addEventListener ("keyup", keyUps, false);
+				function keyUps (s) {
+					if (s.keyCode == "83") {
+						acc_clock.elapsedTime = 0;
+					}
+				}
+					
+				if (keyboard.pressed ("d"))
+				{
+					cube.rotation.y += (rotateAngle * 1.25);
+				}
+					
+				if (keyboard.pressed ("a"))
+				{
+					cube.rotation.y -= (rotateAngle * 1.25);
+				}
+			}  
+                
+            if ( keyboard.pressed("R") )
+            {
+                cube.position.x = spawnX;
+                cube.position.z = spawnZ;
+            }
+              
+            //Collision detection via Raytracing
+            //Looking for all different Vertices 
+            for(var verti = 0; verti <cube.geometry.vertices.length; verti++)
+            {
+                
+                //Get Local Vertex, Get Global Vertex, Get Direction of moving cube
+                var localvert = cube.geometry.vertices[verti].clone();
+                var globalvert = localvert.applyMatrix4( cube.matrix);
+                var directionvec = globalvert.sub(cube.position);
+
+                //Creating a Ray for Raytracing an looking if there is an collision
+                var ray = new THREE.Raycaster(cube.position.clone(), directionvec.clone().normalize());
+                var collision = ray.intersectObjects(collidableMeshList);
+                var checkcollision = ray.intersectObjects(checkpointMeshList);
+
+                //What happens if there is an collision
+                if(collision.length > 0 && collision[0].distance < directionvec.length())
+                {
+                    clearText();  
+                    updateCollision();
+                }
+                if(checkcollision.length > 0 && checkcollision[0].distance < directionvec.length())
+                {
+                    console.log(checkcollision);
+                    nextTarget();
+                }
+            }
+        }
+
+            </script>
+    </body>
+</html>
