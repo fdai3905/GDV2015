@@ -44,8 +44,9 @@
         var wall, wall2;
         var target;  
         var checkpoint;
-        var spawnX, spawnZ;
+        var spawnX, spawnZ, destroyZ, destroyX;
         var round;
+        var damageCalc;
 
         //Function for Creating the World, getting a scene, a camera, the
         //test-walls, the floor and our test-cube.
@@ -345,6 +346,7 @@
             //First Target!
             target = checkpointWirea;
             checkpointa.material = new THREE.MeshBasicMaterial({color:0x00ff00});
+            damageCalc = 0;
             }
         }
 
@@ -415,10 +417,30 @@
 
                                             function updateCollision()
                                             {
-                                                    if (acc_clock.elapsedTime > 3) {acc_clock.elapsedTime = -2;}
-                                                    if (acc_clock.elapsedTime > 2) {acc_clock.elapsedTime = -1.5;}
-                                                    if (acc_clock.elapsedTime > 1) {acc_clock.elapsedTime = -1;}
-                                                    if (acc_clock.elapsedTime > 0) {acc_clock.elapsedTime = -0.5;}
+                                                    if (acc_clock.elapsedTime > 3) 
+                                                    {
+                                                        acc_clock.elapsedTime = -2;
+                                                        damageCalc += 3;
+                                                        console.log("3 Damage!");
+                                                    }
+                                                    if (acc_clock.elapsedTime > 2) 
+                                                    {
+                                                        acc_clock.elapsedTime = -1.5;
+                                                        damageCalc += 2;
+                                                        console.log("2 Damage!");
+                                                    }
+                                                    if (acc_clock.elapsedTime > 1) 
+                                                    {
+                                                        acc_clock.elapsedTime = -1;
+                                                        damageCalc += 1;
+                                                        console.log("1 Damage!");
+                                                    }
+                                                    if (acc_clock.elapsedTime > 0) 
+                                                    {
+                                                        acc_clock.elapsedTime = -0.5;
+                                                        //No Damage!
+                                                        console.log("NO Damage!");
+                                                    }
                                             }
 
                                             if (acc_clock.getElapsedTime () >= 4) {
@@ -491,8 +513,18 @@
             {
                 cube.position.x = spawnX;
                 cube.position.z = spawnZ;
+                damageCalc = 0;
+                cube.material = new THREE.MeshBasicMaterial({color:0x0000ff});
             }
               
+            if(damageCalc >= 10)
+            {
+                cube.material = new THREE.MeshBasicMaterial({color:0x000000});
+                destroyX = cube.position.x;
+                destroyZ = cube.position.z;
+                console.log("Your Car has been destroyed! Press Respawn!");
+                destroyed();
+            }
             //Round Counter
             if(round == 4)
             {
@@ -525,6 +557,15 @@
                     console.log(checkcollision);
                     nextTarget();
                 }
+            }
+        }
+        
+        function destroyed()
+        {
+            while(damageCalc >= 10)
+            {
+                cube.position.x = destroyX;
+                cube.position.z = destroyZ;
             }
         }
 
