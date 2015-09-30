@@ -13,7 +13,8 @@
         <script src="JS/three.js"></script>
         <script src="JS/three.min.js"></script>
         <script src="JS/THREEx.KeyboardState.js"></script>
-       
+        <script src="JS/JSONLoader.js"></script>
+        
         <!--   Creating div, for different informations-->
         <div id="textarea"></div>
         <div id="ThreeJS" style="z-index: 2;"></div>
@@ -44,6 +45,8 @@
         var target;  
         var checkpoint;
         var spawnX, spawnZ;
+        var loaderShip, loaderShip1;
+        var ship, ship1;
 
         //Function for Creating the World, getting a scene, a camera, the
         //test-walls, the floor and our test-cube.
@@ -56,10 +59,13 @@
             //Creating a new Camera
             {
 		camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 20000);
-                camera.position.set(0,7000,80);
+               //camera.position.set(0,7000,80);
                 camera.lookAt(scene.position);
                 //camera.position.z = 200;
 		//camera.position.y = 75;
+                
+                
+                
             }
 
             //Creating a new Renderer
@@ -81,7 +87,7 @@
 
             //Add a cube
             {
-                spawnX = -2000;
+                spawnX = -1800;
                 spawnZ = 2000;
                 var geometry = new THREE.BoxGeometry(50,50,50);
                 var material = new THREE.MeshBasicMaterial({color:0x0000ff});
@@ -89,8 +95,30 @@
                
                 cube.position.set(spawnX, 25.1, spawnZ);
                 scene.add(cube);
-		//cube.add(camera);
+                cube.add(camera);
             }
+            
+            //objebte einfügen
+            loaderShip = new THREE.JSONLoader();           
+            loaderShip.load("ModelsJson/SpaceShip.json", function( geometry, mat ) {
+                              
+                ship = new THREE.Mesh( geometry, new THREE.MeshFaceMaterial(mat) );
+                ship.scale.set( 15, 15, 15);
+                ship.position.y = 15;
+                ship.position.x = -2000;
+                ship.position.z = 2000;
+                scene.add(ship);             
+            } );           
+            loaderShip1 = new THREE.JSONLoader();
+            loaderShip1.load("ModelsJson/Ship.json", function( geometry, mat ) {
+                              
+                ship1 = new THREE.Mesh( geometry, new THREE.MeshFaceMaterial(mat) );
+                ship1.scale.set( 30, 30, 30);
+                ship1.position.y = 15;
+                ship1.position.x = -2200;
+                ship1.position.z = 2000;
+                scene.add(ship1);                
+            } );
 
             //The Walls...
             {
@@ -100,10 +128,9 @@
                                 var wandMittel = new THREE.CubeGeometry( 1237, 100, 50, 1, 1, 1 );
                                 var wandKurz = new THREE.CubeGeometry( 825, 100, 50, 1, 1, 1 );
                                 var wandNano = new THREE.CubeGeometry( 437, 100, 50, 1, 1, 1 );
-				var wallMaterial = new THREE.MeshNormalMaterial();
-				var wireMaterial = new THREE.MeshBasicMaterial( { color: 0x000000} );
-				var wallMaterial2 = new THREE.MeshBasicMaterial( { color: 0x00ff00});
-				                             
+				var wallMaterial = new THREE.MeshPhongMaterial( { color: 0x00FFCC, specular: 0xFFFFFF, shininess: 100 } );	
+				var wallMaterial2 = new THREE.MeshPhongMaterial( { color: 0x00ff00, specular: 0xFFFFFF, shininess: 100 });
+				var wallMaterial3 = new THREE.MeshPhongMaterial( {color:0x0000ff, specular: 0xFFFFFF, shininess: 100 });                             
                                 
 				//Außenwände Weltbegrenzung Links, Rechts, Oben, Unten
                                 outWallLi = new THREE.Mesh(wandbegrenzung, wallMaterial);
@@ -130,7 +157,7 @@
                                
                                
                                 //Innenwände Lang
-				outWallL = new THREE.Mesh(wandLang, wallMaterial);
+				outWallL = new THREE.Mesh(wandLang, wallMaterial2);
 				outWallL.position.set(-1700, 50, 825);
 				outWallL.rotation.y = 3.14159 / 2;
 				scene.add(outWallL);
@@ -142,13 +169,13 @@
 				scene.add(outWallL2);
 				collidableMeshList.push(outWallL2);
                                 
-                                outWallL3 = new THREE.Mesh(wandLang, wallMaterial);
+                                outWallL3 = new THREE.Mesh(wandLang, wallMaterial3);
 				outWallL3.position.set(-90, 50, -425);
 				//outWallL3.rotation.y = 3.14159 / 2;
 				scene.add(outWallL3);
 				collidableMeshList.push(outWallL3);
                                 
-                                outWallL4 = new THREE.Mesh(wandLang, wallMaterial);
+                                outWallL4 = new THREE.Mesh(wandLang, wallMaterial2);
 				outWallL4.position.set(690, 50, -50);
 				//outWallL4.rotation.y = 3.14159 / 2;
 				scene.add(outWallL4);
@@ -160,13 +187,13 @@
 				scene.add(outWallL5);
 				collidableMeshList.push(outWallL5);
                                 
-                                outWallL6 = new THREE.Mesh(wandLang, wallMaterial);
+                                outWallL6 = new THREE.Mesh(wandLang, wallMaterial3);
 				outWallL6.position.set(300, 50, 900);
 				//outWallL6.rotation.y = 3.14159 / 2;
 				scene.add(outWallL6);
 				collidableMeshList.push(outWallL6);
                                 
-                                outWallL7 = new THREE.Mesh(wandLang, wallMaterial);
+                                outWallL7 = new THREE.Mesh(wandLang, wallMaterial2);
 				outWallL7.position.set(100, 50, 450);
 				//outWallL7rotation.y = 3.14159 / 2;
 				scene.add(outWallL7);
@@ -180,13 +207,13 @@
                                 
                                 
                                 // Innenwände Mittel
-                                outWallM = new THREE.Mesh(wandMittel, wallMaterial);
+                                outWallM = new THREE.Mesh(wandMittel, wallMaterial3);
 				outWallM.position.set(-900, 50, -1050);
 				outWallM.rotation.y = 3.14159 / 2;
 				scene.add(outWallM);
 				collidableMeshList.push(outWallM);
                                 
-                                outWallM1 = new THREE.Mesh(wandMittel, wallMaterial);
+                                outWallM1 = new THREE.Mesh(wandMittel, wallMaterial2);
 				outWallM1.position.set(1100, 50, -1050);
 				outWallM1.rotation.y = 3.14159 / 2;
 				scene.add(outWallM1);
@@ -198,13 +225,13 @@
 				scene.add(outWallM2);
 				collidableMeshList.push(outWallM2);
                                 
-                                outWallM3 = new THREE.Mesh(wandMittel, wallMaterial);
+                                outWallM3 = new THREE.Mesh(wandMittel, wallMaterial3);
 				outWallM3.position.set(-690, 50, -50);
 				//outWallM3.rotation.y = 3.14159 / 2;
 				scene.add(outWallM3);
 				collidableMeshList.push(outWallM3);
                                 
-                                outWallM3 = new THREE.Mesh(wandMittel, wallMaterial);
+                                outWallM3 = new THREE.Mesh(wandMittel, wallMaterial2);
 				outWallM3.position.set(-700, 50, 900);
 				//outWallM3.rotation.y = 3.14159 / 2;
 				scene.add(outWallM3);
@@ -216,19 +243,19 @@
 				scene.add(outWallM4);
 				collidableMeshList.push(outWallM4);
                                 
-                                outWallM5 = new THREE.Mesh(wandMittel, wallMaterial);
+                                outWallM5 = new THREE.Mesh(wandMittel, wallMaterial3);
 				outWallM5.position.set(2100, 50, 2100);
 				outWallM5.rotation.y = 3.14159 / 4;
 				scene.add(outWallM5);
 				collidableMeshList.push(outWallM5);
                                 
-                                outWallM6 = new THREE.Mesh(wandMittel, wallMaterial);
+                                outWallM6 = new THREE.Mesh(wandMittel, wallMaterial2);
 				outWallM6.position.set(-280, 50, -1900);
 				outWallM6.rotation.y = 3.14159 / 2;
 				scene.add(outWallM6);
 				collidableMeshList.push(outWallM6);
                                 
-                                outWallM7 = new THREE.Mesh(wandMittel, wallMaterial);
+                                outWallM7 = new THREE.Mesh(wandMittel, wallMaterial3);
 				outWallM7.position.set(480, 50, -1900);
 				outWallM7.rotation.y = 3.14159 / 2;
 				scene.add(outWallM7);
@@ -236,7 +263,7 @@
                                 
                                 
                                 //Innenwände Kurz
-                                outWallK = new THREE.Mesh(wandKurz, wallMaterial);
+                                outWallK = new THREE.Mesh(wandKurz, wallMaterial2);
 				outWallK.position.set(-1287, 50, -1650);
 				//outWallK.rotation.y = 3.14159 / 2;
 				scene.add(outWallK);
@@ -248,7 +275,7 @@
 				scene.add(outWallK1);
 				collidableMeshList.push(outWallK1);
                                 
-                                outWallK2 = new THREE.Mesh(wandKurz, wallMaterial);
+                                outWallK2 = new THREE.Mesh(wandKurz, wallMaterial3);
 				outWallK2.position.set(-1310, 50, 1650);
 				//outWallK2.rotation.y = 3.14159 / 2;
 				scene.add(outWallK2);
@@ -260,13 +287,13 @@
 				scene.add(outWallK3);
 				collidableMeshList.push(outWallK3);
                                 
-                                outWallK4 = new THREE.Mesh(wandKurz, wallMaterial);
+                                outWallK4 = new THREE.Mesh(wandKurz, wallMaterial2);
 				outWallK4.position.set(100, 50, 2200);
 				outWallK4.rotation.y = 3.14159 / 2;
 				scene.add(outWallK4);
 				collidableMeshList.push(outWallK4);
                                 
-                                outWallN7 = new THREE.Mesh(wandKurz, wallMaterial);
+                                outWallN7 = new THREE.Mesh(wandKurz, wallMaterial3);
 				outWallN7.position.set(100, 50, -1300);
 				//outWallN7rotation.y = 3.14159 / 2;
 				scene.add(outWallN7);
@@ -274,13 +301,13 @@
                          
                                 
                                 //Innenwände Nano
-                                outWallN = new THREE.Mesh(wandNano, wallMaterial);
+                                outWallN = new THREE.Mesh(wandNano, wallMaterial2);
 				outWallN.position.set(1300, 50, -1650);
 				//outWallK.rotation.y = 3.14159 / 2;
 				scene.add(outWallN);
 				collidableMeshList.push(outWallN);
                                 
-                                outWallN1 = new THREE.Mesh(wandNano, wallMaterial);
+                                outWallN1 = new THREE.Mesh(wandNano, wallMaterial3);
 				outWallN1.position.set(1500, 50, -280);
 				outWallN1.rotation.y = 3.14159 / 2;
 				scene.add(outWallN1);
@@ -292,19 +319,19 @@
 				scene.add(outWallN2);
 				collidableMeshList.push(outWallN2);
                                 
-                                outWallN2 = new THREE.Mesh(wandNano, wallMaterial);
+                                outWallN2 = new THREE.Mesh(wandNano, wallMaterial3);
 				outWallN2.position.set(700, 50, 1420);
 				outWallN2.rotation.y = 3.14159 / 2;
 				scene.add(outWallN2);
 				collidableMeshList.push(outWallN2);
                                 
-                                outWallN3 = new THREE.Mesh(wandNano, wallMaterial);
+                                outWallN3 = new THREE.Mesh(wandNano, wallMaterial2);
 				outWallN3.position.set(920, 50, 1620);
 				//outWallN3.rotation.y = 3.14159 / 2;
 				scene.add(outWallN3);
 				collidableMeshList.push(outWallN3);
                                 
-                                outWallN4 = new THREE.Mesh(wandNano, wallMaterial);
+                                outWallN4 = new THREE.Mesh(wandNano, wallMaterial3);
 				outWallN4.position.set(1100, 50, 1400);
 				outWallN4.rotation.y = 3.14159 / 2;
 				scene.add(outWallN4);
@@ -316,7 +343,7 @@
 				scene.add(outWallN5);
 				collidableMeshList.push(outWallN5);
                                 
-                                outWallN6 = new THREE.Mesh(wandNano, wallMaterial);
+                                outWallN6 = new THREE.Mesh(wandNano, wallMaterial2);
 				outWallN6.position.set(-100, 50, 1800);
 				//outWallN6.rotation.y = 3.14159 / 2;
 				scene.add(outWallN6);
@@ -356,9 +383,44 @@
 
         init();
 
+        function addLights()
+        {
+            //added light
+            var ambientLight = new THREE.AmbientLight(0xFFFFFF);
+            //scene.add(ambientLight);
+            var directionalLight = new THREE.DirectionalLight(0xFFFFFF);
+            directionalLight.position.set(1, 1, 1).normalize();
+            scene.add(directionalLight);
+            
+            var hemLight = new THREE.HemisphereLight(0xffe5bb, 0xFFFFFF, .2);
+            scene.add(hemLight);
+            
+            var bluePoint = new THREE.PointLight(0x0033ff, 5, 2000);
+            bluePoint.position.set( -2050, 10, 0 );
+            scene.add(bluePoint);
+            scene.add(new THREE.PointLightHelper(bluePoint, 3));
+            
+            var greenPoint = new THREE.PointLight(0x33ff00, 1, 2000);
+            greenPoint.position.set( -60, 5, 1570 );
+            scene.add(greenPoint);
+            scene.add(new THREE.PointLightHelper(greenPoint, 3));
+            
+            var bluePoint = new THREE.PointLight(0x0033ff, 2, 2000);
+            bluePoint.position.set( 2000, 5, -500 );
+            scene.add(bluePoint);
+            scene.add(new THREE.PointLightHelper(bluePoint, 3));
+            
+            var greenPoint = new THREE.PointLight(0x33ff00, 10, 2000);
+            greenPoint.position.set( 60, 5, -870 );
+            scene.add(greenPoint);
+            scene.add(new THREE.PointLightHelper(greenPoint, 3));
+        }
+        
+        addLights();
+        
         //Rendering the Scene
         function render()
-        {
+        {         
             requestAnimationFrame(render);
             update();
             renderer.render(scene, camera);
