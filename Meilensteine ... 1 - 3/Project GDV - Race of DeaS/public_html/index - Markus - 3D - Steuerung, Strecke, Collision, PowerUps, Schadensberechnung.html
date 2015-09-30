@@ -78,10 +78,11 @@
             {
                 spawnX = -300;
                 spawnZ = 0;
-                var geometry = new THREE.BoxGeometry(50,50,50);
+                var geometry = new THREE.BoxGeometry(50,50,100);
                 var material = new THREE.MeshBasicMaterial({color:0x0000ff});
                 cube = new THREE.Mesh(geometry,material);
-                cube.position.set(spawnX, 25.1, spawnZ);
+                cube.position.set((spawnX -50), 25.1, (spawnZ -50));
+                //cube.lookAt(spawnX, 0, spawnZ);
                 scene.add(cube);
                 cube.add(camera);
             }
@@ -349,9 +350,9 @@
                 //What happens if there is an collision
 				if (collision.length > 0 && collision [0].distance < directionvec.length ()) 
 				{
-					dmgCalc += 3;
+					dmgCalc += 1;
 					document.getElementById('textarea').innerHTML = dmgCalc;
-					if (dmgCalc >= 100) {cube.position.x = spawnX; cube.position.z = spawnZ; dmgCalc = 0;}
+					if (dmgCalc >= 100) {cube.position.x = (spawnX-50); cube.position.z = (spawnZ-50); dmgCalc = 0;}
 					updateCollision ();
 				}
 			}
