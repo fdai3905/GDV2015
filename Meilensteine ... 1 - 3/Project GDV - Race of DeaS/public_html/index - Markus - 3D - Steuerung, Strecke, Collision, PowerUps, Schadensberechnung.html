@@ -40,6 +40,7 @@
         var scene, camera, renderer, cube;
         var spawnX, spawnZ;		
 		var dmgCalc = -3;
+		var brw_clock = new THREE.Clock();
 
         //Function for Creating the World, getting a scene, a camera, the
         //test-walls, the floor and our test-cube.
@@ -241,27 +242,17 @@
 				
 			if (keyboard.pressed ("a"))
 			{	
-				
-				if (acc_clock.getElapsedTime () >= 4) {
-						
-					acc_clock.elapsedTime = 4;
-				}
-				
 				cube.rotation.y += rotateAngle;
 			}
 				
 			if (keyboard.pressed ("d"))
 			{
-				if (acc_clock.getElapsedTime () >= 4) {
-						
-					acc_clock.elapsedTime = 4;
-				}
-			
 				cube.rotation.y -= rotateAngle;
 			}
-			if (keyboard.pressed ("w")) 
-			{
 			
+			if (keyboard.pressed ("w")) 
+			{					
+				
 				function updateCollision()
 				{
 					if (acc_clock.elapsedTime > 3) {acc_clock.elapsedTime = -2;}
@@ -280,15 +271,10 @@
 					acc_clock.elapsedTime = 2;
 				}
 				
+				br_clock.elapsedTime = 0;
+				
 				if (pU_clock.getElapsedTime () <= 3) {cube.translateZ (- acceleration * 2);}
 				else if (pU_clock.getElapsedTime () > 3) {cube.translateZ (- acceleration)};
-				
-				document.addEventListener ("keyup", keyUpw, false);
-				function keyUpw (w) {
-					if (w.keyCode == "87") {
-						acc_clock.elapsedTime = 0;
-					}
-				}
 			}
 				
 			else if (keyboard.pressed ("s"))
@@ -309,13 +295,6 @@
 					
 				cube.translateZ (+ acceleration);
 					
-				document.addEventListener ("keyup", keyUps, false);
-				function keyUps (s) {
-					if (s.keyCode == "83") {
-						acc_clock.elapsedTime = 0;
-					}
-				}
-					
 				if (keyboard.pressed ("d"))
 				{
 					cube.rotation.y += (rotateAngle * 1.5);
@@ -328,9 +307,13 @@
 			}  
 			
 			else
-			{
+			{	
 				acc_clock.elapsedTime = 0;
 				pU_clock.elapsedTime = 5;
+				if (br_clock.getElapsedTime () <= 2)
+				{
+					cube.translateZ (- (100 * ((2 - br_clock.getElapsedTime ()) / 10)));
+				}
 			}
                 
             if (keyboard.pressed("R"))
