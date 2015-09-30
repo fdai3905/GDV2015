@@ -38,6 +38,7 @@
 		var pU_clock = new THREE.Clock();
         var scene, camera, renderer, cube;
         var spawnX, spawnZ;
+		var dmgCalc;
 
         //Function for Creating the World, getting a scene, a camera, the
         //test-walls, the floor and our test-cube.
@@ -257,10 +258,11 @@
 					
 				function updateCollision()
 				{
-					if (acc_clock.elapsedTime > 3) {acc_clock.elapsedTime = -2;}
-					if (acc_clock.elapsedTime > 2) {acc_clock.elapsedTime = -1.5;}
-					if (acc_clock.elapsedTime > 1) {acc_clock.elapsedTime = -1;}
-					if (acc_clock.elapsedTime > 0) {acc_clock.elapsedTime = -0.5;}
+					if (acc_clock.elapsedTime > 3) {acc_clock.elapsedTime = -2; dmgCalc += 4;}
+					if (acc_clock.elapsedTime > 2) {acc_clock.elapsedTime = -1.5; dmgCalc += 3;}
+					if (acc_clock.elapsedTime > 1) {acc_clock.elapsedTime = -1; dmgCalc += 2;}
+					if (acc_clock.elapsedTime > 0) {acc_clock.elapsedTime = -0.5; dmgCalc += 1;}
+					if (dmgCalc >= 10) {cube.material = new THREE.MeshBasicMaterial({color:0x000000});}
 				}
 				
 				function updateCollisionPowerUps() 
