@@ -64,21 +64,37 @@
 			}
 			
             //Creating a new Camera
-            {
-				topCamera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 20000);
+            {    
+				var SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = window.innerHeight;
+                var VIEW_ANGLE = 60, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 0.1, FAR = 20000;
+                
+                // camera 1 RECHTS
+                topCamera = new THREE.PerspectiveCamera( VIEW_ANGLE, ASPECT, NEAR, FAR);
 				topCamera.position.z = 220;
 				topCamera.position.y = 90;
-				
-				bottomCamera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 20000);
+
+                // camera 2 LINKS
+                bottomCamera = new THREE.PerspectiveCamera( VIEW_ANGLE, ASPECT, NEAR, FAR);
 				bottomCamera.position.z = 220;
 				bottomCamera.position.y = 90;
-            }
-
-            //Creating a new Renderer
-            {
-                renderer = new THREE.WebGLRenderer();
-                renderer.setSize(window.innerWidth, window.innerHeight);
-                document.body.appendChild(renderer.domElement);
+				
+				// RENDERER
+                if ( Detector.webgl ) 
+				{
+                    renderer = new THREE.WebGLRenderer( {antialias:true} );
+				}
+                else
+				{
+                    renderer = new THREE.CanvasRenderer(); 
+				}
+				
+				renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+                container = document.getElementById( 'ThreeJS' );
+                container.appendChild( renderer.domElement );
+                
+                // EVENTS
+                THREEx.WindowResize(renderer, topCamera);
+                THREEx.FullScreen.bindKey({ charCode : 'm'.charCodeAt(0) });
             }
 
             //FLOOR
@@ -103,7 +119,7 @@
             {             
                 spawnX = -1800;
                 spawnZ = 2000;
-                var geometry = new THREE.BoxGeometry(50,50,50);
+                var geometry = new THREE.BoxGeometry(25,25,75);
                 var material = new THREE.MeshBasicMaterial({color:0x0000ff});
                 var material2 = new THREE.MeshBasicMaterial({color:0xFF0000});
                 
@@ -118,20 +134,6 @@
                 cube2.position.set(spawnX, 25.1, spawnZ);
                 scene.add(cube2);
                 cube2.add(bottomCamera);
-				
-				// RENDERER
-                if ( Detector.webgl ) 
-				{
-                    renderer = new THREE.WebGLRenderer( {antialias:true} );
-				}
-                else
-				{
-                    renderer = new THREE.CanvasRenderer(); 
-				}
-                
-                // EVENTS
-                THREEx.WindowResize(renderer, topCamera);
-                THREEx.FullScreen.bindKey({ charCode : 'm'.charCodeAt(0) });
             }
 			
 			//Add a missile
@@ -740,7 +742,7 @@
 				{
 					document.getElementById('textarea').innerHTML = dmgCalc;
 					dmgCalc += 1;
-					if (dmgCalc >= 100) {cube.position.x; cube.position.z; dmgCalc = -3;}
+					if (dmgCalc >= 100) {cube.position.x = spawnX; cube.position.z = spawnZ; dmgCalc = 0;}
 					updateCollision ();
 				}
 			}
