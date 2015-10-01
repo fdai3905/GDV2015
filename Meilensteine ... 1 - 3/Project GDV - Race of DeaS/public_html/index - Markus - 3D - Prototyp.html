@@ -17,6 +17,26 @@
 		<script src="JS/THREExFullScreen.js" type="text/javascript"></script>
         <script src="JS/THREEx.WindowResize.js" type="text/javascript"></script>
         <script src="JS/Detector.js" type="text/javascript"></script>
+        
+        <!-- Code für Infobox von http://stemkoski.github.io/Three.js/Infobox.html -->
+        <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+        <script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
+        <link rel=stylesheet href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" />
+        <link rel=stylesheet href="CSS/info.css"/>
+        <script src="JS/info.js"></script>
+        <div id="infoButton"></div>
+        <div id="infoBox" title="Steuerung">
+        <a>Spieler 1</a></br>
+        <a>W,A,S,D - Für Vor, Links, Zurück, Rechts</a></br>
+        <a>Leertaste - Für Geschoss</a></br></br>
+        <a>Spieler 2</a></br>
+        <a>8,4,2,6 - Für Vor, Links, Zurück, Rechts</a></br>
+        <a>0 - Für Geschoss</a></br></br>
+        <a>Der Spieler der als erster 3 Runden absolviert hat gewonnen!</a></br></br>
+        <a>Power Ups</a></br>
+        <a>Rot - Damage Heal</a></br>
+        <a>Weiß - Speed</a></br>
+        </div>
 		
         <!--   Creating div, for different informations-->
         <div id="textarea"></div>
@@ -146,33 +166,6 @@
                 missile.position.set (spawnX, 28, spawnZ);
                 scene.add (missile);
 			}
-			
-			//Objebte einfügen, lädt die Modelle nicht
-			/*{
-				var loaderShip1 = new THREE.JSONLoader ();           
-				loaderShip1.load ("https://www.dropbox.com/home/Public?preview=SpaceShip.json", function (geometry, materials1) { 
-					var material1 = new THREE.MeshFaceMaterial (materials1);
-					var ship1 = new THREE.Mesh (geometry, material1);
-					ship1.scale.set (15, 15, 15);
-					ship1.position.y = 15;
-					ship1.position.x = -2000;
-					ship1.position.z = 2000;
-					scene.add (ship1);             
-				} );           
-            }
-			
-			{
-				var loaderShip2 = new THREE.JSONLoader ();
-				loaderShip2.load("ModelsJson/ship.json", function (geometry, materials2) {       
-					var material2 = new THREE.MeshFaceMaterial (materials2);
-					var ship2 = new THREE.Mesh (geometry, material2);
-					ship2.scale.set (30, 30, 30);
-					ship2.position.y = 15;
-					ship2.position.x = -2200;
-					ship2.position.z = 2000;
-					scene.add (ship2);                
-				} );
-			}*/
 			
             //The Walls...
             {
@@ -448,9 +441,9 @@
 				scene.add(checkpoint8);
 
 				//First Target!
-				target = checkpoint5;
-                checkpointList[0] = checkpoint5;
-				checkpoint5.material = wallGreen; 
+				target = checkpoint1;
+                checkpointList[0] = checkpoint1;
+				checkpoint1.material = wallGreen; 
 			}
         }
         init();
