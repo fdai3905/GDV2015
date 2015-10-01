@@ -19,23 +19,25 @@
         <script src="JS/Detector.js" type="text/javascript"></script>
         
         <!-- Code für Infobox von http://stemkoski.github.io/Three.js/Infobox.html -->
-        <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
-        <script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
-        <link rel=stylesheet href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" />
+        <script src="JS/jquery-1.9.1.js"></script>
+        <script src="JS/jquery-ui.js"></script>
+        <link rel=stylesheet href="CSS/jquery-ui.css" />
         <link rel=stylesheet href="CSS/info.css"/>
         <script src="JS/info.js"></script>
         <div id="infoButton"></div>
         <div id="infoBox" title="Steuerung">
         <a>Spieler 1</a></br>
-        <a>W,A,S,D - Für Vor, Links, Zurück, Rechts</a></br>
-        <a>Leertaste - Für Geschoss</a></br></br>
+        <a>W, A, S, D - Vor, Links, Zurück, Rechts</a></br>
+		<a>R - zurück setzen</a></br>
+        <a>Leertaste - Geschoss abfeuern</a></br></br>
         <a>Spieler 2</a></br>
-        <a>Pfeil Hoch,Pfeil Links,Pfeil Hinten,Pfeil Rechts - Für Vor, Links, Zurück, Rechts</a></br>
-        <a>0 - Für Geschoss</a></br></br>
+        <a>Pfeil Hoch,Pfeil Links,Pfeil Runter,Pfeil Rechts - Vor, Links, Zurück, Rechts</a></br>
+		<a>Num6 - zurück setzen</a></br>
+        <a>Num0 - Geschoss abfeuern</a></br></br>
         <a>Der Spieler der als erster 3 Runden absolviert hat gewonnen!</a></br></br>
         <a>Power Ups</a></br>
         <a>Rot - Damage Heal</a></br>
-        <a>Weiß - Speed</a></br>
+        <a>Weiß - Speedboost</a></br>
         </div>
 		
         <!--   Creating div, for different informations-->
@@ -62,15 +64,23 @@
 		var acc_clock = new THREE.Clock();
 		var pU_clock = new THREE.Clock();
 		var misClock = new THREE.Clock();
-		var rotaClock = new THREE.Clock();
+		var acc_clock2 = new THREE.Clock();
+		var pU_clock2 = new THREE.Clock();
+		var misClock2 = new THREE.Clock();
         var scene, camera, renderer, cube;
         var spawnX, spawnZ;		
-		var dmgCalc = -3;
+		var dmgCalc = 0;
+		var dmgCalc2 = 0;
 		var round = 0;
 		var bottomCamera, topCamera;
 		var checkpointList = [];
         var wallGreen = new THREE.MeshBasicMaterial( { color: 0x00ff00, transparent: true, opacity: 0.2});
         var wallRed = new THREE.MeshBasicMaterial( { color: 0xff0000,  transparent: true, opacity: 0.2});
+		var dmgMatYel = new THREE.MeshBasicMaterial(({color: 0xFFFF00}));
+		var dmgMatOra = new THREE.MeshBasicMaterial(({color: 0xFF8000}));
+		var dmgMatRed = new THREE.MeshBasicMaterial(({color: 0xff0000}));
+		var materialCube = new THREE.MeshBasicMaterial({color:0x0000ff});
+        var materialCube2 = new THREE.MeshBasicMaterial({color:0xFF0000});
 
 
         //Function for Creating the World, getting a scene, a camera, the
@@ -140,17 +150,15 @@
                 spawnX = -1800;
                 spawnZ = 2000;
                 var geometry = new THREE.BoxGeometry(25,25,75);
-                var material = new THREE.MeshBasicMaterial({color:0x0000ff});
-                var material2 = new THREE.MeshBasicMaterial({color:0xFF0000});
-                
+
                 //Cube1 blue
-                cube = new THREE.Mesh(geometry,material);
+                cube = new THREE.Mesh(geometry, materialCube);
                 cube.position.set(spawnX, 25.1, spawnZ);
                 scene.add(cube);
                 cube.add(topCamera);
                 
                 //Cube2 red
-                cube2 = new THREE.Mesh(geometry,material2);
+                cube2 = new THREE.Mesh(geometry,materialCube2);
                 cube2.position.set(spawnX, 25.1, spawnZ);
                 scene.add(cube2);
                 cube2.add(bottomCamera);
@@ -162,9 +170,16 @@
                 spawnZ = 2000;
                 var geometryMissile = new THREE.BoxGeometry (5,5,15);
                 var material = new THREE.MeshBasicMaterial ({color:0x0000ff});
+				var material2 = new THREE.MeshBasicMaterial ({color:0xFF0000});
+				
                 missile = new THREE.Mesh( geometryMissile, material);
                 missile.position.set (spawnX, 28, spawnZ);
                 scene.add (missile);
+				
+
+                missile2 = new THREE.Mesh( geometryMissile, material2);
+                missile2.position.set (spawnX, 28, spawnZ);
+                scene.add (missile2);
 			}
 			
             //The Walls...
@@ -180,7 +195,7 @@
 				var wallCheck = new THREE.CubeGeometry(740, 100, 1, 1, 1, 1);
                 var wallCheck2 = new THREE.CubeGeometry(950, 100, 1, 1, 1, 1);
                 var goalMat = new THREE.MeshBasicMaterial(({color: 0x00ff00}));
-				                             
+		                             
                                 
 				//Außenwände Weltbegrenzung Links, Rechts, Oben, Unten
                 outWallLi = new THREE.Mesh(wandbegrenzung, wallMaterial);
@@ -598,12 +613,13 @@
         {
             requestAnimationFrame( animate );
             render();		
-            update();
+            updatePlayer1();
+			updatePlayer2();
         }
         animate();
 		
         //Function update for the movement and the collisiondetection
-        function update()
+        function updatePlayer1()
 		{
 			if(round >= 4)
             {
@@ -733,9 +749,18 @@
                 //What happens if there is an collision
 				if (collision.length > 0 && collision [0].distance < directionvec.length ()) 
 				{
-					document.getElementById('textarea').innerHTML = dmgCalc;
-					dmgCalc += 1;
-					if (dmgCalc >= 100) {cube.position.x = spawnX; cube.position.z = spawnZ; dmgCalc = 0;}
+					dmgCalc += 5;
+					if (dmgCalc >= 25 && dmgCalc < 50) {cube.material = dmgMatYel;}
+					if (dmgCalc >= 50 && dmgCalc < 75) {cube.material = dmgMatOra;}
+					if (dmgCalc >= 75) {cube.material = dmgMatRed;}
+					if (dmgCalc >= 100) 
+					{
+						cube.material = materialCube; 
+						cube.position.x = spawnX; 
+						cube.position.z = spawnZ; 
+						dmgCalc = 0;
+						acc_clock.elapsedTime = 0;
+					}
 					updateCollision ();
 				}
 			}
@@ -759,6 +784,26 @@
 				}
 			}
 			
+			for (var verti = 0; verti < cube.geometry.vertices.length; verti++) 
+			{
+
+				//Get Local Vertex, Get Global Vertex, Get Direction of moving cube
+				var localvert = cube.geometry.vertices [verti].clone ();
+				var globalvert = localvert.applyMatrix4 (cube.matrix);
+				var directionvec = globalvert.sub (cube.position);
+
+				//Creating a Ray for Raytracing an looking if there is an collision
+				var ray = new THREE.Raycaster (cube.position.clone (), directionvec.clone ().normalize ());
+				var collision = ray.intersectObjects (collidablePowerUpList2);
+                
+				//What happens if there is an collision
+				if (collision.length > 0 && collision [0].distance < directionvec.length ()) 
+				{
+					dmgCalc = 0;
+					cube.material = materialCube;
+				}
+			}
+			
 			//Collision for Checkpoints
             for(var verti = 0; verti <cube.geometry.vertices.length; verti++)
             {
@@ -769,6 +814,214 @@
                 
                 //Get Local Vertex, Get Global Vertex, Get Direction of moving cube
                 var ray = new THREE.Raycaster(cube.position.clone(), directionvec.clone().normalize());
+                var checkcollision = ray.intersectObjects(checkpointList);
+
+                //What happens if there is an collision
+                if(checkcollision.length > 0 && checkcollision[0].distance < directionvec.length())
+                {
+                    console.log(target);
+                    nextTarget();
+                }
+            }
+		}
+		
+		function updatePlayer2()
+		{
+			if(round >= 4)
+            {
+                console.log("Player 2 Wins!");
+                confirm("Player 2 Wins! Press OK for rematch!");
+                window.location.reload();
+            }
+		
+			var acceleration = 100 * (acc_clock2.getElapsedTime () / 10);
+			var rotateAngle = Math.PI * 2 * (acc_clock2.getElapsedTime ()  / 150);
+				
+			if (keyboard.pressed ("left"))
+			{	
+				cube2.rotation.y += rotateAngle;
+				missile2.rotation.y += rotateAngle;
+			}
+				
+			if (keyboard.pressed ("right"))
+			{
+				cube2.rotation.y -= rotateAngle;
+				missile2.rotation.y -= rotateAngle;
+			}
+			
+			if (keyboard.pressed ("up")) 
+			{					
+				
+				function updateCollision()
+				{
+					if (acc_clock2.elapsedTime > 3) {acc_clock2.elapsedTime = -2;}
+					if (acc_clock2.elapsedTime > 2) {acc_clock2.elapsedTime = -1.5;}
+					if (acc_clock2.elapsedTime > 1) {acc_clock2.elapsedTime = -1;}
+					if (acc_clock2.elapsedTime > 0) {acc_clock2.elapsedTime = -0.5;}
+				}
+				
+				function updateCollisionPowerUpSpeed() 
+				{
+					pU_clock2.elapsedTime = 0;
+				}
+						
+				if (acc_clock2.getElapsedTime () >= 2) 
+				{	
+					acc_clock2.elapsedTime = 2;
+				}
+				
+				if (pU_clock2.getElapsedTime () <= 3) {cube2.translateZ (- acceleration * 2);}
+				else if (pU_clock2.getElapsedTime () > 3) {cube2.translateZ (- acceleration); missile2.translateZ ( - acceleration);}
+			}
+				
+			else if (keyboard.pressed ("down"))
+			{
+				
+				function updateCollision() 
+				{
+					if (acc_clock2.elapsedTime > 3) {acc_clock2.elapsedTime = -2;}
+					if (acc_clock2.elapsedTime > 2) {acc_clock2.elapsedTime = -1.5;}
+					if (acc_clock2.elapsedTime > 1) {acc_clock2.elapsedTime = -1;}
+					if (acc_clock2.elapsedTime > 0) {acc_clock2.elapsedTime = -0.5;}
+				}
+			
+				if (acc_clock2.getElapsedTime () >= 2) {
+						
+					acc_clock2.elapsedTime = 2;
+				}
+					
+				cube2.translateZ (+ acceleration);
+				missile2.translateZ (+ acceleration);
+					
+				if (keyboard.pressed ("right"))
+				{
+					cube2.rotation.y += (rotateAngle * 1.5);
+					missile2.rotation.y += (rotateAngle * 1.5);
+				}
+					
+				if (keyboard.pressed ("left"))
+				{
+					cube2.rotation.y -= (rotateAngle * 1.5);
+					missile2.rotation.y -= (rotateAngle * 1.5);
+				}
+			}  
+			
+			else
+			{	
+				acc_clock2.elapsedTime = 0;
+				pU_clock2.elapsedTime = 5;
+				
+				//* Ausrollen funktioniert noch nicht wie gewünscht
+				/*if (br_clock.getElapsedTime () <= 2)
+				{
+					cube.translateZ (- (100 * ((2 - br_clock.getElapsedTime ()) / 10)));
+				}*/
+			}
+			
+			if (misClock2.getElapsedTime () >= 2)
+			{
+				misClock2.elapsedTime = 0;
+				missile2.position.set (cube2.position.x, 28, cube2.position.z);
+			}
+                
+            if (keyboard.pressed("num5"))
+            {
+                cube2.position.x = spawnX;
+                cube2.position.z = spawnZ;
+            }
+			
+			if (keyboard.pressed("num1"))
+            {
+				
+				if (misClock2.getElapsedTime () <= 2)
+				{
+					
+					missile2.translateZ (- (100 * (4 / 10)));
+				}
+            }
+
+			for (var verti = 0; verti < cube2.geometry.vertices.length; verti++) 
+			{
+			                
+				//Get Local Vertex, Get Global Vertex, Get Direction of moving cube
+				var localvert = cube2.geometry.vertices [verti].clone();
+				var globalvert = localvert.applyMatrix4 (cube2.matrix);
+				var directionvec = globalvert.sub (cube2.position);
+
+				//Creating a Ray for Raytracing an looking if there is an collision
+				var ray = new THREE.Raycaster (cube2.position.clone (), directionvec.clone ().normalize ());
+				var collision = ray.intersectObjects (collidableMeshList);
+
+                //What happens if there is an collision
+				if (collision.length > 0 && collision [0].distance < directionvec.length ()) 
+				{
+					dmgCalc2 += 5;
+					if (dmgCalc2 >= 25 && dmgCalc2 < 50) {cube2.material = dmgMatYel;}
+					if (dmgCalc2 >= 50 && dmgCalc2 < 75) {cube2.material = dmgMatOra;}
+					if (dmgCalc2 >= 75) {cube2.material = dmgMatRed;}
+					if (dmgCalc2 >= 100) 
+					{
+						cube2.material = materialCube2;
+						cube2.position.x = spawnX; 
+						cube2.position.z = spawnZ; 
+						missile2.position.x = spawnX; 
+						missile2.position.z = spawnZ; 
+						dmgCalc2 = 0;
+						acc_clock2.elapsedTime = 0;
+					}
+					updateCollision ();
+				}
+			}
+
+			for (var verti = 0; verti < cube.geometry.vertices.length; verti++) 
+			{
+
+				//Get Local Vertex, Get Global Vertex, Get Direction of moving cube
+				var localvert = cube2.geometry.vertices [verti].clone ();
+				var globalvert = localvert.applyMatrix4 (cube2.matrix);
+				var directionvec = globalvert.sub (cube2.position);
+
+				//Creating a Ray for Raytracing an looking if there is an collision
+				var ray = new THREE.Raycaster (cube2.position.clone (), directionvec.clone ().normalize ());
+				var collision = ray.intersectObjects (collidablePowerUpList1);
+                
+				//What happens if there is an collision
+				if (collision.length > 0 && collision [0].distance < directionvec.length ()) 
+				{
+					updateCollisionPowerUpSpeed ();
+				}
+			}
+			
+			for (var verti = 0; verti < cube2.geometry.vertices.length; verti++) 
+			{
+
+				//Get Local Vertex, Get Global Vertex, Get Direction of moving cube
+				var localvert = cube2.geometry.vertices [verti].clone ();
+				var globalvert = localvert.applyMatrix4 (cube2.matrix);
+				var directionvec = globalvert.sub (cube2.position);
+
+				//Creating a Ray for Raytracing an looking if there is an collision
+				var ray = new THREE.Raycaster (cube2.position.clone (), directionvec.clone ().normalize ());
+				var collision = ray.intersectObjects (collidablePowerUpList2);
+                
+				//What happens if there is an collision
+				if (collision.length > 0 && collision [0].distance < directionvec.length ()) 
+				{
+					dmgCalc2 = 0;
+					cube2.material = materialCube2;
+				}
+			}
+			
+			//Collision for Checkpoints
+            for(var verti = 0; verti <cube2.geometry.vertices.length; verti++)
+            {
+                 //Creating a Ray for Raytracing an looking if there is an collision
+                var localvert = cube2.geometry.vertices[verti].clone();
+                var globalvert = localvert.applyMatrix4( cube2.matrix);
+                var directionvec = globalvert.sub(cube2.position);
+                
+                //Get Local Vertex, Get Global Vertex, Get Direction of moving cube
+                var ray = new THREE.Raycaster(cube2.position.clone(), directionvec.clone().normalize());
                 var checkcollision = ray.intersectObjects(checkpointList);
 
                 //What happens if there is an collision
