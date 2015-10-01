@@ -475,17 +475,12 @@
 				if (keyboard.pressed ("a"))
 				{
 					cube.rotation.y -= (rotateAngle * 1.5);
-					missile.rotation.y += (rotateAngle * 1.5);
+					missile.rotation.y -= (rotateAngle * 1.5);
 				}
 			}  
 			
 			else
 			{	
-				if (misClock.getElapsedTime () >= 2)
-				{
-					misClock.elapsedTime = 0;
-					missile.position.set (cube.position.x, 27, cube.position.z);
-				}
 				acc_clock.elapsedTime = 0;
 				pU_clock.elapsedTime = 5;
 				
