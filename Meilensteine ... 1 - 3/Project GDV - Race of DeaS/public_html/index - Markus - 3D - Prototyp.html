@@ -37,7 +37,7 @@
 		var collidablePowerUpList2 = [];
 		var acc_clock = new THREE.Clock();
 		var pU_clock = new THREE.Clock();
-		var br_clock = new THREE.Clock();
+		var misClock = new THREE.Clock();
 		var rotaClock = new THREE.Clock();
         var scene, camera, renderer, cube;
         var spawnX, spawnZ;		
@@ -82,15 +82,26 @@
             {
 				spawnX = -1800;
                 spawnZ = 2000;
-                var geometryCube = new THREE.BoxGeometry(25,25,75);
-                var material = new THREE.MeshBasicMaterial({color:0x0000ff});
-                cube = new THREE.Mesh(geometryCube, material);
-                cube.position.set(spawnX, 25.1, spawnZ);
-                scene.add(cube);
-				cube.add(camera);
+                var geometryCube = new THREE.BoxGeometry (25,25,75);
+                var material = new THREE.MeshBasicMaterial ({color:0x0000ff});
+                cube = new THREE.Mesh (geometryCube, material);
+                cube.position.set (spawnX, 25.1, spawnZ);
+                scene.add (cube);
+				cube.add (camera);
             }
 			
-			//objebte einfügen noch nicht funktionstüchtig
+			//Add a missile
+			{
+				spawnX = -1800;
+                spawnZ = 2000;
+                var geometryMissile = new THREE.BoxGeometry (5,5,15);
+                var material = new THREE.MeshBasicMaterial ({color:0x0000ff});
+                missile = new THREE.Mesh( geometryMissile, material);
+                missile.position.set (spawnX, 28, spawnZ);
+                scene.add (missile);
+			}
+			
+			//Objebte einfügen, lädt die Modelle nicht
 			/*{
 				var loaderShip1 = new THREE.JSONLoader ();           
 				loaderShip1.load ("https://www.dropbox.com/home/Public?preview=SpaceShip.json", function (geometry, materials1) { 
@@ -398,17 +409,17 @@
 		{
 			var acceleration = 100 * (acc_clock.getElapsedTime () / 10);
 			var rotateAngle = Math.PI * 2 * (acc_clock.getElapsedTime ()  / 150);
-			var rotateShip = Math.PI * 2 * (acc_clock.getElapsedTime ()  / 1000);
 				
 			if (keyboard.pressed ("a"))
 			{	
 				cube.rotation.y += rotateAngle;
-				cube.rotation.z += rotateShip;
+				missile.rotation.y += rotateAngle;
 			}
 				
 			if (keyboard.pressed ("d"))
 			{
 				cube.rotation.y -= rotateAngle;
+				missile.rotation.y -= rotateAngle;
 			}
 			
 			if (keyboard.pressed ("w")) 
@@ -433,7 +444,7 @@
 				}
 				
 				if (pU_clock.getElapsedTime () <= 3) {cube.translateZ (- acceleration * 2);}
-				else if (pU_clock.getElapsedTime () > 3) {cube.translateZ (- acceleration)};
+				else if (pU_clock.getElapsedTime () > 3) {cube.translateZ (- acceleration); missile.translateZ ( - acceleration);}
 			}
 				
 			else if (keyboard.pressed ("s"))
@@ -453,20 +464,28 @@
 				}
 					
 				cube.translateZ (+ acceleration);
+				missile.translateZ (+ acceleration);
 					
 				if (keyboard.pressed ("d"))
 				{
 					cube.rotation.y += (rotateAngle * 1.5);
+					missile.rotation.y += (rotateAngle * 1.5);
 				}
 					
 				if (keyboard.pressed ("a"))
 				{
 					cube.rotation.y -= (rotateAngle * 1.5);
+					missile.rotation.y += (rotateAngle * 1.5);
 				}
 			}  
 			
 			else
 			{	
+				if (misClock.getElapsedTime () >= 2)
+				{
+					misClock.elapsedTime = 0;
+					missile.position.set (cube.position.x, 28, cube.position.z);
+				}
 				acc_clock.elapsedTime = 0;
 				pU_clock.elapsedTime = 5;
 				
@@ -476,11 +495,27 @@
 					cube.translateZ (- (100 * ((2 - br_clock.getElapsedTime ()) / 10)));
 				}*/
 			}
+			
+			if (misClock.getElapsedTime () >= 2)
+			{
+				misClock.elapsedTime = 0;
+				missile.position.set (cube.position.x, 28, cube.position.z);
+			}
                 
-            if (keyboard.pressed("R"))
+            if (keyboard.pressed("r"))
             {
                 cube.position.x = spawnX;
                 cube.position.z = spawnZ;
+            }
+			
+			if (keyboard.pressed("space"))
+            {
+				
+				if (misClock.getElapsedTime () <= 2)
+				{
+					
+					missile.translateZ (- (100 * (4 / 10)));
+				}
             }
 
 			for (var verti = 0; verti < cube.geometry.vertices.length; verti++) 
