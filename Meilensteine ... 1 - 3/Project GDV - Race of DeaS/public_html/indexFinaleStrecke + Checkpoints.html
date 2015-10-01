@@ -500,6 +500,8 @@
                     if(round >= 4)
                     {
                         console.log("Player 1 Wins!");
+                        confirm("Player 1 Wins! Press OK for rematch!");
+                        window.location.reload();
                     }
                     
 			var acceleration = 100 * (acc_clock.getElapsedTime () / 10);        // 200 pixels pro Sekunde
