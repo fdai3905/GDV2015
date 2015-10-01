@@ -91,11 +91,11 @@
             }
 
             //Creating a new Renderer
-            {
-                renderer = new THREE.WebGLRenderer();
-                renderer.setSize(window.innerWidth, window.innerHeight);
-                document.body.appendChild(renderer.domElement);
-            }
+//            {
+//                renderer = new THREE.WebGLRenderer();
+//                renderer.setSize(window.innerWidth, window.innerHeight);
+//                document.body.appendChild(renderer.domElement);
+//            }
 
             //FLOOR
             {
@@ -140,27 +140,31 @@
             
             //objebte einfügen
             /*
-            loaderShip = new THREE.JSONLoader();           
-            loaderShip.load("ModelsJson/SpaceShip.json", function( geometry, mat ) {
-                              
-                ship = new THREE.Mesh( geometry, new THREE.MeshFaceMaterial(mat) );
-                ship.scale.set( 15, 15, 15);
-                ship.position.y = 15;
-                ship.position.x = -2000;
-                ship.position.z = 2000;
-                scene.add(ship);             
-            } );           
-            loaderShip1 = new THREE.JSONLoader();
-            loaderShip1.load("ModelsJson/Ship.json", function( geometry, mat ) {
-                              
-                ship1 = new THREE.Mesh( geometry, new THREE.MeshFaceMaterial(mat) );
-                ship1.scale.set( 30, 30, 30);
-                ship1.position.y = 15;
-                ship1.position.x = -2200;
-                ship1.position.z = 2000;
-                scene.add(ship1);                
-            } );
+             {
+                loaderShip = new THREE.JSONLoader();           
+                loaderShip.load("ModelsJson/SpaceShip.json", function( geometry, mat ) {
+
+                    ship = new THREE.Mesh( geometry, new THREE.MeshFaceMaterial(mat) );
+                    ship.scale.set( 15, 15, 15);
+                    ship.position.y = 15;
+                    ship.position.x = -2000;
+                    ship.position.z = 2000;
+                    scene.add(ship);             
+                } );  
+        
+                loaderShip1 = new THREE.JSONLoader();
+                loaderShip1.load("ModelsJson/Ship.json", function( geometry, mat ) {
+
+                    ship1 = new THREE.Mesh( geometry, new THREE.MeshFaceMaterial(mat) );
+                    ship1.scale.set( 30, 30, 30);
+                    ship1.position.y = 15;
+                    ship1.position.x = -2200;
+                    ship1.position.z = 2000;
+                    scene.add(ship1);                
+                } );
+            }
             */
+           
             //The Walls...
             {
                 var wallGeometry = new THREE.CubeGeometry( 500, 500, 50, 1, 1, 1 );
@@ -419,7 +423,7 @@
                 target = checkpointWire1;
                 checkpoint1.material = wallMaterial2;
                 */
-               renderer.autoClear = false;
+                
             }
         }
 
@@ -465,8 +469,8 @@
         function render()
         {   
             var SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = window.innerHeight;
-            chaseCamera.aspect = 0.5 * SCREEN_WIDTH / SCREEN_HEIGHT;
-            topCamera.aspect = 0.5 * SCREEN_WIDTH / SCREEN_HEIGHT;
+            chaseCamera.aspect =0.5*SCREEN_WIDTH / SCREEN_HEIGHT;
+            topCamera.aspect = 0.5*SCREEN_WIDTH / SCREEN_HEIGHT;
             chaseCamera.updateProjectionMatrix();
             topCamera.updateProjectionMatrix();
 
@@ -477,12 +481,15 @@
             renderer.clear();
 
             // render left side
-            renderer.setViewport( 1, 1,   0.5 * SCREEN_WIDTH - 2, SCREEN_HEIGHT - 2 );
+            renderer.setViewport( 1, 1,   0.5 * SCREEN_WIDTH - 2, SCREEN_HEIGHT-2 );
             renderer.render( scene, chaseCamera );
 
             // render right side
-            renderer.setViewport( 0.5 * SCREEN_WIDTH + 1, 1,   0.5 * SCREEN_WIDTH - 2, SCREEN_HEIGHT - 2 );
+            renderer.setViewport( 0.5 * SCREEN_WIDTH + 1, 1,   0.5 * SCREEN_WIDTH - 2, SCREEN_HEIGHT -2 );
             renderer.render( scene, topCamera );   
+            
+            renderer.setSize( window.innerWidth, window.innerHeight );
+            renderer.autoClear = false;
         }
         
         function animate() 
