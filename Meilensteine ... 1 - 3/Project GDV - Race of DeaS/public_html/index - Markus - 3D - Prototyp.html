@@ -383,27 +383,27 @@
         }
         addLights ();
 
+		
         //Rendering the Scene
         function render ()
         {
             requestAnimationFrame (render);
             update ();
             renderer.render (scene, camera);
-			
-			var rota = Math.PI * 2 * (rotaClock.getElapsedTime ()  / 150);
-			powerUpSpeed.rotation.y = rota / 2;
         }
-        render (); 
+		render ();
 		
         //Function update for the movement and the collisiondetection
         function update()
 		{
 			var acceleration = 100 * (acc_clock.getElapsedTime () / 10);
 			var rotateAngle = Math.PI * 2 * (acc_clock.getElapsedTime ()  / 150);
+			var rotateShip = Math.PI * 2 * (acc_clock.getElapsedTime ()  / 1000);
 				
 			if (keyboard.pressed ("a"))
 			{	
 				cube.rotation.y += rotateAngle;
+				cube.rotation.z += rotateShip;
 			}
 				
 			if (keyboard.pressed ("d"))
