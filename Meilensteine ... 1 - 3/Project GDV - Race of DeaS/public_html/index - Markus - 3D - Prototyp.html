@@ -42,7 +42,11 @@
         var scene, camera, renderer, cube;
         var spawnX, spawnZ;		
 		var dmgCalc = -3;
-		var brw_clock = new THREE.Clock();
+		var round = 0;
+		var checkpointList = [];
+        var wallGreen = new THREE.MeshBasicMaterial( { color: 0x00ff00, transparent: true, opacity: 0.2});
+        var wallRed = new THREE.MeshBasicMaterial( { color: 0xff0000,  transparent: true, opacity: 0.2});
+
 
         //Function for Creating the World, getting a scene, a camera, the
         //test-walls, the floor and our test-cube.
@@ -138,8 +142,9 @@
                 var wandNano = new THREE.CubeGeometry( 437, 100, 50, 1, 1, 1 );
 				var wallMaterial = new THREE.MeshPhongMaterial( { color: 0x000000, specular: 0xFFFFFF, shininess: 70 } );
 				var wireMaterial = new THREE.MeshBasicMaterial( { color: 0x000000} );
-				var wallGreen = new THREE.MeshBasicMaterial( { color: 0x00ff00});
-                var wallRed = new THREE.MeshBasicMaterial( { color: 0xff0000});
+				var wallCheck = new THREE.CubeGeometry(740, 100, 1, 1, 1, 1);
+                var wallCheck2 = new THREE.CubeGeometry(950, 100, 1, 1, 1, 1);
+                var goalMat = new THREE.MeshBasicMaterial(({colir: 0x00ff00}));
 				                             
                                 
 				//Außenwände Weltbegrenzung Links, Rechts, Oben, Unten
@@ -353,14 +358,147 @@
 				scene.add(powerUpSpeed);
 				collidablePowerUpList1.push(powerUpSpeed);
 				
-				
 				var powerUpDmg = new THREE.Mesh(geometryPowerUp, powerUpMaterial2);
 				powerUpDmg.position.set(-2200, 60, -500);
 				scene.add(powerUpDmg);
 				collidablePowerUpList2.push(powerUpDmg);
+				
+				//A Goal for Winning
+                goal = new THREE.Mesh(wallCheck, goalMat);
+                goal.position.set(-2100, 200, 1600);
+				scene.add(goal);
+                
+                //Checkpoints
+                checkpoint1 = new THREE.Mesh(wallCheck, wallRed);
+                checkpoint1.position.set(-2100, 50, 1600);
+				scene.add(checkpoint1);
+                
+                checkpoint2 = new THREE.Mesh(wallCheck, wallRed);
+                checkpoint2.position.set(-2100, 50, -1650);
+				scene.add(checkpoint2);
+                
+                checkpoint3 = new THREE.Mesh(wallCheck, wallRed);
+                checkpoint3.position.set(-600, 50, -1650);
+				scene.add(checkpoint3);
+                
+                checkpoint4 = new THREE.Mesh(wallCheck, wallRed);
+                checkpoint4.position.set(800, 50, -1650);
+				scene.add(checkpoint4);
+                
+                checkpoint5 = new THREE.Mesh(wallCheck2, wallRed);
+                checkpoint5.position.set(2000, 50, -1650);
+
+				scene.add(checkpoint5);
+                
+                checkpoint6 = new THREE.Mesh(wallCheck, wallRed);
+                checkpoint6.position.set(300, 50, 50);
+				checkpoint6.rotation.y = 3.14159/2;
+				scene.add(checkpoint6);
+                
+                checkpoint7 = new THREE.Mesh(wallCheck, wallRed);
+                checkpoint7.position.set(800, 50, 800);
+				checkpoint7.rotation.y = 3.14159/2;
+				scene.add(checkpoint7);
+                
+                checkpoint8 = new THREE.Mesh(wallCheck, wallRed);
+                checkpoint8.position.set(100, 50, 1500);
+				checkpoint8.rotation.y = 3.14159/2;
+				scene.add(checkpoint8);
+
+				//First Target!
+				target = checkpoint5;
+                checkpointList[0] = checkpoint5;
+				checkpoint5.material = wallGreen; 
 			}
         }
         init();
+		
+		function nextTarget()
+        {
+            switch(target)
+            {
+                case checkpoint1:
+                    checkpointList[0] = checkpoint2;
+                    target = checkpoint2;
+                    checkpoint1.material = wallRed;
+                    checkpoint2.material = wallGreen;
+                    spawnX = checkpoint1.position.x;
+                    spawnZ = checkpoint1.position.z;
+                    round++;
+                    console.log("checkpoint ONE - Round " + round);
+                    break;
+
+                case checkpoint2:
+                    console.log("checkpoint TWO");
+                    checkpointList[0] = checkpoint3;
+                    target = checkpoint3;
+                    checkpoint2.material = wallRed;
+                    checkpoint3.material = wallGreen;
+                    spawnX = checkpoint2.position.x;
+                    spawnZ = checkpoint2.position.z;
+                    break;
+                    
+                case checkpoint3:
+                    console.log("checkpoint THREE");
+                    checkpointList[0] = checkpoint4;
+                    target = checkpoint4;
+                    checkpoint3.material = wallRed;
+                    checkpoint4.material = wallGreen;
+                    spawnX = checkpoint3.position.x;
+                    spawnZ = checkpoint3.position.z;
+                    break;
+                    
+                case checkpoint4:
+                    console.log("checkpoint FOUR");
+                    checkpointList[0] = checkpoint5;
+                    target = checkpoint5;
+                    checkpoint4.material = wallRed;
+                    checkpoint5.material = wallGreen;
+                    spawnX = checkpoint4.position.x;
+                    spawnZ = checkpoint4.position.z;
+                    break;
+                    
+                case checkpoint5:
+                    console.log("checkpoint FIVE");
+                    checkpointList[0] = checkpoint6;
+                    target = checkpoint6;
+                    checkpoint5.material = wallRed;
+                    checkpoint6.material = wallGreen;
+                    spawnX = checkpoint5.position.x;
+                    spawnZ = checkpoint5.position.z;
+                    break;
+                    
+                case checkpoint6:
+                    console.log("checkpoint SIX");
+                    checkpointList[0] = checkpoint7;
+                    target = checkpoint7;
+                    checkpoint6.material = wallRed;
+                    checkpoint7.material = wallGreen;
+                    spawnX = checkpoint6.position.x;
+                    spawnZ = checkpoint6.position.z;
+                    break;
+                    
+                case checkpoint7:
+                    console.log("checkpoint SEVEN");
+                    checkpointList[0] = checkpoint8;
+                    target = checkpoint8;
+                    checkpoint7.material = wallRed;
+                    checkpoint8.material = wallGreen;
+                    spawnX = checkpoint7.position.x;
+                    spawnZ = checkpoint7.position.z;
+                    break;
+                    
+                case checkpoint8:
+                    console.log("checkpoint EIGHT");
+                    checkpointList[0] = checkpoint1;
+                    target = checkpoint1;
+                    checkpoint8.material = wallRed;
+                    checkpoint1.material = wallGreen;
+                    spawnX = checkpoint8.position.x;
+                    spawnZ = checkpoint8.position.z;
+                    break;     
+            }
+        }
 				
 		function addLights()
         {
@@ -407,6 +545,13 @@
         //Function update for the movement and the collisiondetection
         function update()
 		{
+			if(round >= 4)
+            {
+                console.log("Player 1 Wins!");
+                confirm("Player 1 Wins! Press OK for rematch!");
+                window.location.reload();
+            }
+		
 			var acceleration = 100 * (acc_clock.getElapsedTime () / 10);
 			var rotateAngle = Math.PI * 2 * (acc_clock.getElapsedTime ()  / 150);
 				
@@ -554,25 +699,25 @@
 				}
 			}
 			
-			for (var verti = 0; verti < cube.geometry.vertices.length; verti++) 
-			{
-
-				//Get Local Vertex, Get Global Vertex, Get Direction of moving cube
-				var localvert = cube.geometry.vertices [verti].clone ();
-				var globalvert = localvert.applyMatrix4 (cube.matrix);
-				var directionvec = globalvert.sub (cube.position);
-
-				//Creating a Ray for Raytracing an looking if there is an collision
-				var ray = new THREE.Raycaster (cube.position.clone (), directionvec.clone ().normalize ());
-				var collision = ray.intersectObjects (collidablePowerUpList2);
+			//Collision for Checkpoints
+            for(var verti = 0; verti <cube.geometry.vertices.length; verti++)
+            {
+                 //Creating a Ray for Raytracing an looking if there is an collision
+                var localvert = cube.geometry.vertices[verti].clone();
+                var globalvert = localvert.applyMatrix4( cube.matrix);
+                var directionvec = globalvert.sub(cube.position);
                 
-				//What happens if there is an collision
-				if (collision.length > 0 && collision [0].distance < directionvec.length ()) 
-				{
-					dmgCalc = 0;
-					document.getElementById('textarea').innerHTML = dmgCalc;
-				}
-			}
+                //Get Local Vertex, Get Global Vertex, Get Direction of moving cube
+                var ray = new THREE.Raycaster(cube.position.clone(), directionvec.clone().normalize());
+                var checkcollision = ray.intersectObjects(checkpointList);
+
+                //What happens if there is an collision
+                if(checkcollision.length > 0 && checkcollision[0].distance < directionvec.length())
+                {
+                    console.log(target);
+                    nextTarget();
+                }
+            }
 		}
 
         </script>
