@@ -43,8 +43,8 @@
         var checkpoint;
         var spawnX, spawnZ;
         var round = 0;
-        var wallGreen = new THREE.MeshBasicMaterial( { color: 0x00ff00});
-        var wallRed = new THREE.MeshBasicMaterial( { color: 0xff0000});
+        var wallGreen = new THREE.MeshBasicMaterial( { color: 0x00ff00, transparent: true, opacity: 0.2});
+        var wallRed = new THREE.MeshBasicMaterial( { color: 0xff0000,  transparent: true, opacity: 0.2});
 
         //Function for Creating the World, getting a scene, a camera, the
         //test-walls, the floor and our test-cube.
@@ -57,11 +57,11 @@
             //Creating a new Camera
             {
 		camera = new THREE.PerspectiveCamera(50, (window.innerWidth / window.innerHeight), 0.1, 20000);
-                camera.position.set(0, 7000, 80);
-                //camera.position.set(0,1500,80);
+                //camera.position.set(0, 7000, 80);
+                //camera.position.set(0,500,80);
                 camera.lookAt(scene.position);
-                //camera.position.z = 200;
-		//camera.position.y = 55;
+                camera.position.z = 200;
+		camera.position.y = 55;
             }
 
             //Creating a new Renderer
@@ -91,19 +91,19 @@
                
                 cube.position.set(spawnX, 10, spawnZ);
                 scene.add(cube);
-		//cube.add(camera);
+		cube.add(camera);
             }
 
             //The Walls...
             {
-                var wallGeometry = new THREE.CubeGeometry( 500, 500, 50, 1, 1, 1 );
                 var wandbegrenzung = new THREE.CubeGeometry( 5000, 100, 50, 1, 1, 1 );
                 var wandLang = new THREE.CubeGeometry( 1650, 100, 50, 1, 1, 1 );
                 var wandMittel = new THREE.CubeGeometry( 1237, 100, 50, 1, 1, 1 );
                 var wandKurz = new THREE.CubeGeometry( 825, 100, 50, 1, 1, 1 );
                 var wandNano = new THREE.CubeGeometry( 437, 100, 50, 1, 1, 1 );
-                var wallCheck = new THREE.CubeGeometry(740, 200, 10, 1, 1, 1);
-                var wallCheck2 = new THREE.CubeGeometry(950, 200, 10, 1, 1, 1);
+                var wallCheck = new THREE.CubeGeometry(740, 100, 1, 1, 1, 1);
+                var wallCheck2 = new THREE.CubeGeometry(950, 100, 1, 1, 1, 1);
+                var goalMat = new THREE.MeshBasicMaterial(({colir: 0x00ff00}));
 		var wallMaterial = new THREE.MeshPhongMaterial( { color: 0xff0000, specular: 0xFFFFFF, shininess: 100 } );
 		
        
@@ -324,6 +324,11 @@
 		scene.add(outWallN6);
 		collidableMeshList.push(outWallN6);   
                 
+                //A Goal for Winning
+                goal = new THREE.Mesh(wallCheck, goalMat);
+                goal.position.set(-2100, 200, 1600);
+		//goal.rotation.y = 3.14159/2;
+		scene.add(goal);
                 
                 //Checkpoints
                 checkpoint1 = new THREE.Mesh(wallCheck, wallRed);
@@ -332,7 +337,7 @@
 		scene.add(checkpoint1);
 		//checkpointList.push(checkpoint1);
                 
-                checkpoint2 = new THREE.Mesh(wallCheck2, wallRed);
+                checkpoint2 = new THREE.Mesh(wallCheck, wallRed);
                 checkpoint2.position.set(-2100, 50, -1650);
 		//checkpoint2.rotation.y = 3.14159/2;
 		scene.add(checkpoint2);
@@ -368,9 +373,9 @@
 		scene.add(checkpoint8);
 
 		//First Target!
-		target = checkpoint1;
-                checkpointList[0] = checkpoint1;
-		checkpoint1.material = wallGreen; 
+		target = checkpoint5;
+                checkpointList[0] = checkpoint5;
+		checkpoint5.material = wallGreen; 
             }
         }
 
@@ -485,14 +490,18 @@
                     checkpoint1.material = wallGreen;
                     spawnX = checkpoint8.position.x;
                     spawnZ = checkpoint8.position.z;
-                    break;
-                    
+                    break;     
             }
         }
 
         //Function update for the movement and the collisiondetection
         function update()
 		{
+                    if(round >= 4)
+                    {
+                        console.log("Player 1 Wins!");
+                    }
+                    
 			var acceleration = 100 * (acc_clock.getElapsedTime () / 10);        // 200 pixels pro Sekunde
 			var rotateAngle = Math.PI * (acc_clock.getElapsedTime () / 150);  	// Pi Grad (225°) pro Sekunde
 				
@@ -592,6 +601,27 @@
                 
             //Collision detection via Raytracing
             //Looking for all different Vertices
+            
+            //Collision for Checkpoints
+            for(var verti = 0; verti <cube.geometry.vertices.length; verti++)
+            {
+                 //Creating a Ray for Raytracing an looking if there is an collision
+                var localvert = cube.geometry.vertices[verti].clone();
+                var globalvert = localvert.applyMatrix4( cube.matrix);
+                var directionvec = globalvert.sub(cube.position);
+                
+                //Get Local Vertex, Get Global Vertex, Get Direction of moving cube
+                var ray = new THREE.Raycaster(cube.position.clone(), directionvec.clone().normalize());
+                var checkcollision = ray.intersectObjects(checkpointList);
+
+                //What happens if there is an collision
+                if(checkcollision.length > 0 && checkcollision[0].distance < directionvec.length())
+                {
+                    console.log(target);
+                    nextTarget();
+                }
+            }
+            
             //Collision for Solid Walls
             for(var verti = 0; verti <cube.geometry.vertices.length; verti++)
             {
@@ -613,25 +643,7 @@
                 
             }
             
-            //Collision for Checkpoints
-            for(var verti = 0; verti <cube.geometry.vertices.length; verti++)
-            {
-                 //Creating a Ray for Raytracing an looking if there is an collision
-                var localvert = cube.geometry.vertices[verti].clone();
-                var globalvert = localvert.applyMatrix4( cube.matrix);
-                var directionvec = globalvert.sub(cube.position);
-                
-                //Get Local Vertex, Get Global Vertex, Get Direction of moving cube
-                var rayA = new THREE.Raycaster(cube.position.clone(), directionvec.clone().normalize());
-                var checkcollision = rayA.intersectObjects(checkpointList);
-
-                //What happens if there is an collision
-                if(checkcollision.length > 0 && checkcollision[0].distance < directionvec.length())
-                {
-                    console.log(target);
-                    nextTarget();
-                }
-            }
+            
         }
 
             </script>
