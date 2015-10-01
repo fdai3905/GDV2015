@@ -1,4 +1,4 @@
-<html>
+<html> 
     <head>
             <title>Race Of DeaS</title>
             <meta charset="utf-8">
@@ -6,6 +6,16 @@
             <style>
                     body { margin: 0; }
                     canvas { width: 100%; height: 100% }
+                    
+                    #Damage{
+                        position: absolute;
+                        text-align: right;
+                        width: 100%;
+                        height: 100%;
+                        font-size: 30px;
+                        font-family: MV Boli;
+                        color: white;
+                    }
             </style>
     </head>
     <body>
@@ -14,8 +24,27 @@
         <script src="JS/three.min.js"></script>
         <script src="JS/THREEx.KeyboardState.js"></script>
         
+        <!-- Code für Infobox von http://stemkoski.github.io/Three.js/Infobox.html -->
+        <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+        <script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
+        <link rel=stylesheet href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" />
+        <link rel=stylesheet href="CSS/info.css"/>
+        <script src="JS/info.js"></script>
+        <div id="infoButton"></div>
+        <div id="infoBox" title="Steuerung">
+        <a>Spieler 1</a></br>
+        <a>W,A,S,D - Für Vor, Links, Zurück, Rechts</a></br>
+        <a>Leertaste - Für Geschoss</a></br></br>
+        <a>Spieler 2</a></br>
+        <a>8,4,2,6 - Für Vor, Links, Zurück, Rechts</a></br>
+        <a>0 - Für Geschoss</a></br></br>
+        <a>Der Spieler der als erster 3 Runden absolviert hat gewonnen!</a>
+        </div>
+        
         <!--   Creating div, for different informations-->
-        <div id="textarea"></div>
+        <div id="Damage">
+            <a id="DamageText">0</a>
+        </div>
         <div id="ThreeJS" style="z-index: 2;"></div>
         
         <!-- Script for the Game  -->
@@ -43,7 +72,10 @@
         var checkpoint;
         var spawnX, spawnZ;
         var round = 0;
-        var wallGreen = new THREE.MeshBasicMaterial( { color: 0x00ff00, transparent: true, opacity: 0.2});
+        
+    var dmgCalc;
+    
+    var wallGreen = new THREE.MeshBasicMaterial( { color: 0x00ff00, transparent: true, opacity: 0.2});
         var wallRed = new THREE.MeshBasicMaterial( { color: 0xff0000,  transparent: true, opacity: 0.2});
 
         //Function for Creating the World, getting a scene, a camera, the
@@ -103,8 +135,12 @@
                 var wandNano = new THREE.CubeGeometry( 437, 100, 50, 1, 1, 1 );
                 var wallCheck = new THREE.CubeGeometry(740, 100, 1, 1, 1, 1);
                 var wallCheck2 = new THREE.CubeGeometry(950, 100, 1, 1, 1, 1);
-                var goalMat = new THREE.MeshBasicMaterial(({colir: 0x00ff00}));
+                
+                var goalTexture = THREE.ImageUtils.loadTexture( 'Graphics/Schach.jpg' );
+                var goalMat = new THREE.MeshBasicMaterial( { map: goalTexture } );
+                
 		var wallMaterial = new THREE.MeshPhongMaterial( { color: 0xff0000, specular: 0xFFFFFF, shininess: 100 } );
+
 		
        
 		//Außenwände Weltbegrenzung Links, Rechts, Oben, Unten
@@ -325,10 +361,16 @@
 		collidableMeshList.push(outWallN6);   
                 
                 //A Goal for Winning
-                goal = new THREE.Mesh(wallCheck, goalMat);
-                goal.position.set(-2100, 200, 1600);
-		//goal.rotation.y = 3.14159/2;
-		scene.add(goal);
+                
+                var cubeGeometry = new THREE.CubeGeometry( 85, 85, 85 );
+	
+                var crateTexture = new THREE.ImageUtils.loadTexture( 'Graphics/Schach.jpg' );
+                var crateMaterial = new THREE.MeshBasicMaterial( { map: crateTexture } );
+                var crate = new THREE.Mesh( cubeGeometry.clone(), crateMaterial );
+                crate.position.set(-2100, 200, 16000);
+                scene.add( crate );
+                
+               
                 
                 //Checkpoints
                 checkpoint1 = new THREE.Mesh(wallCheck, wallRed);
@@ -500,7 +542,7 @@
                     if(round >= 4)
                     {
                         console.log("Player 1 Wins!");
-                        confirm("Player 1 Wins! Press OK for rematch!");
+                        confirm("Player 1 Wins! Press OK for rematch!");                        
                         window.location.reload();
                     }
                     
@@ -639,9 +681,13 @@
                 //What happens if there is an collision
                 if(collision.length > 0 && collision[0].distance < directionvec.length())
                 {
-                    clearText();  
-                    updateCollision();
+                    
+                    dmgCalc += 1;
+                    document.getElementById("DamageText").innerHTML = dmgCalc;
+                    if (dmgCalc >= 100) {cube.position.x; cube.position.z; dmgCalc = -3;}
+                    updateCollision ();
                 }
+                
                 
             }
             
