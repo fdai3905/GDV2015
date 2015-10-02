@@ -60,6 +60,8 @@
         var keyboard = new THREEx.KeyboardState();
         var collidableMeshList = [];
 		var collidablePowerUpList1 = [];
+		var cubeList1 = [];
+		var cubeList2 = [];
 		var collidablePowerUpList2 = [];
 		var acc_clock = new THREE.Clock();
 		var pU_clock = new THREE.Clock();
@@ -83,7 +85,7 @@
 		var dmgMatOra = new THREE.MeshBasicMaterial (({color: 0xFF8000}));
 		var dmgMatRed = new THREE.MeshBasicMaterial (({color: 0xff0000}));
 		var materialCube = new THREE.MeshBasicMaterial ({color:0x0000ff});
-        var materialCube2 = new THREE.MeshBasicMaterial ({color:0xFF0000});
+        var materialCube2 = new THREE.MeshBasicMaterial ({color:0xBDBDBD});
 
 
         //Function for Creating the World, getting a scene, a camera, the
@@ -144,8 +146,11 @@
 
             //Add a cubes       
             {             
-                spawnX = -1800;
-                spawnZ = 2000;
+                spawnX = -2000;
+                spawnZ = 1800;
+				
+				spawnX2 = -2200;
+                spawnZ2 = 1800;
                 var geometry  =  new THREE.BoxGeometry (25,25,75);
 
                 //Cube1 blue
@@ -153,12 +158,14 @@
                 cube.position.set (spawnX, 45, spawnZ);
                 scene.add (cube);
                 cube.add (topCamera);
+				cubeList1.push (cube);
                 
                 //Cube2 red
                 cube2 = new THREE.Mesh (geometry,materialCube2);
-                cube2.position.set (spawnX, 45, spawnZ);
+                cube2.position.set (spawnX2, 45, spawnZ2);
                 scene.add (cube2);
                 cube2.add (bottomCamera);
+				cubeList2.push (cube2);
             }
 			
 			//Add a missile
@@ -167,14 +174,14 @@
                 spawnZ = 2000;
                 var geometryMissile = new THREE.BoxGeometry (10, 10, 25);
                 var material = new THREE.MeshBasicMaterial ({color: 0x0000ff});
-				var material2 = new THREE.MeshBasicMaterial ({color: 0xFF0000});
+				var material2 = new THREE.MeshBasicMaterial ({color: 0xBDBDBD});
 				
                 missile = new THREE.Mesh (geometryMissile, material);
-                missile.position.set (spawnX, 60, spawnZ);
+                missile.position.set (spawnX, 50, spawnZ);
                 scene.add (missile);
 				
                 missile2 = new THREE.Mesh (geometryMissile, material2);
-                missile2.position.set (spawnX, 60, spawnZ);
+                missile2.position.set (spawnX2, 50, spawnZ2);
                 scene.add (missile2);
 			}
 			
@@ -626,8 +633,8 @@
                     target2 = checkpoint22;
                     checkpoint12.material = wallRed;
                     checkpoint22.material = wallGreen;
-                    spawnX = checkpoint12.position.x;
-                    spawnZ = checkpoint12.position.z;
+                    spawnX2 = checkpoint12.position.x;
+                    spawnZ2 = checkpoint12.position.z;
                     round2 ++;
                     console.log ("checkpoint ONE - Round " + round);
                     break;
@@ -638,8 +645,8 @@
                     target2 = checkpoint32;
                     checkpoint22.material = wallRed;
                     checkpoint32.material = wallGreen;
-                    spawnX = checkpoint22.position.x;
-                    spawnZ = checkpoint22.position.z;
+                    spawnX2 = checkpoint22.position.x;
+                    spawnZ2 = checkpoint22.position.z;
                     break;
                     
                 case checkpoint32:
@@ -648,8 +655,8 @@
                     target2 = checkpoint42;
                     checkpoint32.material = wallRed;
                     checkpoint42.material = wallGreen;
-                    spawnX = checkpoint32.position.x;
-                    spawnZ = checkpoint32.position.z;
+                    spawnX2 = checkpoint32.position.x;
+                    spawnZ2 = checkpoint32.position.z;
                     break;
                     
                 case checkpoint42:
@@ -658,8 +665,8 @@
                     target2 = checkpoint52;
                     checkpoint42.material = wallRed;
                     checkpoint52.material = wallGreen;
-                    spawnX = checkpoint42.position.x;
-                    spawnZ = checkpoint42.position.z;
+                    spawnX2 = checkpoint42.position.x;
+                    spawnZ2 = checkpoint42.position.z;
                     break;
                     
                 case checkpoint52:
@@ -668,8 +675,8 @@
                     target2 = checkpoint62;
                     checkpoint52.material = wallRed;
                     checkpoint62.material = wallGreen;
-                    spawnX = checkpoint52.position.x;
-                    spawnZ = checkpoint52.position.z;
+                    spawnX2 = checkpoint52.position.x;
+                    spawnZ2 = checkpoint52.position.z;
                     break;
                     
                 case checkpoint62:
@@ -678,8 +685,8 @@
                     target2 = checkpoint72;
                     checkpoint62.material = wallRed;
                     checkpoint72.material = wallGreen;
-                    spawnX = checkpoint62.position.x;
-                    spawnZ = checkpoint62.position.z;
+                    spawnX2 = checkpoint62.position.x;
+                    spawnZ2 = checkpoint62.position.z;
                     break;
                     
                 case checkpoint72:
@@ -688,8 +695,8 @@
                     target2 = checkpoint82;
                     checkpoint72.material = wallRed;
                     checkpoint82.material = wallGreen;
-                    spawnX = checkpoint72.position.x;
-                    spawnZ = checkpoint72.position.z;
+                    spawnX2 = checkpoint72.position.x;
+                    spawnZ2 = checkpoint72.position.z;
                     break;
                     
                 case checkpoint82:
@@ -698,8 +705,8 @@
                     target2 = checkpoint12;
                     checkpoint82.material = wallRed;
                     checkpoint12.material = wallGreen;
-                    spawnX = checkpoint82.position.x;
-                    spawnZ = checkpoint82.position.z;
+                    spawnX2 = checkpoint82.position.x;
+                    spawnZ2 = checkpoint82.position.z;
                     break;     
             }
         }
@@ -747,7 +754,6 @@
             //  lower_left_x, lower_left_y, viewport_width, viewport_height
             renderer.setViewport (0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
             renderer.clear ();
-
 
             // render left side
             renderer.setViewport (0, 0, SCREEN_WIDTH, 0.5 * SCREEN_HEIGHT);
@@ -851,7 +857,7 @@
 			
 			if (misClock.getElapsedTime () >=  2) {
 				misClock.elapsedTime = 0;
-				missile.position.set (cube.position.x, 28, cube.position.z);
+				missile.position.set (cube.position.x, 50, cube.position.z);
 			}
                 
             if (keyboard.pressed ("r")) {
@@ -942,6 +948,25 @@
                     nextTarget1 ();
                 }
             }
+			
+			//Collision for Missile
+            for(var verti = 0; verti < missile.geometry.vertices.length; verti ++) {
+                 //Creating a Ray for Raytracing an looking if there is an collision
+                var localvert = missile.geometry.vertices [verti].clone();
+                var globalvert = localvert.applyMatrix4 (missile.matrix);
+                var directionvec = globalvert.sub (missile.position);
+                
+                //Get Local Vertex, Get Global Vertex, Get Direction of moving cube
+                var ray = new THREE.Raycaster (missile.position.clone (), directionvec.clone ().normalize ());
+                var collision = ray.intersectObjects (cubeList2);
+
+                //What happens if there is an collision
+                if (collision.length > 0 && collision [0].distance < directionvec.length()) {
+                    cube2.position.x = spawnX2;
+					cube2.position.z = spawnZ2;
+					missile.position.set (cube.position.x, 50, cube.position.z);
+                }
+            }
 		}
 		
 		function updatePlayer2 () {
@@ -952,17 +977,17 @@
                 window.location.reload ();
             }
 		
-			var acceleration = 100 * (acc_clock2.getElapsedTime () / 10);
-			var rotateAngle = Math.PI * 2 * (acc_clock2.getElapsedTime () / 150);
+			var acceleration2 = 100 * (acc_clock2.getElapsedTime () / 10);
+			var rotateAngle2 = Math.PI * 2 * (acc_clock2.getElapsedTime () / 150);
 				
 			if (keyboard.pressed ("left")) {	
-				cube2.rotation.y += rotateAngle;
-				missile2.rotation.y += rotateAngle;
+				cube2.rotation.y += rotateAngle2;
+				missile2.rotation.y += rotateAngle2;
 			}
 				
 			if (keyboard.pressed ("right")) {
-				cube2.rotation.y -= rotateAngle;
-				missile2.rotation.y -= rotateAngle;
+				cube2.rotation.y -= rotateAngle2;
+				missile2.rotation.y -= rotateAngle2;
 			}
 			
 			if (keyboard.pressed ("up")) {					
@@ -974,12 +999,16 @@
 					if (acc_clock2.elapsedTime > 0) {acc_clock2.elapsedTime = -0.5;}
 				}
 				
-				function updateCollisionPowerUpSpeed() {pU_clock2.elapsedTime = 0;}
+				function updateCollisionPowerUpSpeed () {pU_clock2.elapsedTime = 0;}
 						
 				if (acc_clock2.getElapsedTime () >=  2) {acc_clock2.elapsedTime = 2;}
 				
-				if (pU_clock2.getElapsedTime () <= 3) {cube2.translateZ (- acceleration * 2);}
-				else if (pU_clock2.getElapsedTime () > 3) {cube2.translateZ (- acceleration); missile2.translateZ (- acceleration);}
+				if (pU_clock2.getElapsedTime () <= 3) {cube2.translateZ (- acceleration2 * 2);}
+				
+				else if (pU_clock2.getElapsedTime () > 3) {
+					cube2.translateZ (- acceleration2); 
+					missile2.translateZ (- acceleration2);
+				}
 			}
 				
 			else if (keyboard.pressed ("down")) {
@@ -993,17 +1022,17 @@
 			
 				if (acc_clock2.getElapsedTime () >= 2) {acc_clock2.elapsedTime = 2;}
 					
-				cube2.translateZ (+ acceleration);
-				missile2.translateZ (+ acceleration);
+				cube2.translateZ (+ acceleration2);
+				missile2.translateZ (+ acceleration2);
 					
 				if (keyboard.pressed ("right")) {
-					cube2.rotation.y += (rotateAngle * 1.5);
-					missile2.rotation.y += (rotateAngle * 1.5);
+					cube2.rotation.y += (rotateAngle2 * 1.5);
+					missile2.rotation.y += (rotateAngle2 * 1.5);
 				}
 					
 				if (keyboard.pressed ("left")) {
-					cube2.rotation.y -= (rotateAngle * 1.5);
-					missile2.rotation.y -= (rotateAngle * 1.5);
+					cube2.rotation.y -= (rotateAngle2 * 1.5);
+					missile2.rotation.y -= (rotateAngle2 * 1.5);
 				}
 			}  
 			
@@ -1020,12 +1049,12 @@
 			
 			if (misClock2.getElapsedTime () >= 2) {
 				misClock2.elapsedTime = 0;
-				missile2.position.set (cube2.position.x, 28, cube2.position.z);
+				missile2.position.set (cube2.position.x, 50, cube2.position.z);
 			}
                 
             if (keyboard.pressed ("num5")) {
-                cube2.position.x = spawnX;
-                cube2.position.z = spawnZ;
+                cube2.position.x = spawnX2;
+                cube2.position.z = spawnZ2;
             }
 			
 			if (keyboard.pressed ("num1")) {
@@ -1052,10 +1081,10 @@
 					if (dmgCalc2 >= 75) {cube2.material = dmgMatRed;}
 					if (dmgCalc2 >= 100) {
 						cube2.material = materialCube2;
-						cube2.position.x = spawnX; 
-						cube2.position.z = spawnZ; 
-						missile2.position.x = spawnX; 
-						missile2.position.z = spawnZ; 
+						cube2.position.x = spawnX2; 
+						cube2.position.z = spawnZ2; 
+						missile2.position.x = spawnX2; 
+						missile2.position.z = spawnZ2; 
 						dmgCalc2 = 0;
 						acc_clock2.elapsedTime = 0;
 					}
@@ -1110,10 +1139,28 @@
                 var checkcollision = ray.intersectObjects (checkpointList2);
 
                 //What happens if there is an collision
-                if (checkcollision.length > 0 && checkcollision [0].distance < directionvec.length())
-                {
+                if (checkcollision.length > 0 && checkcollision [0].distance < directionvec.length()) {
                     console.log (target2);
                     nextTarget2 ();
+                }
+			}
+				
+			//Collision for Missile
+            for(var verti = 0; verti < missile2.geometry.vertices.length; verti ++) {
+                 //Creating a Ray for Raytracing an looking if there is an collision
+                var localvert = missile2.geometry.vertices [verti].clone();
+                var globalvert = localvert.applyMatrix4 (missile2.matrix);
+                var directionvec = globalvert.sub (missile2.position);
+                
+                //Get Local Vertex, Get Global Vertex, Get Direction of moving cube
+                var ray = new THREE.Raycaster (missile2.position.clone (), directionvec.clone ().normalize ());
+                var collision = ray.intersectObjects (cubeList1);
+
+                //What happens if there is an collision
+                if (collision.length > 0 && collision [0].distance < directionvec.length()) {
+                    cube.position.x = spawnX;
+					cube.position.z = spawnZ;
+					missile2.position.set (cube2.position.x, 50, cube2.position.z);
                 }
             }
 		}
