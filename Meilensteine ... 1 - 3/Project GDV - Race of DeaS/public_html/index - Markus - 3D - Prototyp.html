@@ -1,8 +1,8 @@
 <html>
     <head>
-            <title>Race of DeaS</title>
-            <meta charset="utf-8">
-            <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+            <title> Race of DeaS </title>
+            <meta charset = "utf-8">
+            <meta name = "viewport" content = "width = device-width, user-scalable = no, minimum-scale = 1.0, maximum-scale = 1.0">
             <style>
                     body { margin: 0; }
                     canvas { width: 100%; height: 100% }
@@ -10,39 +10,39 @@
     </head>
     <body>
         <!--Including libaries-->
-        <script src="JS/three.js"></script>
-        <script src="JS/three.min.js"></script>
-        <script src="JS/THREEx.KeyboardState.js"></script>
-		<script src="JS/JSONLoader.js"></script>
-		<script src="JS/THREExFullScreen.js" type="text/javascript"></script>
-        <script src="JS/THREEx.WindowResize.js" type="text/javascript"></script>
-        <script src="JS/Detector.js" type="text/javascript"></script>
+        <script src = "JS/three.js"> </script>
+        <script src = "JS/three.min.js"> </script>
+        <script src = "JS/THREEx.KeyboardState.js"> </script>
+		<script src = "JS/JSONLoader.js"> </script>
+		<script src = "JS/THREExFullScreen.js" type = "text/javascript"> </script>
+        <script src = "JS/THREEx.WindowResize.js" type = "text/javascript"> </script>
+        <script src = "JS/Detector.js" type = "text/javascript"> </script>
         
         <!-- Code für Infobox von http://stemkoski.github.io/Three.js/Infobox.html -->
-        <script src="JS/jquery-1.9.1.js"></script>
-        <script src="JS/jquery-ui.js"></script>
-        <link rel=stylesheet href="CSS/jquery-ui.css" />
-        <link rel=stylesheet href="CSS/info.css"/>
-        <script src="JS/info.js"></script>
-        <div id="infoButton"></div>
-        <div id="infoBox" title="Steuerung">
-        <a>Spieler 1</a></br>
-        <a>W, A, S, D - Vor, Links, Zurück, Rechts</a></br>
-		<a>R - zurück setzen</a></br>
-        <a>Leertaste - Geschoss abfeuern</a></br></br>
-        <a>Spieler 2</a></br>
-        <a>Pfeil Hoch,Pfeil Links,Pfeil Runter,Pfeil Rechts - Vor, Links, Zurück, Rechts</a></br>
-		<a>Num6 - zurück setzen</a></br>
-        <a>Num0 - Geschoss abfeuern</a></br></br>
-        <a>Der Spieler der als erster 3 Runden absolviert hat gewonnen!</a></br></br>
-        <a>Power Ups</a></br>
-        <a>Rot - Damage Heal</a></br>
-        <a>Weiß - Speedboost</a></br>
+        <script src = "JS/jquery-1.9.1.js"> </script>
+        <script src = "JS/jquery-ui.js"> </script>
+        <link rel = stylesheet href = "CSS/jquery-ui.css"/>
+        <link rel = stylesheet href = "CSS/info.css"/>
+        <script src = "JS/info.js"></script>
+        <div id = "infoButton"></div>
+        <div id = "infoBox" title = "Steuerung">
+        <a> Spieler 1 </a> </br>
+        <a> W, A, S, D - Vor, Links, Zurück, Rechts </a> </br>
+		<a> R - zurück setzen </a> </br>
+        <a> Leertaste - Geschoss abfeuern </a> </br> </br>
+        <a> Spieler 2</a></br>
+        <a> Pfeil Hoch,Pfeil Links,Pfeil Runter,Pfeil Rechts - Vor, Links, Zurück, Rechts </a> </br>
+		<a> Num6 - zurück setzen </a> </br>
+        <a> Num0 - Geschoss abfeuern </a> </br> </br>
+        <a> Der Spieler der als erster 3 Runden absolviert hat gewonnen! </a> </br> </br>
+        <a> Power Ups </a> </br>
+        <a> Rot - Damage Heal </a> </br>
+        <a> Weiß - Speedboost </a> </br>
         </div>
 		
         <!--   Creating div, for different informations-->
-        <div id="textarea"></div>
-        <div id="ThreeJS" style="z-index: 2;"></div>
+        <div id = "textarea"> </div>
+        <div id = "ThreeJS" style = "z-index: 2;"> </div>
         
         <!-- Script for the Game  -->
         <script>    
@@ -68,29 +68,32 @@
 		var pU_clock2 = new THREE.Clock();
 		var misClock2 = new THREE.Clock();
         var scene, camera, renderer, cube;
-        var spawnX, spawnZ;		
+        var spawnX, spawnZ;	
+		var spawnX2, spawnZ2;		
 		var dmgCalc = 0;
 		var dmgCalc2 = 0;
 		var round = 0;
+		var round2 = 0;
 		var bottomCamera, topCamera;
-		var checkpointList = [];
-        var wallGreen = new THREE.MeshBasicMaterial( { color: 0x00ff00, transparent: true, opacity: 0.2});
-        var wallRed = new THREE.MeshBasicMaterial( { color: 0xff0000,  transparent: true, opacity: 0.2});
-		var dmgMatYel = new THREE.MeshBasicMaterial(({color: 0xFFFF00}));
-		var dmgMatOra = new THREE.MeshBasicMaterial(({color: 0xFF8000}));
-		var dmgMatRed = new THREE.MeshBasicMaterial(({color: 0xff0000}));
-		var materialCube = new THREE.MeshBasicMaterial({color:0x0000ff});
-        var materialCube2 = new THREE.MeshBasicMaterial({color:0xFF0000});
+		var checkpointList1 = [];
+		var checkpointList2 = [];
+        var wallGreen = new THREE.MeshBasicMaterial ({color: 0x00ff00, transparent: true, opacity: 0.2});
+        var wallRed = new THREE.MeshBasicMaterial ({color: 0xff0000, transparent: true, opacity: 0.2});
+		var dmgMatYel = new THREE.MeshBasicMaterial (({color: 0xFFFF00}));
+		var dmgMatOra = new THREE.MeshBasicMaterial (({color: 0xFF8000}));
+		var dmgMatRed = new THREE.MeshBasicMaterial (({color: 0xff0000}));
+		var materialCube = new THREE.MeshBasicMaterial ({color:0x0000ff});
+        var materialCube2 = new THREE.MeshBasicMaterial ({color:0xFF0000});
 
 
         //Function for Creating the World, getting a scene, a camera, the
         //test-walls, the floor and our test-cube.
         //Also Creating a Renderer with WebGL
-        function init()
-        {
-            //Creating a new Scene
+        function init () {
+            
+			//Creating a new Scene
 			{
-				scene = new THREE.Scene();
+				scene = new THREE.Scene ();
 			}
 			
             //Creating a new Camera
@@ -99,389 +102,455 @@
                 var VIEW_ANGLE = 60, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 0.1, FAR = 20000;
                 
                 // camera 1 RECHTS
-                topCamera = new THREE.PerspectiveCamera( VIEW_ANGLE, ASPECT, NEAR, FAR);
+                topCamera = new THREE.PerspectiveCamera (VIEW_ANGLE, ASPECT, NEAR, FAR);
 				topCamera.position.z = 220;
 				topCamera.position.y = 90;
 
                 // camera 2 LINKS
-                bottomCamera = new THREE.PerspectiveCamera( VIEW_ANGLE, ASPECT, NEAR, FAR);
+                bottomCamera = new THREE.PerspectiveCamera (VIEW_ANGLE, ASPECT, NEAR, FAR);
 				bottomCamera.position.z = 220;
 				bottomCamera.position.y = 90;
 				
 				// RENDERER
-                if ( Detector.webgl ) 
-				{
-                    renderer = new THREE.WebGLRenderer( {antialias:true} );
-				}
-                else
-				{
-                    renderer = new THREE.CanvasRenderer(); 
-				}
+                if (Detector.webgl) {renderer = new THREE.WebGLRenderer ({antialias:true});}
+                else {renderer = new THREE.CanvasRenderer();}
 				
-				renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
-                container = document.getElementById( 'ThreeJS' );
-                container.appendChild( renderer.domElement );
+				renderer.setSize (SCREEN_WIDTH, SCREEN_HEIGHT);
+                container = document.getElementById ('ThreeJS');
+                container.appendChild (renderer.domElement);
                 
                 // EVENTS
-                THREEx.WindowResize(renderer, topCamera);
-                THREEx.FullScreen.bindKey({ charCode : 'm'.charCodeAt(0) });
+                THREEx.WindowResize (renderer, topCamera);
+                THREEx.FullScreen.bindKey ({charCode : 'm'.charCodeAt(0)});
             }
 
             //FLOOR
             {
-                var floorMaterial = new THREE.MeshBasicMaterial( {color:0x444444, side:THREE.DoubleSide} );
-                var floorGeometry = new THREE.PlaneGeometry(5000, 5000, 10, 10);
-                var floor = new THREE.Mesh(floorGeometry, floorMaterial);
+                var floorMaterial = new THREE.MeshBasicMaterial ({color:0x444444, side:THREE.DoubleSide});
+                var floorGeometry = new THREE.PlaneGeometry (5000, 5000, 10, 10);
+                var floor = new THREE.Mesh (floorGeometry, floorMaterial);
                 floor.position.y = -0.5;
                 floor.rotation.x = Math.PI / 2;
-                scene.add(floor);
+                scene.add (floor);
             }
 			
 			//SKYBOX
             {
-                var skyBoxGeometry = new THREE.CubeGeometry( 10000, 10000, 10000 );
-                var skyBoxMaterial = new THREE.MeshBasicMaterial( { color: 0x9999ff, side: THREE.BackSide } );
-                var skyBox = new THREE.Mesh( skyBoxGeometry, skyBoxMaterial );
-                scene.add(skyBox);
+                var skyBoxGeometry = new THREE.CubeGeometry (10000, 10000, 10000);
+                var skyBoxMaterial = new THREE.MeshBasicMaterial ({color: 0x9999ff, side: THREE.BackSide});
+                var skyBox = new THREE.Mesh (skyBoxGeometry, skyBoxMaterial);
+                scene.add (skyBox);
             }
 
             //Add a cubes       
             {             
                 spawnX = -1800;
                 spawnZ = 2000;
-                var geometry = new THREE.BoxGeometry(25,25,75);
+                var geometry  =  new THREE.BoxGeometry (25,25,75);
 
                 //Cube1 blue
-                cube = new THREE.Mesh(geometry, materialCube);
-                cube.position.set(spawnX, 25.1, spawnZ);
-                scene.add(cube);
-                cube.add(topCamera);
+                cube = new THREE.Mesh (geometry, materialCube);
+                cube.position.set (spawnX, 45, spawnZ);
+                scene.add (cube);
+                cube.add (topCamera);
                 
                 //Cube2 red
-                cube2 = new THREE.Mesh(geometry,materialCube2);
-                cube2.position.set(spawnX, 25.1, spawnZ);
-                scene.add(cube2);
-                cube2.add(bottomCamera);
+                cube2 = new THREE.Mesh (geometry,materialCube2);
+                cube2.position.set (spawnX, 45, spawnZ);
+                scene.add (cube2);
+                cube2.add (bottomCamera);
             }
 			
 			//Add a missile
 			{
 				spawnX = -1800;
                 spawnZ = 2000;
-                var geometryMissile = new THREE.BoxGeometry (5,5,15);
-                var material = new THREE.MeshBasicMaterial ({color:0x0000ff});
-				var material2 = new THREE.MeshBasicMaterial ({color:0xFF0000});
+                var geometryMissile = new THREE.BoxGeometry (10, 10, 25);
+                var material = new THREE.MeshBasicMaterial ({color: 0x0000ff});
+				var material2 = new THREE.MeshBasicMaterial ({color: 0xFF0000});
 				
-                missile = new THREE.Mesh( geometryMissile, material);
-                missile.position.set (spawnX, 28, spawnZ);
+                missile = new THREE.Mesh (geometryMissile, material);
+                missile.position.set (spawnX, 60, spawnZ);
                 scene.add (missile);
 				
-
-                missile2 = new THREE.Mesh( geometryMissile, material2);
-                missile2.position.set (spawnX, 28, spawnZ);
+                missile2 = new THREE.Mesh (geometryMissile, material2);
+                missile2.position.set (spawnX, 60, spawnZ);
                 scene.add (missile2);
 			}
 			
             //The Walls...
             {
-				var wallGeometry = new THREE.CubeGeometry( 500, 500, 50, 1, 1, 1 );
-                var wandbegrenzung = new THREE.CubeGeometry( 5000, 100, 50, 1, 1, 1 );
-				var wandLang = new THREE.CubeGeometry( 1650, 100, 50, 1, 1, 1 );
-                var wandMittel = new THREE.CubeGeometry( 1237, 100, 50, 1, 1, 1 );
-                var wandKurz = new THREE.CubeGeometry( 825, 100, 50, 1, 1, 1 );
-                var wandNano = new THREE.CubeGeometry( 437, 100, 50, 1, 1, 1 );
-				var wallMaterial = new THREE.MeshPhongMaterial( { color: 0x000000, specular: 0xFFFFFF, shininess: 70 } );
-				var wireMaterial = new THREE.MeshBasicMaterial( { color: 0x000000} );
-				var wallCheck = new THREE.CubeGeometry(740, 100, 1, 1, 1, 1);
-                var wallCheck2 = new THREE.CubeGeometry(950, 100, 1, 1, 1, 1);
-                var goalMat = new THREE.MeshBasicMaterial(({color: 0x00ff00}));
+				var wallGeometry = new THREE.CubeGeometry (500, 500, 50, 1, 1, 1);
+                var wandbegrenzung = new THREE.CubeGeometry (5000, 100, 50, 1, 1, 1);
+				var wandLang = new THREE.CubeGeometry (1650, 100, 50, 1, 1, 1);
+                var wandMittel = new THREE.CubeGeometry (1237, 100, 50, 1, 1, 1);
+                var wandKurz = new THREE.CubeGeometry (825, 100, 50, 1, 1, 1);
+                var wandNano = new THREE.CubeGeometry (437, 100, 50, 1, 1, 1);
+				var wallMaterial = new THREE.MeshPhongMaterial ({color: 0x000000, specular: 0xFFFFFF, shininess: 70});
+				var wireMaterial = new THREE.MeshBasicMaterial ({color: 0x000000});
+				var wallCheck = new THREE.CubeGeometry (740, 50, 1, 1, 1, 1);
+                var wallCheck2 = new THREE.CubeGeometry (950, 50, 1, 1, 1, 1);
+				var wallCheck3 = new THREE.CubeGeometry (500, 50, 1, 1, 1, 1);
+                var goalMat = new THREE.MeshBasicMaterial (({color: 0xffffff}));
 		                             
                                 
 				//Außenwände Weltbegrenzung Links, Rechts, Oben, Unten
-                outWallLi = new THREE.Mesh(wandbegrenzung, wallMaterial);
-				outWallLi.position.set(-2500, 50, 0);
+                outWallLi = new THREE.Mesh (wandbegrenzung, wallMaterial);
+				outWallLi.position.set (-2500, 50, 0);
 				outWallLi.rotation.y = 3.14159 / 2;
-				scene.add(outWallLi);
-				collidableMeshList.push(outWallLi);
+				scene.add (outWallLi);
+				collidableMeshList.push (outWallLi);
                                 
-                outWallRe = new THREE.Mesh(wandbegrenzung, wallMaterial);
-				outWallRe.position.set(2500, 50, 0);
+                outWallRe = new THREE.Mesh (wandbegrenzung, wallMaterial);
+				outWallRe.position.set (2500, 50, 0);
 				outWallRe.rotation.y = 3.14159 / 2;
-				scene.add(outWallRe);
-				collidableMeshList.push(outWallRe);
+				scene.add  (outWallRe);
+				collidableMeshList.push (outWallRe);
                                 
-				outWallOb = new THREE.Mesh(wandbegrenzung, wallMaterial);
-				outWallOb.position.set(0, 50, -2500);				
-				scene.add(outWallOb);
-				collidableMeshList.push(outWallOb);
+				outWallOb = new THREE.Mesh (wandbegrenzung, wallMaterial);
+				outWallOb.position.set (0, 50, -2500);				
+				scene.add (outWallOb);
+				collidableMeshList.push (outWallOb);
                                 
-                outWallUn = new THREE.Mesh(wandbegrenzung, wallMaterial);
-				outWallUn.position.set(0, 50, 2500);				
-				scene.add(outWallUn);
-				collidableMeshList.push(outWallUn);
+                outWallUn = new THREE.Mesh (wandbegrenzung, wallMaterial);
+				outWallUn.position.set (0, 50, 2500);				
+				scene.add (outWallUn);
+				collidableMeshList.push (outWallUn);
                                
                                
                 //Innenwände Lang
-				outWallL = new THREE.Mesh(wandLang, wallMaterial);
-				outWallL.position.set(-1700, 50, 825);
+				outWallL = new THREE.Mesh (wandLang, wallMaterial);
+				outWallL.position.set (-1700, 50, 825);
 				outWallL.rotation.y = 3.14159 / 2;
-				scene.add(outWallL);
-				collidableMeshList.push(outWallL);
+				scene.add (outWallL);
+				collidableMeshList.push (outWallL);
 				
-				outWallL2 = new THREE.Mesh(wandLang, wallMaterial);
-				outWallL2.position.set(-1700, 50, -825);
+				outWallL2 = new THREE.Mesh (wandLang, wallMaterial);
+				outWallL2.position.set (-1700, 50, -825);
 				outWallL2.rotation.y = 3.14159 / 2;
-				scene.add(outWallL2);
-				collidableMeshList.push(outWallL2);
+				scene.add (outWallL2);
+				collidableMeshList.push (outWallL2);
                                 
-                outWallL3 = new THREE.Mesh(wandLang, wallMaterial);
-				outWallL3.position.set(-90, 50, -425);
-				scene.add(outWallL3);
-				collidableMeshList.push(outWallL3);
+                outWallL3 = new THREE.Mesh (wandLang, wallMaterial);
+				outWallL3.position.set (-90, 50, -425);
+				scene.add (outWallL3);
+				collidableMeshList.push (outWallL3);
                                 
-                outWallL4 = new THREE.Mesh(wandLang, wallMaterial);
-				outWallL4.position.set(690, 50, -50);
-				scene.add(outWallL4);
-				collidableMeshList.push(outWallL4);
+                outWallL4 = new THREE.Mesh (wandLang, wallMaterial);
+				outWallL4.position.set (690, 50, -50);
+				scene.add (outWallL4);
+				collidableMeshList.push (outWallL4);
                                 
-                outWallL5 = new THREE.Mesh(wandLang, wallMaterial);
-				outWallL5.position.set(-100, 50, 1200);
-				scene.add(outWallL5);
-				collidableMeshList.push(outWallL5);
+                outWallL5 = new THREE.Mesh (wandLang, wallMaterial);
+				outWallL5.position.set (-100, 50, 1200);
+				scene.add (outWallL5);
+				collidableMeshList.push (outWallL5);
                                 
-                outWallL6 = new THREE.Mesh(wandLang, wallMaterial);
-				outWallL6.position.set(300, 50, 900);
-				scene.add(outWallL6);
-				collidableMeshList.push(outWallL6);
+                outWallL6 = new THREE.Mesh (wandLang, wallMaterial);
+				outWallL6.position.set (300, 50, 900);
+				scene.add (outWallL6);
+				collidableMeshList.push (outWallL6);
                                 
-                outWallL7 = new THREE.Mesh(wandLang, wallMaterial);
-				outWallL7.position.set(100, 50, 450);
-				scene.add(outWallL7);
-				collidableMeshList.push(outWallL7);
+                outWallL7 = new THREE.Mesh (wandLang, wallMaterial);
+				outWallL7.position.set (100, 50, 450);
+				scene.add (outWallL7);
+				collidableMeshList.push (outWallL7);
                                 
-                outWallL8 = new THREE.Mesh(wandLang, wallMaterial);
-				outWallL8.position.set(1700, 50, 450);
-				scene.add(outWallL8);
-				collidableMeshList.push(outWallL8);
+                outWallL8 = new THREE.Mesh (wandLang, wallMaterial);
+				outWallL8.position.set (1700, 50, 450);
+				scene.add (outWallL8);
+				collidableMeshList.push (outWallL8);
                                 
                                 
                 // Innenwände Mittel
-                outWallM = new THREE.Mesh(wandMittel, wallMaterial);
-				outWallM.position.set(-900, 50, -1050);
+                outWallM = new THREE.Mesh (wandMittel, wallMaterial);
+				outWallM.position.set (-900, 50, -1050);
 				outWallM.rotation.y = 3.14159 / 2;
-				scene.add(outWallM);
-				collidableMeshList.push(outWallM);
+				scene.add (outWallM);
+				collidableMeshList.push (outWallM);
                                 
-                outWallM1 = new THREE.Mesh(wandMittel, wallMaterial);
-				outWallM1.position.set(1100, 50, -1050);
+                outWallM1 = new THREE.Mesh (wandMittel, wallMaterial);
+				outWallM1.position.set (1100, 50, -1050);
 				outWallM1.rotation.y = 3.14159 / 2;
-				scene.add(outWallM1);
-				collidableMeshList.push(outWallM1);
+				scene.add (outWallM1);
+				collidableMeshList.push (outWallM1);
                                 
-                outWallM2 = new THREE.Mesh(wandMittel, wallMaterial);
-				outWallM2.position.set(1500, 50, -1050);
+                outWallM2 = new THREE.Mesh (wandMittel, wallMaterial);
+				outWallM2.position.set (1500, 50, -1050);
 				outWallM2.rotation.y = 3.14159 / 2;
-				scene.add(outWallM2);
-				collidableMeshList.push(outWallM2);
+				scene.add (outWallM2);
+				collidableMeshList.push (outWallM2);
                                 
-                outWallM3 = new THREE.Mesh(wandMittel, wallMaterial);
-				outWallM3.position.set(-690, 50, -50);
-				scene.add(outWallM3);
-				collidableMeshList.push(outWallM3);
+                outWallM3 = new THREE.Mesh (wandMittel, wallMaterial);
+				outWallM3.position.set (-690, 50, -50);
+				scene.add (outWallM3);
+				collidableMeshList.push (outWallM3);
                                 
-                outWallM3 = new THREE.Mesh(wandMittel, wallMaterial);
-				outWallM3.position.set(-700, 50, 900);
-				scene.add(outWallM3);
-				collidableMeshList.push(outWallM3);
+                outWallM3 = new THREE.Mesh (wandMittel, wallMaterial);
+				outWallM3.position.set (-700, 50, 900);
+				scene.add (outWallM3);
+				collidableMeshList.push (outWallM3);
                                 
-                outWallM4 = new THREE.Mesh(wandMittel, wallMaterial);
-				outWallM4.position.set(-1300, 50, 400);
+                outWallM4 = new THREE.Mesh (wandMittel, wallMaterial);
+				outWallM4.position.set (-1300, 50, 400);
 				outWallM4.rotation.y = 3.14159 / 2;
-				scene.add(outWallM4);
-				collidableMeshList.push(outWallM4);
+				scene.add (outWallM4);
+				collidableMeshList.push (outWallM4);
                                 
-                outWallM5 = new THREE.Mesh(wandMittel, wallMaterial);
-				outWallM5.position.set(2100, 50, 2100);
+                outWallM5 = new THREE.Mesh (wandMittel, wallMaterial);
+				outWallM5.position.set (2100, 50, 2100);
 				outWallM5.rotation.y = 3.14159 / 4;
-				scene.add(outWallM5);
-				collidableMeshList.push(outWallM5);
+				scene.add (outWallM5);
+				collidableMeshList.push (outWallM5);
                                 
-                outWallM6 = new THREE.Mesh(wandMittel, wallMaterial);
-				outWallM6.position.set(-280, 50, -1900);
+                outWallM6 = new THREE.Mesh (wandMittel, wallMaterial);
+				outWallM6.position.set (-280, 50, -1900);
 				outWallM6.rotation.y = 3.14159 / 2;
-				scene.add(outWallM6);
-				collidableMeshList.push(outWallM6);
+				scene.add (outWallM6);
+				collidableMeshList.push (outWallM6);
                                 
-                outWallM7 = new THREE.Mesh(wandMittel, wallMaterial);
-				outWallM7.position.set(480, 50, -1900);
+                outWallM7 = new THREE.Mesh (wandMittel, wallMaterial);
+				outWallM7.position.set (480, 50, -1900);
 				outWallM7.rotation.y = 3.14159 / 2;
-				scene.add(outWallM7);
-				collidableMeshList.push(outWallM7);
+				scene.add (outWallM7);
+				collidableMeshList.push (outWallM7);
                                               
                 //Innenwände Kurz
-                outWallK = new THREE.Mesh(wandKurz, wallMaterial);
-				outWallK.position.set(-1287, 50, -1650);
-				scene.add(outWallK);
-				collidableMeshList.push(outWallK);
+                outWallK = new THREE.Mesh (wandKurz, wallMaterial);
+				outWallK.position.set (-1287, 50, -1650);
+				scene.add (outWallK);
+				collidableMeshList.push (outWallK);
                                 
-                outWallK1 = new THREE.Mesh(wandKurz, wallMaterial);
-				outWallK1.position.set(700, 50, -425);
-				scene.add(outWallK1);
-				collidableMeshList.push(outWallK1);
+                outWallK1 = new THREE.Mesh (wandKurz, wallMaterial);
+				outWallK1.position.set (700, 50, -425);
+				scene.add (outWallK1);
+				collidableMeshList.push (outWallK1);
                                 
-                outWallK2 = new THREE.Mesh(wandKurz, wallMaterial);
-				outWallK2.position.set(-1310, 50, 1650);
-				scene.add(outWallK2);
-				collidableMeshList.push(outWallK2);
+                outWallK2 = new THREE.Mesh (wandKurz, wallMaterial);
+				outWallK2.position.set (-1310, 50, 1650);
+				scene.add (outWallK2);
+				collidableMeshList.push (outWallK2);
                                 
-                outWallK3 = new THREE.Mesh(wandKurz, wallMaterial);
-				outWallK3.position.set(-300, 50, 2200);
+                outWallK3 = new THREE.Mesh (wandKurz, wallMaterial);
+				outWallK3.position.set (-300, 50, 2200);
 				outWallK3.rotation.y = 3.14159 / 2;
-				scene.add(outWallK3);
-				collidableMeshList.push(outWallK3);
+				scene.add (outWallK3);
+				collidableMeshList.push (outWallK3);
                                 
-                outWallK4 = new THREE.Mesh(wandKurz, wallMaterial);
-				outWallK4.position.set(100, 50, 2200);
+                outWallK4 = new THREE.Mesh (wandKurz, wallMaterial);
+				outWallK4.position.set (100, 50, 2200);
 				outWallK4.rotation.y = 3.14159 / 2;
-				scene.add(outWallK4);
-				collidableMeshList.push(outWallK4);
+				scene.add (outWallK4);
+				collidableMeshList.push (outWallK4);
                                 
-                outWallN7 = new THREE.Mesh(wandKurz, wallMaterial);
-				outWallN7.position.set(100, 50, -1300);
-				scene.add(outWallN7);
-				collidableMeshList.push(outWallN7);
+                outWallN7 = new THREE.Mesh (wandKurz, wallMaterial);
+				outWallN7.position.set (100, 50, -1300);
+				scene.add (outWallN7);
+				collidableMeshList.push (outWallN7);
                          
                                 
                 //Innenwände Nano
-                outWallN = new THREE.Mesh(wandNano, wallMaterial);
-				outWallN.position.set(1300, 50, -1650);
-				scene.add(outWallN);
-				collidableMeshList.push(outWallN);
+                outWallN = new THREE.Mesh (wandNano, wallMaterial);
+				outWallN.position.set (1300, 50, -1650);
+				scene.add (outWallN);
+				collidableMeshList.push (outWallN);
                                 
-                outWallN1 = new THREE.Mesh(wandNano, wallMaterial);
-				outWallN1.position.set(1500, 50, -280);
+                outWallN1 = new THREE.Mesh (wandNano, wallMaterial);
+				outWallN1.position.set (1500, 50, -280);
 				outWallN1.rotation.y = 3.14159 / 2;
-				scene.add(outWallN1);
-				collidableMeshList.push(outWallN1);
+				scene.add (outWallN1);
+				collidableMeshList.push (outWallN1);
                                 
-				outWallN2 = new THREE.Mesh(wandNano, wallMaterial);
-				outWallN2.position.set(-900, 50, 1450);
+				outWallN2 = new THREE.Mesh (wandNano, wallMaterial);
+				outWallN2.position.set (-900, 50, 1450);
 				outWallN2.rotation.y = 3.14159 / 2;
-				scene.add(outWallN2);
-				collidableMeshList.push(outWallN2);
+				scene.add (outWallN2);
+				collidableMeshList.push (outWallN2);
                                 
-                outWallN2 = new THREE.Mesh(wandNano, wallMaterial);
-				outWallN2.position.set(700, 50, 1420);
+                outWallN2 = new THREE.Mesh (wandNano, wallMaterial);
+				outWallN2.position.set (700, 50, 1420);
 				outWallN2.rotation.y = 3.14159 / 2;
-				scene.add(outWallN2);
-				collidableMeshList.push(outWallN2);
+				scene.add (outWallN2);
+				collidableMeshList.push (outWallN2);
                                 
-                outWallN3 = new THREE.Mesh(wandNano, wallMaterial);
-				outWallN3.position.set(920, 50, 1620);
-				scene.add(outWallN3);
-				collidableMeshList.push(outWallN3);
+                outWallN3 = new THREE.Mesh (wandNano, wallMaterial);
+				outWallN3.position.set (920, 50, 1620);
+				scene.add (outWallN3);
+				collidableMeshList.push (outWallN3);
                                 
-                outWallN4 = new THREE.Mesh(wandNano, wallMaterial);
-				outWallN4.position.set(1100, 50, 1400);
+                outWallN4 = new THREE.Mesh (wandNano, wallMaterial);
+				outWallN4.position.set (1100, 50, 1400);
 				outWallN4.rotation.y = 3.14159 / 2;
-				scene.add(outWallN4);
-				collidableMeshList.push(outWallN4);
+				scene.add (outWallN4);
+				collidableMeshList.push (outWallN4);
                                 
-                outWallN5 = new THREE.Mesh(wandNano, wallMaterial);
-				outWallN5.position.set(1100, 50, 1100);
+                outWallN5 = new THREE.Mesh (wandNano, wallMaterial);
+				outWallN5.position.set (1100, 50, 1100);
 				outWallN5.rotation.y = 3.14159 / 2;
-				scene.add(outWallN5);
-				collidableMeshList.push(outWallN5);
+				scene.add (outWallN5);
+				collidableMeshList.push (outWallN5);
                                 
-                outWallN6 = new THREE.Mesh(wandNano, wallMaterial);
-				outWallN6.position.set(-100, 50, 1800);
-				scene.add(outWallN6);
-				collidableMeshList.push(outWallN6);
+                outWallN6 = new THREE.Mesh (wandNano, wallMaterial);
+				outWallN6.position.set (-100, 50, 1800);
+				scene.add (outWallN6);
+				collidableMeshList.push (outWallN6);
 				
 				//Creating PowerUps
 				var powerUpMaterial1 = new THREE.MeshBasicMaterial ({color: 0xffffff});
 				var powerUpMaterial2 = new THREE.MeshBasicMaterial ({color: 0xff0000});
-				var geometryPowerUp = new THREE.BoxGeometry(75, 75,75);
+				var geometryPowerUp = new THREE.BoxGeometry (75, 75,75);
 				
-				var powerUpSpeed = new THREE.Mesh(geometryPowerUp, powerUpMaterial1);
-				powerUpSpeed.position.set(-2000, 60, -500);
-				scene.add(powerUpSpeed);
-				collidablePowerUpList1.push(powerUpSpeed);
+				var powerUpSpeed = new THREE.Mesh (geometryPowerUp, powerUpMaterial1);
+				powerUpSpeed.position.set (-2000, 60, -500);
+				scene.add (powerUpSpeed);
+				collidablePowerUpList1.push (powerUpSpeed);
 				
-				var powerUpDmg = new THREE.Mesh(geometryPowerUp, powerUpMaterial2);
-				powerUpDmg.position.set(-2200, 60, -500);
-				scene.add(powerUpDmg);
-				collidablePowerUpList2.push(powerUpDmg);
+				var powerUpSpeed1 = new THREE.Mesh (geometryPowerUp, powerUpMaterial1);
+				powerUpSpeed1.position.set (-2200, 60, -500);
+				scene.add (powerUpSpeed1);
+				collidablePowerUpList1.push(powerUpSpeed1);
+				
+				var powerUpSpeed3 = new THREE.Mesh (geometryPowerUp, powerUpMaterial1);
+				powerUpSpeed3.position.set (1900, 60, -1300);
+				scene.add (powerUpSpeed3);
+				collidablePowerUpList1.push (powerUpSpeed3);
+				
+				var powerUpSpeed4 = new THREE.Mesh (geometryPowerUp, powerUpMaterial1);
+				powerUpSpeed4.position.set (2100, 60, -1300);
+				scene.add (powerUpSpeed4);
+				collidablePowerUpList1.push (powerUpSpeed4);
+				
+				var powerUpSpeed5 = new THREE.Mesh (geometryPowerUp, powerUpMaterial1);
+				powerUpSpeed5.position.set (-200, 60, 675);
+				scene.add (powerUpSpeed5);
+				collidablePowerUpList1.push (powerUpSpeed5);
+				
+				var powerUpSpeed6 = new THREE.Mesh (geometryPowerUp, powerUpMaterial1);
+				powerUpSpeed6.position.set (-1300, 60, 1900);
+				scene.add (powerUpSpeed6);
+				collidablePowerUpList1.push (powerUpSpeed6);
+				
+				var powerUpDmg = new THREE.Mesh (geometryPowerUp, powerUpMaterial2);
+				powerUpDmg.position.set (-2100, 60, -1200);
+				scene.add (powerUpDmg);
+				collidablePowerUpList2.push (powerUpDmg);
+				
+				var powerUpDmg2 = new THREE.Mesh (geometryPowerUp, powerUpMaterial2);
+				powerUpDmg2.position.set (2000, 60, -600);
+				scene.add (powerUpDmg2);
+				collidablePowerUpList2.push (powerUpDmg2);
+				
+				var powerUpDmg3 = new THREE.Mesh (geometryPowerUp, powerUpMaterial2);
+				powerUpDmg3.position.set (-85, 60, 1500);
+				scene.add (powerUpDmg3);
+				collidablePowerUpList2.push (powerUpDmg3);
 				
 				//A Goal for Winning
-                goal = new THREE.Mesh(wallCheck, goalMat);
-                goal.position.set(-2100, 200, 1600);
-				scene.add(goal);
+                goal = new THREE.Mesh (wallCheck, goalMat);
+                goal.position.set (-2100, 200, 1600);
+				scene.add (goal);
                 
                 //Checkpoints
-                checkpoint1 = new THREE.Mesh(wallCheck, wallRed);
-                checkpoint1.position.set(-2100, 50, 1600);
-				scene.add(checkpoint1);
+                checkpoint1 = new THREE.Mesh (wallCheck, wallRed);
+                checkpoint1.position.set (-2100, 75, 1600);
+				scene.add (checkpoint1);
                 
-                checkpoint2 = new THREE.Mesh(wallCheck, wallRed);
-                checkpoint2.position.set(-2100, 50, -1650);
-				scene.add(checkpoint2);
+                checkpoint2 = new THREE.Mesh (wallCheck, wallRed);
+                checkpoint2.position.set (-2100, 75, -1650);
+				scene.add (checkpoint2);
                 
-                checkpoint3 = new THREE.Mesh(wallCheck, wallRed);
-                checkpoint3.position.set(-600, 50, -1650);
-				scene.add(checkpoint3);
+                checkpoint3 = new THREE.Mesh (wallCheck, wallRed);
+                checkpoint3.position.set (-600, 75, -1650);
+				scene.add (checkpoint3);
                 
-                checkpoint4 = new THREE.Mesh(wallCheck, wallRed);
-                checkpoint4.position.set(800, 50, -1650);
-				scene.add(checkpoint4);
+                checkpoint4 = new THREE.Mesh (wallCheck, wallRed);
+                checkpoint4.position.set (800, 75, -1650);
+				scene.add (checkpoint4);
                 
-                checkpoint5 = new THREE.Mesh(wallCheck2, wallRed);
-                checkpoint5.position.set(2000, 50, -1650);
-
-				scene.add(checkpoint5);
+                checkpoint5 = new THREE.Mesh (wallCheck2, wallRed);
+                checkpoint5.position.set (2000, 75, -1650);
+				scene.add (checkpoint5);
                 
-                checkpoint6 = new THREE.Mesh(wallCheck, wallRed);
-                checkpoint6.position.set(300, 50, 50);
+                checkpoint6 = new THREE.Mesh (wallCheck, wallRed);
+                checkpoint6.position.set (300, 75, 50);
 				checkpoint6.rotation.y = 3.14159/2;
-				scene.add(checkpoint6);
+				scene.add (checkpoint6);
                 
-                checkpoint7 = new THREE.Mesh(wallCheck, wallRed);
-                checkpoint7.position.set(800, 50, 800);
+                checkpoint7 = new THREE.Mesh (wallCheck3, wallRed);
+                checkpoint7.position.set (800, 75, 700);
 				checkpoint7.rotation.y = 3.14159/2;
-				scene.add(checkpoint7);
+				scene.add (checkpoint7);
                 
-                checkpoint8 = new THREE.Mesh(wallCheck, wallRed);
-                checkpoint8.position.set(100, 50, 1500);
+                checkpoint8 = new THREE.Mesh (wallCheck, wallRed);
+                checkpoint8.position.set (100, 75, 1500);
 				checkpoint8.rotation.y = 3.14159/2;
-				scene.add(checkpoint8);
+				scene.add (checkpoint8);
+				
+				checkpoint12 = new THREE.Mesh (wallCheck, wallRed);
+                checkpoint12.position.set (-2100, 25, 1600);
+				scene.add (checkpoint12);
+                
+                checkpoint22 = new THREE.Mesh (wallCheck, wallRed);
+                checkpoint22.position.set (-2100, 25, -1650);
+				scene.add (checkpoint22);
+                
+                checkpoint32 = new THREE.Mesh (wallCheck, wallRed);
+                checkpoint32.position.set (-600, 25, -1650);
+				scene.add (checkpoint32);
+                
+                checkpoint42 = new THREE.Mesh (wallCheck, wallRed);
+                checkpoint42.position.set (800, 25, -1650);
+				scene.add (checkpoint42);
+                
+                checkpoint52 = new THREE.Mesh (wallCheck2, wallRed);
+                checkpoint52.position.set (2000, 25, -1650);
+				scene.add (checkpoint52);
+                
+                checkpoint62 = new THREE.Mesh (wallCheck, wallRed);
+                checkpoint62.position.set (300, 25, 50);
+				checkpoint62.rotation.y = 3.14159/2;
+				scene.add (checkpoint62);
+                
+                checkpoint72 = new THREE.Mesh (wallCheck3, wallRed);
+                checkpoint72.position.set (800, 25, 700);
+				checkpoint72.rotation.y = 3.14159/2;
+				scene.add (checkpoint72);
+                
+                checkpoint82 = new THREE.Mesh (wallCheck, wallRed);
+                checkpoint82.position.set (100, 25, 1500);
+				checkpoint82.rotation.y = 3.14159/2;
+				scene.add (checkpoint82);
 
-				//First Target!
-				target = checkpoint1;
-                checkpointList[0] = checkpoint1;
+				//First Target1!
+				target1 = checkpoint1;
+                checkpointList1 [0] = checkpoint1;
 				checkpoint1.material = wallGreen; 
+				
+				//First Target2!
+				target2 = checkpoint12;
+                checkpointList2 [0] = checkpoint12;
+				checkpoint12.material = wallGreen; 
 			}
         }
         init();
 		
-		function nextTarget()
-        {
-            switch(target)
-            {
+		function nextTarget1 () {
+            switch (target1) {
                 case checkpoint1:
-                    checkpointList[0] = checkpoint2;
-                    target = checkpoint2;
+                    checkpointList1 [0] = checkpoint2;
+                    target1 = checkpoint2;
                     checkpoint1.material = wallRed;
                     checkpoint2.material = wallGreen;
                     spawnX = checkpoint1.position.x;
                     spawnZ = checkpoint1.position.z;
-                    round++;
-                    console.log("checkpoint ONE - Round " + round);
+                    round ++;
+                    console.log ("checkpoint ONE - Round " + round);
                     break;
 
                 case checkpoint2:
-                    console.log("checkpoint TWO");
-                    checkpointList[0] = checkpoint3;
-                    target = checkpoint3;
+                    console.log ("checkpoint TWO");
+                    checkpointList1 [0] = checkpoint3;
+                    target1 = checkpoint3;
                     checkpoint2.material = wallRed;
                     checkpoint3.material = wallGreen;
                     spawnX = checkpoint2.position.x;
@@ -489,9 +558,9 @@
                     break;
                     
                 case checkpoint3:
-                    console.log("checkpoint THREE");
-                    checkpointList[0] = checkpoint4;
-                    target = checkpoint4;
+                    console.log ("checkpoint THREE");
+                    checkpointList1 [0] = checkpoint4;
+                    target1 = checkpoint4;
                     checkpoint3.material = wallRed;
                     checkpoint4.material = wallGreen;
                     spawnX = checkpoint3.position.x;
@@ -499,9 +568,9 @@
                     break;
                     
                 case checkpoint4:
-                    console.log("checkpoint FOUR");
-                    checkpointList[0] = checkpoint5;
-                    target = checkpoint5;
+                    console.log ("checkpoint FOUR");
+                    checkpointList1 [0] = checkpoint5;
+                    target1 = checkpoint5;
                     checkpoint4.material = wallRed;
                     checkpoint5.material = wallGreen;
                     spawnX = checkpoint4.position.x;
@@ -509,9 +578,9 @@
                     break;
                     
                 case checkpoint5:
-                    console.log("checkpoint FIVE");
-                    checkpointList[0] = checkpoint6;
-                    target = checkpoint6;
+                    console.log ("checkpoint FIVE");
+                    checkpointList1 [0] = checkpoint6;
+                    target1 = checkpoint6;
                     checkpoint5.material = wallRed;
                     checkpoint6.material = wallGreen;
                     spawnX = checkpoint5.position.x;
@@ -519,9 +588,9 @@
                     break;
                     
                 case checkpoint6:
-                    console.log("checkpoint SIX");
-                    checkpointList[0] = checkpoint7;
-                    target = checkpoint7;
+                    console.log ("checkpoint SIX");
+                    checkpointList1 [0] = checkpoint7;
+                    target1 = checkpoint7;
                     checkpoint6.material = wallRed;
                     checkpoint7.material = wallGreen;
                     spawnX = checkpoint6.position.x;
@@ -529,9 +598,9 @@
                     break;
                     
                 case checkpoint7:
-                    console.log("checkpoint SEVEN");
-                    checkpointList[0] = checkpoint8;
-                    target = checkpoint8;
+                    console.log ("checkpoint SEVEN");
+                    checkpointList1 [0] = checkpoint8;
+                    target1 = checkpoint8;
                     checkpoint7.material = wallRed;
                     checkpoint8.material = wallGreen;
                     spawnX = checkpoint7.position.x;
@@ -539,9 +608,9 @@
                     break;
                     
                 case checkpoint8:
-                    console.log("checkpoint EIGHT");
-                    checkpointList[0] = checkpoint1;
-                    target = checkpoint1;
+                    console.log ("checkpoint EIGHT");
+                    checkpointList1 [0] = checkpoint1;
+                    target1 = checkpoint1;
                     checkpoint8.material = wallRed;
                     checkpoint1.material = wallGreen;
                     spawnX = checkpoint8.position.x;
@@ -549,9 +618,93 @@
                     break;     
             }
         }
+		
+		function nextTarget2 () {
+            switch (target2) {
+                case checkpoint12:
+                    checkpointList2 [0] = checkpoint22;
+                    target2 = checkpoint22;
+                    checkpoint12.material = wallRed;
+                    checkpoint22.material = wallGreen;
+                    spawnX = checkpoint12.position.x;
+                    spawnZ = checkpoint12.position.z;
+                    round2 ++;
+                    console.log ("checkpoint ONE - Round " + round);
+                    break;
+
+                case checkpoint22:
+                    console.log ("checkpoint TWOTWO");
+                    checkpointList2 [0] = checkpoint32;
+                    target2 = checkpoint32;
+                    checkpoint22.material = wallRed;
+                    checkpoint32.material = wallGreen;
+                    spawnX = checkpoint22.position.x;
+                    spawnZ = checkpoint22.position.z;
+                    break;
+                    
+                case checkpoint32:
+                    console.log ("checkpoint THREETWO");
+                    checkpointList2 [0] = checkpoint42;
+                    target2 = checkpoint42;
+                    checkpoint32.material = wallRed;
+                    checkpoint42.material = wallGreen;
+                    spawnX = checkpoint32.position.x;
+                    spawnZ = checkpoint32.position.z;
+                    break;
+                    
+                case checkpoint42:
+                    console.log ("checkpoint FOURTWO");
+                    checkpointList2 [0] = checkpoint52;
+                    target2 = checkpoint52;
+                    checkpoint42.material = wallRed;
+                    checkpoint52.material = wallGreen;
+                    spawnX = checkpoint42.position.x;
+                    spawnZ = checkpoint42.position.z;
+                    break;
+                    
+                case checkpoint52:
+                    console.log ("checkpoint FIVETWO");
+                    checkpointList2 [0] = checkpoint62;
+                    target2 = checkpoint62;
+                    checkpoint52.material = wallRed;
+                    checkpoint62.material = wallGreen;
+                    spawnX = checkpoint52.position.x;
+                    spawnZ = checkpoint52.position.z;
+                    break;
+                    
+                case checkpoint62:
+                    console.log ("checkpoint SIXTWO");
+                    checkpointList2 [0] = checkpoint72;
+                    target2 = checkpoint72;
+                    checkpoint62.material = wallRed;
+                    checkpoint72.material = wallGreen;
+                    spawnX = checkpoint62.position.x;
+                    spawnZ = checkpoint62.position.z;
+                    break;
+                    
+                case checkpoint72:
+                    console.log ("checkpoint SEVENTWO");
+                    checkpointList2 [0] = checkpoint82;
+                    target2 = checkpoint82;
+                    checkpoint72.material = wallRed;
+                    checkpoint82.material = wallGreen;
+                    spawnX = checkpoint72.position.x;
+                    spawnZ = checkpoint72.position.z;
+                    break;
+                    
+                case checkpoint82:
+                    console.log ("checkpoint EIGHTTWO");
+                    checkpointList2 [0] = checkpoint12;
+                    target2 = checkpoint12;
+                    checkpoint82.material = wallRed;
+                    checkpoint12.material = wallGreen;
+                    spawnX = checkpoint82.position.x;
+                    spawnZ = checkpoint82.position.z;
+                    break;     
+            }
+        }
 				
-		function addLights()
-        {
+		function addLights () {
             var ambientLight = new THREE.AmbientLight (0xFFFFFF);
             var directionalLight = new THREE.DirectionalLight (0xFFFFFF);
             directionalLight.position.set (1, 1, 1).normalize ();
@@ -563,179 +716,155 @@
             var bluePoint = new THREE.PointLight (0x0033ff, 5, 2000);
             bluePoint.position.set (-2050, 10, 0);
             scene.add (bluePoint);
-            scene.add(new THREE.PointLightHelper (bluePoint, 3));
+            scene.add (new THREE.PointLightHelper (bluePoint, 3));
             
             var greenPoint = new THREE.PointLight (0x33ff00, 1, 2000);
             greenPoint.position.set (-60, 5, 1570);
             scene.add (greenPoint);
-            scene.add(new THREE.PointLightHelper (greenPoint, 3));
+            scene.add (new THREE.PointLightHelper (greenPoint, 3));
             
             var bluePoint = new THREE.PointLight (0x0033ff, 2, 2000);
             bluePoint.position.set (2000, 5, -500);
             scene.add (bluePoint);
-            scene.add(new THREE.PointLightHelper (bluePoint, 3));
+            scene.add (new THREE.PointLightHelper (bluePoint, 3));
             
             var greenPoint = new THREE.PointLight (0x33ff00, 10, 2000);
             greenPoint.position.set (60, 5, -870);
             scene.add (greenPoint);
-            scene.add(new THREE.PointLightHelper (greenPoint, 3));
+            scene.add (new THREE.PointLightHelper (greenPoint, 3));
         }
         addLights ();
 
 		//Rendering the Scene
-        function render()
-        {   
+        function render () {   
             var SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = window.innerHeight;
             bottomCamera.aspect = 2 * SCREEN_WIDTH / SCREEN_HEIGHT;
             topCamera.aspect = 2 * SCREEN_WIDTH / SCREEN_HEIGHT;
-            bottomCamera.updateProjectionMatrix();
-            topCamera.updateProjectionMatrix();
+            bottomCamera.updateProjectionMatrix ();
+            topCamera.updateProjectionMatrix ();
 
             // setViewport parameters:
             //  lower_left_x, lower_left_y, viewport_width, viewport_height
-            renderer.setViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT );
-            renderer.clear();
+            renderer.setViewport (0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+            renderer.clear ();
 
 
             // render left side
-            renderer.setViewport(0, 0, SCREEN_WIDTH, 0.5 * SCREEN_HEIGHT);
-            renderer.render( scene, bottomCamera );
+            renderer.setViewport (0, 0, SCREEN_WIDTH, 0.5 * SCREEN_HEIGHT);
+            renderer.render (scene, bottomCamera);
 
             // render right side
-            renderer.setViewport( 1 , 0.5 * SCREEN_HEIGHT, SCREEN_WIDTH, 0.5 * SCREEN_HEIGHT);
-            renderer.render( scene, topCamera );   
+            renderer.setViewport (1 , 0.5 * SCREEN_HEIGHT, SCREEN_WIDTH, 0.5 * SCREEN_HEIGHT);
+            renderer.render (scene, topCamera);   
             
-            renderer.setSize( window.innerWidth, window.innerHeight);
+            renderer.setSize (window.innerWidth, window.innerHeight);
             renderer.autoClear = false;
         }
         
-        function animate() 
-        {
-            requestAnimationFrame( animate );
-            render();		
-            updatePlayer1();
-			updatePlayer2();
+        function animate () {
+           
+			requestAnimationFrame (animate);
+            render ();		
+            updatePlayer1 ();
+			updatePlayer2 ();
         }
-        animate();
+        animate ();
 		
         //Function update for the movement and the collisiondetection
-        function updatePlayer1()
-		{
-			if(round >= 4)
-            {
-                console.log("Player 1 Wins!");
-                confirm("Player 1 Wins! Press OK for rematch!");
-                window.location.reload();
+        function updatePlayer1 () {
+			
+			if (round >=  4) {
+                console.log ("Player 1 Wins!");
+                confirm ("Player 1 Wins! Press OK for rematch!");
+                window.location.reload ();
             }
 		
 			var acceleration = 100 * (acc_clock.getElapsedTime () / 10);
-			var rotateAngle = Math.PI * 2 * (acc_clock.getElapsedTime ()  / 150);
+			var rotateAngle = Math.PI * 2 * (acc_clock.getElapsedTime () / 150);
 				
-			if (keyboard.pressed ("a"))
-			{	
+			if (keyboard.pressed ("a")) {	
 				cube.rotation.y += rotateAngle;
 				missile.rotation.y += rotateAngle;
 			}
 				
-			if (keyboard.pressed ("d"))
-			{
+			if (keyboard.pressed ("d")) {
 				cube.rotation.y -= rotateAngle;
 				missile.rotation.y -= rotateAngle;
 			}
 			
-			if (keyboard.pressed ("w")) 
-			{					
+			if (keyboard.pressed ("w")) {					
 				
-				function updateCollision()
-				{
+				function updateCollision() {
 					if (acc_clock.elapsedTime > 3) {acc_clock.elapsedTime = -2;}
 					if (acc_clock.elapsedTime > 2) {acc_clock.elapsedTime = -1.5;}
 					if (acc_clock.elapsedTime > 1) {acc_clock.elapsedTime = -1;}
 					if (acc_clock.elapsedTime > 0) {acc_clock.elapsedTime = -0.5;}
 				}
 				
-				function updateCollisionPowerUpSpeed() 
-				{
-					pU_clock.elapsedTime = 0;
-				}
+				function updateCollisionPowerUpSpeed() {pU_clock.elapsedTime = 0;}
 						
-				if (acc_clock.getElapsedTime () >= 2) 
-				{	
-					acc_clock.elapsedTime = 2;
-				}
+				if (acc_clock.getElapsedTime () >=  2) {acc_clock.elapsedTime = 2;}
 				
 				if (pU_clock.getElapsedTime () <= 3) {cube.translateZ (- acceleration * 2);}
-				else if (pU_clock.getElapsedTime () > 3) {cube.translateZ (- acceleration); missile.translateZ ( - acceleration);}
+				
+				else if (pU_clock.getElapsedTime () > 3) {
+					cube.translateZ (- acceleration); 
+					missile.translateZ (- acceleration);
+				}
 			}
 				
-			else if (keyboard.pressed ("s"))
-			{
+			else if (keyboard.pressed ("s")) {
 				
-				function updateCollision() 
-				{
+				function updateCollision() {
 					if (acc_clock.elapsedTime > 3) {acc_clock.elapsedTime = -2;}
 					if (acc_clock.elapsedTime > 2) {acc_clock.elapsedTime = -1.5;}
 					if (acc_clock.elapsedTime > 1) {acc_clock.elapsedTime = -1;}
 					if (acc_clock.elapsedTime > 0) {acc_clock.elapsedTime = -0.5;}
 				}
 			
-				if (acc_clock.getElapsedTime () >= 2) {
-						
-					acc_clock.elapsedTime = 2;
-				}
+				if (acc_clock.getElapsedTime () >=  2) {acc_clock.elapsedTime  =  2;}
 					
 				cube.translateZ (+ acceleration);
 				missile.translateZ (+ acceleration);
 					
-				if (keyboard.pressed ("d"))
-				{
+				if (keyboard.pressed ("d")) {
 					cube.rotation.y += (rotateAngle * 1.5);
 					missile.rotation.y += (rotateAngle * 1.5);
 				}
 					
-				if (keyboard.pressed ("a"))
-				{
+				if (keyboard.pressed ("a")) {
 					cube.rotation.y -= (rotateAngle * 1.5);
 					missile.rotation.y -= (rotateAngle * 1.5);
 				}
 			}  
 			
-			else
-			{	
+			else {	
 				acc_clock.elapsedTime = 0;
 				pU_clock.elapsedTime = 5;
 				
 				//* Ausrollen funktioniert noch nicht wie gewünscht
-				/*if (br_clock.getElapsedTime () <= 2)
+				/*if (br_clock.getElapsedTime () < =  2)
 				{
 					cube.translateZ (- (100 * ((2 - br_clock.getElapsedTime ()) / 10)));
 				}*/
 			}
 			
-			if (misClock.getElapsedTime () >= 2)
-			{
+			if (misClock.getElapsedTime () >=  2) {
 				misClock.elapsedTime = 0;
 				missile.position.set (cube.position.x, 28, cube.position.z);
 			}
                 
-            if (keyboard.pressed("r"))
-            {
+            if (keyboard.pressed ("r")) {
                 cube.position.x = spawnX;
                 cube.position.z = spawnZ;
             }
 			
-			if (keyboard.pressed("space"))
-            {
+			if (keyboard.pressed ("space")) {
 				
-				if (misClock.getElapsedTime () <= 2)
-				{
-					
-					missile.translateZ (- (100 * (4 / 10)));
-				}
+				if (misClock.getElapsedTime () <= 2) {missile.translateZ (- (100 * (4 / 10)));}
             }
 
-			for (var verti = 0; verti < cube.geometry.vertices.length; verti++) 
-			{
+			for (var verti = 0; verti < cube.geometry.vertices.length; verti++) {
 			                
 				//Get Local Vertex, Get Global Vertex, Get Direction of moving cube
 				var localvert = cube.geometry.vertices [verti].clone();
@@ -747,14 +876,12 @@
 				var collision = ray.intersectObjects (collidableMeshList);
 
                 //What happens if there is an collision
-				if (collision.length > 0 && collision [0].distance < directionvec.length ()) 
-				{
-					dmgCalc += 5;
+				if (collision.length > 0 && collision [0].distance < directionvec.length ()) {
+					dmgCalc +=  5;
 					if (dmgCalc >= 25 && dmgCalc < 50) {cube.material = dmgMatYel;}
 					if (dmgCalc >= 50 && dmgCalc < 75) {cube.material = dmgMatOra;}
 					if (dmgCalc >= 75) {cube.material = dmgMatRed;}
-					if (dmgCalc >= 100) 
-					{
+					if (dmgCalc >= 100) {
 						cube.material = materialCube; 
 						cube.position.x = spawnX; 
 						cube.position.z = spawnZ; 
@@ -765,8 +892,7 @@
 				}
 			}
 
-			for (var verti = 0; verti < cube.geometry.vertices.length; verti++) 
-			{
+			for (var verti = 0; verti < cube.geometry.vertices.length; verti ++) {
 
 				//Get Local Vertex, Get Global Vertex, Get Direction of moving cube
 				var localvert = cube.geometry.vertices [verti].clone ();
@@ -778,14 +904,10 @@
 				var collision = ray.intersectObjects (collidablePowerUpList1);
                 
 				//What happens if there is an collision
-				if (collision.length > 0 && collision [0].distance < directionvec.length ()) 
-				{
-					updateCollisionPowerUpSpeed ();
-				}
+				if (collision.length > 0 && collision [0].distance < directionvec.length ()) {updateCollisionPowerUpSpeed ();}
 			}
 			
-			for (var verti = 0; verti < cube.geometry.vertices.length; verti++) 
-			{
+			for (var verti = 0; verti < cube.geometry.vertices.length; verti ++) {
 
 				//Get Local Vertex, Get Global Vertex, Get Direction of moving cube
 				var localvert = cube.geometry.vertices [verti].clone ();
@@ -797,151 +919,121 @@
 				var collision = ray.intersectObjects (collidablePowerUpList2);
                 
 				//What happens if there is an collision
-				if (collision.length > 0 && collision [0].distance < directionvec.length ()) 
-				{
+				if (collision.length > 0 && collision [0].distance < directionvec.length ()) {
 					dmgCalc = 0;
 					cube.material = materialCube;
 				}
 			}
 			
 			//Collision for Checkpoints
-            for(var verti = 0; verti <cube.geometry.vertices.length; verti++)
-            {
+            for(var verti = 0; verti < cube.geometry.vertices.length; verti ++) {
                  //Creating a Ray for Raytracing an looking if there is an collision
-                var localvert = cube.geometry.vertices[verti].clone();
-                var globalvert = localvert.applyMatrix4( cube.matrix);
-                var directionvec = globalvert.sub(cube.position);
+                var localvert = cube.geometry.vertices [verti].clone ();
+                var globalvert = localvert.applyMatrix4 (cube.matrix);
+                var directionvec = globalvert.sub (cube.position);
                 
                 //Get Local Vertex, Get Global Vertex, Get Direction of moving cube
-                var ray = new THREE.Raycaster(cube.position.clone(), directionvec.clone().normalize());
-                var checkcollision = ray.intersectObjects(checkpointList);
+                var ray = new THREE.Raycaster (cube.position.clone (), directionvec.clone ().normalize ());
+                var checkcollision = ray.intersectObjects (checkpointList1);
 
                 //What happens if there is an collision
-                if(checkcollision.length > 0 && checkcollision[0].distance < directionvec.length())
-                {
-                    console.log(target);
-                    nextTarget();
+                if (checkcollision.length > 0 && checkcollision [0].distance < directionvec.length ()) {
+                    console.log (target1);
+                    nextTarget1 ();
                 }
             }
 		}
 		
-		function updatePlayer2()
-		{
-			if(round >= 4)
-            {
-                console.log("Player 2 Wins!");
-                confirm("Player 2 Wins! Press OK for rematch!");
-                window.location.reload();
+		function updatePlayer2 () {
+			
+			if (round2 >= 4) {
+                console.log ("Player 2 Wins!");
+                confirm ("Player 2 Wins! Press OK for rematch!");
+                window.location.reload ();
             }
 		
 			var acceleration = 100 * (acc_clock2.getElapsedTime () / 10);
-			var rotateAngle = Math.PI * 2 * (acc_clock2.getElapsedTime ()  / 150);
+			var rotateAngle = Math.PI * 2 * (acc_clock2.getElapsedTime () / 150);
 				
-			if (keyboard.pressed ("left"))
-			{	
+			if (keyboard.pressed ("left")) {	
 				cube2.rotation.y += rotateAngle;
 				missile2.rotation.y += rotateAngle;
 			}
 				
-			if (keyboard.pressed ("right"))
-			{
+			if (keyboard.pressed ("right")) {
 				cube2.rotation.y -= rotateAngle;
 				missile2.rotation.y -= rotateAngle;
 			}
 			
-			if (keyboard.pressed ("up")) 
-			{					
+			if (keyboard.pressed ("up")) {					
 				
-				function updateCollision()
-				{
+				function updateCollision () {
 					if (acc_clock2.elapsedTime > 3) {acc_clock2.elapsedTime = -2;}
 					if (acc_clock2.elapsedTime > 2) {acc_clock2.elapsedTime = -1.5;}
 					if (acc_clock2.elapsedTime > 1) {acc_clock2.elapsedTime = -1;}
 					if (acc_clock2.elapsedTime > 0) {acc_clock2.elapsedTime = -0.5;}
 				}
 				
-				function updateCollisionPowerUpSpeed() 
-				{
-					pU_clock2.elapsedTime = 0;
-				}
+				function updateCollisionPowerUpSpeed() {pU_clock2.elapsedTime = 0;}
 						
-				if (acc_clock2.getElapsedTime () >= 2) 
-				{	
-					acc_clock2.elapsedTime = 2;
-				}
+				if (acc_clock2.getElapsedTime () >=  2) {acc_clock2.elapsedTime = 2;}
 				
 				if (pU_clock2.getElapsedTime () <= 3) {cube2.translateZ (- acceleration * 2);}
-				else if (pU_clock2.getElapsedTime () > 3) {cube2.translateZ (- acceleration); missile2.translateZ ( - acceleration);}
+				else if (pU_clock2.getElapsedTime () > 3) {cube2.translateZ (- acceleration); missile2.translateZ (- acceleration);}
 			}
 				
-			else if (keyboard.pressed ("down"))
-			{
+			else if (keyboard.pressed ("down")) {
 				
-				function updateCollision() 
-				{
+				function updateCollision () {
 					if (acc_clock2.elapsedTime > 3) {acc_clock2.elapsedTime = -2;}
 					if (acc_clock2.elapsedTime > 2) {acc_clock2.elapsedTime = -1.5;}
 					if (acc_clock2.elapsedTime > 1) {acc_clock2.elapsedTime = -1;}
 					if (acc_clock2.elapsedTime > 0) {acc_clock2.elapsedTime = -0.5;}
 				}
 			
-				if (acc_clock2.getElapsedTime () >= 2) {
-						
-					acc_clock2.elapsedTime = 2;
-				}
+				if (acc_clock2.getElapsedTime () >= 2) {acc_clock2.elapsedTime = 2;}
 					
 				cube2.translateZ (+ acceleration);
 				missile2.translateZ (+ acceleration);
 					
-				if (keyboard.pressed ("right"))
-				{
+				if (keyboard.pressed ("right")) {
 					cube2.rotation.y += (rotateAngle * 1.5);
 					missile2.rotation.y += (rotateAngle * 1.5);
 				}
 					
-				if (keyboard.pressed ("left"))
-				{
+				if (keyboard.pressed ("left")) {
 					cube2.rotation.y -= (rotateAngle * 1.5);
 					missile2.rotation.y -= (rotateAngle * 1.5);
 				}
 			}  
 			
-			else
-			{	
+			else {	
 				acc_clock2.elapsedTime = 0;
 				pU_clock2.elapsedTime = 5;
 				
 				//* Ausrollen funktioniert noch nicht wie gewünscht
-				/*if (br_clock.getElapsedTime () <= 2)
+				/*if (br_clock.getElapsedTime () < =  2)
 				{
 					cube.translateZ (- (100 * ((2 - br_clock.getElapsedTime ()) / 10)));
 				}*/
 			}
 			
-			if (misClock2.getElapsedTime () >= 2)
-			{
+			if (misClock2.getElapsedTime () >= 2) {
 				misClock2.elapsedTime = 0;
 				missile2.position.set (cube2.position.x, 28, cube2.position.z);
 			}
                 
-            if (keyboard.pressed("num5"))
-            {
+            if (keyboard.pressed ("num5")) {
                 cube2.position.x = spawnX;
                 cube2.position.z = spawnZ;
             }
 			
-			if (keyboard.pressed("num1"))
-            {
+			if (keyboard.pressed ("num1")) {
 				
-				if (misClock2.getElapsedTime () <= 2)
-				{
-					
-					missile2.translateZ (- (100 * (4 / 10)));
-				}
+				if (misClock2.getElapsedTime () <=  2) {missile2.translateZ (- (100 * (4 / 10)));}
             }
 
-			for (var verti = 0; verti < cube2.geometry.vertices.length; verti++) 
-			{
+			for (var verti = 0; verti < cube2.geometry.vertices.length; verti++) {
 			                
 				//Get Local Vertex, Get Global Vertex, Get Direction of moving cube
 				var localvert = cube2.geometry.vertices [verti].clone();
@@ -953,14 +1045,12 @@
 				var collision = ray.intersectObjects (collidableMeshList);
 
                 //What happens if there is an collision
-				if (collision.length > 0 && collision [0].distance < directionvec.length ()) 
-				{
+				if (collision.length > 0 && collision [0].distance < directionvec.length ()) {
 					dmgCalc2 += 5;
 					if (dmgCalc2 >= 25 && dmgCalc2 < 50) {cube2.material = dmgMatYel;}
 					if (dmgCalc2 >= 50 && dmgCalc2 < 75) {cube2.material = dmgMatOra;}
 					if (dmgCalc2 >= 75) {cube2.material = dmgMatRed;}
-					if (dmgCalc2 >= 100) 
-					{
+					if (dmgCalc2 >= 100) {
 						cube2.material = materialCube2;
 						cube2.position.x = spawnX; 
 						cube2.position.z = spawnZ; 
@@ -973,8 +1063,7 @@
 				}
 			}
 
-			for (var verti = 0; verti < cube.geometry.vertices.length; verti++) 
-			{
+			for (var verti = 0; verti < cube.geometry.vertices.length; verti ++) {
 
 				//Get Local Vertex, Get Global Vertex, Get Direction of moving cube
 				var localvert = cube2.geometry.vertices [verti].clone ();
@@ -986,14 +1075,12 @@
 				var collision = ray.intersectObjects (collidablePowerUpList1);
                 
 				//What happens if there is an collision
-				if (collision.length > 0 && collision [0].distance < directionvec.length ()) 
-				{
+				if (collision.length > 0 && collision [0].distance < directionvec.length ()) {
 					updateCollisionPowerUpSpeed ();
 				}
 			}
 			
-			for (var verti = 0; verti < cube2.geometry.vertices.length; verti++) 
-			{
+			for (var verti = 0; verti < cube2.geometry.vertices.length; verti ++) {
 
 				//Get Local Vertex, Get Global Vertex, Get Direction of moving cube
 				var localvert = cube2.geometry.vertices [verti].clone ();
@@ -1005,30 +1092,28 @@
 				var collision = ray.intersectObjects (collidablePowerUpList2);
                 
 				//What happens if there is an collision
-				if (collision.length > 0 && collision [0].distance < directionvec.length ()) 
-				{
+				if (collision.length > 0 && collision [0].distance < directionvec.length ()) {
 					dmgCalc2 = 0;
 					cube2.material = materialCube2;
 				}
 			}
 			
 			//Collision for Checkpoints
-            for(var verti = 0; verti <cube2.geometry.vertices.length; verti++)
-            {
+            for(var verti = 0; verti < cube2.geometry.vertices.length; verti ++) {
                  //Creating a Ray for Raytracing an looking if there is an collision
-                var localvert = cube2.geometry.vertices[verti].clone();
-                var globalvert = localvert.applyMatrix4( cube2.matrix);
-                var directionvec = globalvert.sub(cube2.position);
+                var localvert = cube2.geometry.vertices [verti].clone();
+                var globalvert = localvert.applyMatrix4 (cube2.matrix);
+                var directionvec = globalvert.sub (cube2.position);
                 
                 //Get Local Vertex, Get Global Vertex, Get Direction of moving cube
-                var ray = new THREE.Raycaster(cube2.position.clone(), directionvec.clone().normalize());
-                var checkcollision = ray.intersectObjects(checkpointList);
+                var ray = new THREE.Raycaster (cube2.position.clone (), directionvec.clone ().normalize ());
+                var checkcollision = ray.intersectObjects (checkpointList2);
 
                 //What happens if there is an collision
-                if(checkcollision.length > 0 && checkcollision[0].distance < directionvec.length())
+                if (checkcollision.length > 0 && checkcollision [0].distance < directionvec.length())
                 {
-                    console.log(target);
-                    nextTarget();
+                    console.log (target2);
+                    nextTarget2 ();
                 }
             }
 		}
