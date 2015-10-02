@@ -32,8 +32,8 @@
         <a> Leertaste - Geschoss abfeuern </a> </br> </br>
         <a> Spieler 2</a></br>
         <a> Pfeil Hoch,Pfeil Links,Pfeil Runter,Pfeil Rechts - Vor, Links, Zurück, Rechts </a> </br>
-		<a> Num6 - zurück setzen </a> </br>
-        <a> Num0 - Geschoss abfeuern </a> </br> </br>
+		<a> Num5 - zurück setzen </a> </br>
+        <a> Num1 - Geschoss abfeuern </a> </br> </br>
         <a> Der Spieler der als erster 3 Runden absolviert hat gewonnen! </a> </br> </br>
         <a> Power Ups </a> </br>
         <a> Rot - Damage Heal </a> </br>
@@ -63,6 +63,7 @@
 		var cubeList1 = [];
 		var cubeList2 = [];
 		var collidablePowerUpList2 = [];
+		var startClock = new THREE.Clock();
 		var acc_clock = new THREE.Clock();
 		var pU_clock = new THREE.Clock();
 		var misClock = new THREE.Clock();
@@ -86,6 +87,8 @@
 		var dmgMatRed = new THREE.MeshBasicMaterial (({color: 0xff0000}));
 		var materialCube = new THREE.MeshBasicMaterial ({color:0x0000ff});
         var materialCube2 = new THREE.MeshBasicMaterial ({color:0xBDBDBD});
+		var lightGreenMat = new THREE.MeshBasicMaterial ({color: 0x00FF00});
+		var lightRedMat = new THREE.MeshBasicMaterial ({color: 0xFF0000});
 
 
         //Function for Creating the World, getting a scene, a camera, the
@@ -161,7 +164,7 @@
 				cubeList1.push (cube);
                 
                 //Cube2 red
-                cube2 = new THREE.Mesh (geometry,materialCube2);
+                cube2 = new THREE.Mesh (geometry, materialCube2);
                 cube2.position.set (spawnX2, 45, spawnZ2);
                 scene.add (cube2);
                 cube2.add (bottomCamera);
@@ -198,7 +201,7 @@
 				var wallCheck = new THREE.CubeGeometry (740, 50, 1, 1, 1, 1);
                 var wallCheck2 = new THREE.CubeGeometry (950, 50, 1, 1, 1, 1);
 				var wallCheck3 = new THREE.CubeGeometry (500, 50, 1, 1, 1, 1);
-                var goalMat = new THREE.MeshBasicMaterial (({color: 0xffffff}));
+                var goalMat = new THREE.MeshBasicMaterial (({color: 0x000000}));
 		                             
                                 
 				//Außenwände Weltbegrenzung Links, Rechts, Oben, Unten
@@ -456,7 +459,23 @@
                 goal = new THREE.Mesh (wallCheck, goalMat);
                 goal.position.set (-2100, 200, 1600);
 				scene.add (goal);
-                
+				
+				//Start Lights
+				var geometryLight = new THREE.BoxGeometry (50, 50, 25);
+
+				light1 = new THREE.Mesh (geometryLight, goalMat);
+				light1.position.set (-2300, 200, 1600);
+				scene.add (light1);
+				
+				light2 = new THREE.Mesh (geometryLight, goalMat);
+				light2.position.set (-2100, 200, 1600);
+				scene.add (light2);
+				
+				light3 = new THREE.Mesh (geometryLight, goalMat);
+                light3.position.set (-1900, 200, 1600);
+				scene.add (light3);
+				
+				
                 //Checkpoints
                 checkpoint1 = new THREE.Mesh (wallCheck, wallRed);
                 checkpoint1.position.set (-2100, 75, 1600);
@@ -741,7 +760,7 @@
             scene.add (new THREE.PointLightHelper (greenPoint, 3));
         }
         addLights ();
-
+		
 		//Rendering the Scene
         function render () {   
             var SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = window.innerHeight;
@@ -768,16 +787,22 @@
         }
         
         function animate () {
-           
 			requestAnimationFrame (animate);
             render ();		
             updatePlayer1 ();
 			updatePlayer2 ();
+			start ();
         }
         animate ();
 		
+		function start () {
+			if (startClock.getElapsedTime () >= 1) {light1.material = lightRedMat;}
+			if (startClock.getElapsedTime () >= 2) {light2.material = lightRedMat;}
+			if (startClock.getElapsedTime () >= 3) {light3.material = lightGreenMat;}
+		}
+		
         //Function update for the movement and the collisiondetection
-        function updatePlayer1 () {
+        function updatePlayer1 () { if (startClock.getElapsedTime () < 3) {} else {
 			
 			if (round >=  4) {
                 console.log ("Player 1 Wins!");
@@ -967,9 +992,9 @@
 					missile.position.set (cube.position.x, 50, cube.position.z);
                 }
             }
-		}
+		}}
 		
-		function updatePlayer2 () {
+		function updatePlayer2 () { if (startClock.getElapsedTime () < 3) {} else {
 			
 			if (round2 >= 4) {
                 console.log ("Player 2 Wins!");
@@ -1163,7 +1188,7 @@
 					missile2.position.set (cube2.position.x, 50, cube2.position.z);
                 }
             }
-		}
+		}}
 
         </script>
     </body>
