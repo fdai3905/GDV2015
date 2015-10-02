@@ -222,6 +222,7 @@
                     cube.position.z = spawnZ;
                     scene.add (cube);
                     cube.add (topCamera);
+					cubeList1.push (cube);
                 });  
         
                 loaderShip2 = new THREE.JSONLoader ();
@@ -234,6 +235,7 @@
                     cube2.position.z = spawnZ2;
                     scene.add (cube2);
                     cube2.add (bottomCamera);
+					cubeList2.push (cube2);
                 });
                 
                 loaderMissile = new THREE.JSONLoader ();
