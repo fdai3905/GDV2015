@@ -23,8 +23,8 @@
         <script src = "JS/jquery-ui.js"> </script>
         <link rel = stylesheet href = "CSS/jquery-ui.css"/>
         <link rel = stylesheet href = "CSS/info.css"/>
-        <script src = "JS/info.js"></script>
-        <div id = "infoButton"></div>
+        <script src = "JS/info.js"> </script>
+        <div id = "infoButton"> </div>
         <div id = "infoBox" title = "Steuerung">
         <a> Spieler 1 </a> </br>
         <a> W, A, S, D - Vor, Links, Zurück, Rechts </a> </br>
@@ -70,7 +70,7 @@
 			var acc_clock2 = new THREE.Clock();
 			var pU_clock2 = new THREE.Clock();
 			var misClock2 = new THREE.Clock();
-			var scene, camera, renderer, cube;
+			var scene, camera, renderer;
 			var spawnX, spawnZ;	
 			var spawnX2, spawnZ2;		
 			var dmgCalc = 0;
@@ -81,7 +81,7 @@
 			var checkpointList1 = [];
 			var checkpointList2 = [];
 			var loaderShip, loaderShip2, loaderMissile, loaderMissile2;
-			var ship, ship2, missile, missile2;
+			var cube, cube2, missile, missile2;
 			var wallGreen = new THREE.MeshBasicMaterial ({color: 0x00ff00, transparent: true, opacity: 0.2});
 			var wallRed = new THREE.MeshBasicMaterial ({color: 0xff0000, transparent: true, opacity: 0.2});
 			var dmgMatYel = new THREE.MeshBasicMaterial (({color: 0xFFFF00}));
@@ -206,12 +206,20 @@
 				
 			//objebte einfügen
              {
+				spawnX = -2000;
+				spawnZ = 1800;
+					
+				spawnX2 = -2200;
+				spawnZ2 = 1800;
+			 
                 loaderShip = new THREE.JSONLoader ();           
                 loaderShip.load ("ModelsJson/SpaceShip.json", function (geometry, mat) {
 
                     cube = new THREE.Mesh (geometry, new THREE.MeshFaceMaterial (mat));
                     cube.scale.set (15, 15, 15);
-                    cube.position.set (spawnX, 45, spawnZ);
+                    cube.position.y = 45;
+                    cube.position.x = spawnX;
+                    cube.position.z = spawnZ;
                     scene.add (cube);
                     cube.add (topCamera);
                 });  
@@ -221,7 +229,9 @@
 
                     cube2 = new THREE.Mesh (geometry, new THREE.MeshFaceMaterial (mat));
                     cube2.scale.set (30, 30, 30);
-                    cube2.position.set (spawnX2, 45, spawnZ2);
+                    cube2.position.y = 45;
+                    cube2.position.x = spawnX2;
+                    cube2.position.z = spawnZ2;
                     scene.add (cube2);
                     cube2.add (bottomCamera);
                 });
@@ -232,7 +242,9 @@
                     material = new THREE.MeshPhongMaterial ({ color: 0x990000, specular: 0xFFFFFF, shininess: 100});
                     missile = new THREE.Mesh (geometry, material);
                     missile.scale.set (10, 10, 10);
-                    missile.position.set (spawnX, 50, spawnZ);
+					missile.position.y = 50;
+                    missile.position.x = spawnX;
+                    missile.position.z = spawnZ;
                     scene.add (missile);
 				});
 					
@@ -242,7 +254,9 @@
                     material = new THREE.MeshPhongMaterial ({color: 0x990000, specular: 0xFFFFFF, shininess: 100});
                     missile2 = new THREE.Mesh (geometry, material);
                     missile2.scale.set (10, 10, 10);
-                    missile2.position.set (spawnX2, 50, spawnZ2);
+                    missile2.position.y = 45;
+                    missile2.position.x = spawnX2;
+                    missile2.position.z = spawnZ2;
                     scene.add (missile2);
                 
                 });
